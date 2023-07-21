@@ -15,5 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/estacionamento', [EstacionamentoController::class, 'index']);
-Route::post('/estacionamento', [EstacionamentoController::class, 'store']);
+Route::apiResource('/estacionamento', EstacionamentoController::class);
+
+// Route::get('/estacionamento/{id}', [EstacionamentoController::class, 'show']);
+// Route::get('/estacionamento', [EstacionamentoController::class, 'index']);
+// Route::post('/estacionamento', [EstacionamentoController::class, 'store']);
+// Route::patch('/estacionamento/{id}', [EstacionamentoController::class, 'update']);
+// Route::delete('estacionamento/{id}', [EstacionamentoController::class, 'destroy']);

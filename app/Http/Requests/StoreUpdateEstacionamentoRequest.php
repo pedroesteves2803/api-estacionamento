@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreUpdateEstacionamentoRequest extends FormRequest
 {
@@ -21,7 +22,7 @@ class StoreUpdateEstacionamentoRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'nome' => [
                 'required',
                 'string',
@@ -41,5 +42,28 @@ class StoreUpdateEstacionamentoRequest extends FormRequest
                 'boolean'
             ]
         ];
+
+        if($this->method() === 'PATCH'){
+            $rules['nome'] = [
+                'nullable',
+                'string',
+                'min:3',
+                'max:255',
+                Rule::unique('estacionamentos')->ignore($this->id)
+            ];
+
+            $rules['quantidadeDeVagas'] = [
+                'nullable',
+                'integer',
+                'min:1',
+            ];
+
+            $rules['ativo'] = [
+                'nullable',
+                'boolean'
+            ];
+        }
+
+        return $rules;
     }
 }
