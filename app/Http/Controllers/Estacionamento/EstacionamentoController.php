@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Estacaionamento;
+namespace App\Http\Controllers\Estacionamento;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreUpdateEstacionamentoRequest;
@@ -13,14 +13,11 @@ class EstacionamentoController extends Controller
 {
 
     public function __construct(protected Estacionamento $repository)
-    {
-
-    }
+    {}
 
     public function index()
     {
-
-        $estacionamentos = $this->repository::all();
+        $estacionamentos = $this->repository::with('carros')->get();
 
         return EstacionamentoResource::collection($estacionamentos);
     }
@@ -43,7 +40,7 @@ class EstacionamentoController extends Controller
 
     public function show(string $id)
     {
-        $estacionamento = $this->repository::findOrFail($id);
+        $estacionamento = $this->repository::with('carros')->findOrFail($id);
 
         return new EstacionamentoResource($estacionamento);
     }

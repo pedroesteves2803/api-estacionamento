@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\Estacaionamento\EstacionamentoController;
+use App\Http\Controllers\Carro\CarroController;
+use App\Http\Controllers\Estacionamento\EstacionamentoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('/estacionamento', EstacionamentoController::class);
+Route::apiResource('/carro', CarroController::class);
 
 // Route::get('/estacionamento/{id}', [EstacionamentoController::class, 'show']);
 // Route::get('/estacionamento', [EstacionamentoController::class, 'index']);

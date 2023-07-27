@@ -21,6 +21,7 @@ class EstacionamentoResource extends JsonResource
             'quantidadeDeVagas' => $this->quantidadeDeVagas,
             'ativo' => $this->ativo,
             'criado' => Carbon::make($this->created_at)->format('d-m-Y'),
+            'carros' => $this->carros
         ];
     }
 }
