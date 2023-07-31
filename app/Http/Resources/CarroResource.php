@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Carro;
+use App\Models\Estacionamento;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -28,7 +30,8 @@ class CarroResource extends JsonResource
             'cor' => $this->cor,
             'entrada' => Carbon::make($this->entrada)->format('d-m-Y h:i:s'),
             'estacionamento_id' => $this->estacionamento_id,
-            'saida' => $saida
+            'saida' => Carbon::make($this->saida)->format('d-m-Y h:i:s'),
+            'valor_para_pagamento' => Estacionamento::getAmountToPay(Carbon::make($this->entrada), Carbon::make($this->saida))
         ];
     }
 }

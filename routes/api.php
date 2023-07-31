@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Carro\CarroController;
 use App\Http\Controllers\Estacionamento\EstacionamentoController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\Funcionario\FuncionarioController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,10 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('/estacionamento', EstacionamentoController::class);
-Route::apiResource('/carro', CarroController::class);
 
-// Route::get('/estacionamento/{id}', [EstacionamentoController::class, 'show']);
-// Route::get('/estacionamento', [EstacionamentoController::class, 'index']);
-// Route::post('/estacionamento', [EstacionamentoController::class, 'store']);
-// Route::patch('/estacionamento/{id}', [EstacionamentoController::class, 'update']);
-// Route::delete('estacionamento/{id}', [EstacionamentoController::class, 'destroy']);
+Route::apiResource('/carro', CarroController::class);
+Route::patch('/carro/saida/{carro}', [CarroController::class, 'registersCarExit']);
+
+Route::apiResource('/funcionario', FuncionarioController::class);

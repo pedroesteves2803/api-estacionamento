@@ -22,13 +22,14 @@ class StoreUpdateEstacionamentoRequest extends FormRequest
      */
     public function rules(): array
     {
+
         $rules = [
             'nome' => [
                 'required',
                 'string',
                 'min:3',
                 'max:255',
-                'unique:estacionamentos'
+                Rule::unique('estacionamentos')
             ],
 
             'quantidadeDeVagas' => [
@@ -46,10 +47,10 @@ class StoreUpdateEstacionamentoRequest extends FormRequest
         if($this->method() === 'PATCH'){
             $rules['nome'] = [
                 'nullable',
+                Rule::unique('estacionamentos')->ignore($this->estacionamento),
                 'string',
                 'min:3',
                 'max:255',
-                Rule::unique('estacionamentos')->ignore($this->id)
             ];
 
             $rules['quantidadeDeVagas'] = [

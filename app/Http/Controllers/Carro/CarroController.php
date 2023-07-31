@@ -22,17 +22,11 @@ class CarroController extends Controller
         return CarroResource::collection($carros);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreUpdateCarroRequest $request)
     {
         $data = $request->validated();
@@ -44,9 +38,6 @@ class CarroController extends Controller
         return new CarroResource($carro);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $carro = $this->repository::findOrFail($id);
@@ -54,17 +45,11 @@ class CarroController extends Controller
         return new CarroResource($carro);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(StoreUpdateCarroRequest $request, string $id)
     {
         $data = $request->validated();
@@ -74,9 +59,15 @@ class CarroController extends Controller
         return new CarroResource($carro);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    public function registersCarExit(string $id)
+    {
+        $carro = $this->repository::findOrFail($id);
+        $carro->saida = now();
+        $carro->save();
+
+        return new CarroResource($carro);
+    }
+
     public function destroy(string $id)
     {
         $carro = $this->repository::findOrFail($id);

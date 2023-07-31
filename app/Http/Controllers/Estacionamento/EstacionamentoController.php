@@ -55,7 +55,11 @@ class EstacionamentoController extends Controller
     {
         $data = $request->validated();
         $estacionamento = $this->repository::findOrFail($id);
-        $estacionamento->update($data);
+        $estacionamento->update([
+            'nome' => $data['nome'],
+            'noquantidadeDeVagasme' => $data['quantidadeDeVagas'],
+            'ativo' => $data['ativo'],
+        ]);
 
         return new EstacionamentoResource($estacionamento);
     }
