@@ -39,11 +39,12 @@ class Estacionamento extends Model
     }
 
     public static function calcularValorEstacionamento($minutosEstacionados) {
-        return $minutosEstacionados * 0.20;
+        return (float)$minutosEstacionados * 0.20;
     }
 
     public static function getAmountToPay(Carbon $input, Carbon $output)
     {
+
         $result = $input->diff($output);
 
         $days = $result->d;
@@ -61,6 +62,6 @@ class Estacionamento extends Model
 
         $total += $minutes;
 
-        return self::calcularValorEstacionamento($total);
+        return number_format(self::calcularValorEstacionamento($total), 2, ',', '.');
     }
 }

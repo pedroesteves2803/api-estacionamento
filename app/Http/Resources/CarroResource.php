@@ -18,10 +18,14 @@ class CarroResource extends JsonResource
     public function toArray(Request $request): array
     {
         $saida = null;
+        $valor_para_pagamento = null;
 
-        if(isset($this->saida) && empty($this->saida)){
+        if(isset($this->saida) && !empty($this->saida)){
             $saida = Carbon::make($this->saida)->format('d-m-Y h:i:s');
+            $valor_para_pagamento = Estacionamento::getAmountToPay(Carbon::make($this->entrada), Carbon::make($this->saida));
         }
+
+
 
         return [
             'id' => $this->id,
@@ -30,8 +34,8 @@ class CarroResource extends JsonResource
             'cor' => $this->cor,
             'entrada' => Carbon::make($this->entrada)->format('d-m-Y h:i:s'),
             'estacionamento_id' => $this->estacionamento_id,
-            'saida' => Carbon::make($this->saida)->format('d-m-Y h:i:s'),
-            'valor_para_pagamento' => Estacionamento::getAmountToPay(Carbon::make($this->entrada), Carbon::make($this->saida))
+            'saida' => $saida,
+            'valor_para_pagamento' => $valor_para_pagamento,
         ];
     }
 }
