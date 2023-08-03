@@ -9,17 +9,17 @@ return new class extends Migration
 
     public function up(): void
     {
-        Schema::create('estacionamentos', function (Blueprint $table) {
+        Schema::create('parkings', function (Blueprint $table) {
             $table->id();
-            $table->string('nome')->unique();
-            $table->integer('quantidadeDeVagas');
-            $table->boolean('ativo')->default(1);
+            $table->string('name')->unique();
+            $table->integer('numberOfVacancies');
+            $table->boolean('active')->default(1);
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('estacionamentos');
+        Schema::dropIfExists('parkings');
     }
 };

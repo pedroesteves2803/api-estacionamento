@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('cor');
             $table->dateTime('entrada');
             $table->dateTime('saida')->nullable();
-            $table->foreignId('estacionamento_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('parking_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

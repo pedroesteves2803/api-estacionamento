@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('cargo');
             $table->boolean('ativo')->default(1);
-            $table->foreignId('estacionamento_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignId('parking_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
