@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EstacionamentoResource extends JsonResource
+class ParkingResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,12 +17,12 @@ class EstacionamentoResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'nome' => $this->nome,
-            'quantidadeDeVagas' => $this->quantidadeDeVagas,
-            'ativo' => $this->ativo,
+            'nome' => $this->name,
+            'numero_de_vagas' => $this->numberOfVacancies,
+            'ativo' => $this->active,
             'criado' => Carbon::make($this->created_at)->format('d-m-Y'),
-            'carros' => $this->carros,
-            'funcionarios' => $this->funcionarios
+            'carros' => $this->cars ?? [],
+            'funcionarios' => $this->funcionarios ?? []
         ];
     }
 }

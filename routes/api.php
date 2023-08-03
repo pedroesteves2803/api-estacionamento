@@ -3,6 +3,7 @@
 use App\Http\Controllers\Carro\CarroController;
 use App\Http\Controllers\Estacionamento\EstacionamentoController;
 use App\Http\Controllers\Funcionario\FuncionarioController;
+use App\Http\Controllers\Parking\ParkingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::apiResource('/estacionamento', EstacionamentoController::class);
+Route::apiResource('/parking', ParkingController::class);
 
 Route::apiResource('/carro', CarroController::class);
 Route::patch('/carro/saida/{carro}', [CarroController::class, 'registersCarExit']);

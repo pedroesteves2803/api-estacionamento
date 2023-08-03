@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Estacionamento extends Model
+class Parking extends Model
 {
     use HasFactory;
 
@@ -17,15 +17,15 @@ class Estacionamento extends Model
     ];
 
     protected $casts = [
-        'ativo' => 'boolean',
+        'active' => 'boolean',
     ];
 
-    public function carros(): HasMany
+    public function cars(): HasMany
     {
         return $this->hasMany(Carro::class);
     }
 
-    public function funcionarios(): HasMany
+    public function employees(): HasMany
     {
         return $this->hasMany(Funcionario::class);
     }
@@ -38,8 +38,8 @@ class Estacionamento extends Model
         return $dias * 24 * 60;
     }
 
-    public static function calcularValorEstacionamento($minutosEstacionados) {
-        return (float)$minutosEstacionados * 0.20;
+    public static function calculateParkingValue($parkedMinutes) {
+        return (float)$parkedMinutes * 0.20;
     }
 
     public static function getAmountToPay(Carbon $input, Carbon $output)
@@ -62,6 +62,6 @@ class Estacionamento extends Model
 
         $total += $minutes;
 
-        return number_format(self::calcularValorEstacionamento($total), 2, ',', '.');
+        return number_format(self::calculateParkingValue($total), 2, ',', '.');
     }
 }
