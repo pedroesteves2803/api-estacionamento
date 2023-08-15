@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Funcionario extends Model
+class Employees extends Model
 {
     use HasFactory;
 
@@ -14,6 +14,6 @@ class Funcionario extends Model
     ];
 
     protected $casts = [
-        'ativo' => 'boolean',
+        'active' => 'boolean',
     ];
 }

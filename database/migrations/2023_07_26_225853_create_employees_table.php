@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('funcionarios', function (Blueprint $table) {
+        Schema::create('employees', function (Blueprint $table) {
             $table->id();
-            $table->string('nome');
-            $table->string('cpf');
-            $table->string('email');
-            $table->string('cargo');
-            $table->boolean('ativo')->default(1);
+            $table->string('name');
+            $table->string('cpf')->unique();
+            $table->string('email')->unique();
+            $table->string('office');
+            $table->boolean('active')->default(1);
             $table->foreignId('parking_id')->constrained()->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('funcionarios');
+        Schema::dropIfExists('employees');
     }
 };
