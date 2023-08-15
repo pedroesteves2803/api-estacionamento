@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Carro\CarroController;
+use App\Http\Controllers\Cars\CarsController;
+use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Estacionamento\EstacionamentoController;
 use App\Http\Controllers\Funcionario\FuncionarioController;
 use App\Http\Controllers\Parking\ParkingController;
@@ -19,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::apiResource('/parking', ParkingController::class);
 
-Route::apiResource('/carro', CarroController::class);
-Route::patch('/carro/saida/{carro}', [CarroController::class, 'registersCarExit']);
+Route::apiResource('/car', CarsController::class);
+Route::patch('/car/output/{car}', [CarsController::class, 'registersCarExit']);
 
-Route::apiResource('/funcionario', FuncionarioController::class);
+Route::apiResource('/employees', EmployeesController::class);
