@@ -22,12 +22,12 @@ class Parking extends Model
 
     public function cars(): HasMany
     {
-        return $this->hasMany(Carro::class);
+        return $this->hasMany(Car::class);
     }
 
     public function employees(): HasMany
     {
-        return $this->hasMany(Funcionario::class);
+        return $this->hasMany(Employees::class);
     }
 
     public static function hoursToMinutes($horas) {
