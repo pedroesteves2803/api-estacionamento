@@ -13,12 +13,12 @@ class OutputParkingDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
         public readonly int $id,
-        public readonly string $nome,
-        public readonly int $numero_de_vagas,
-        public readonly bool $ativo,
-        public readonly DateTime $criado,
-        public readonly Collection $carros,
-        public readonly Collection $funcionarios
+        public readonly string $name,
+        public readonly int $numberOfVacancies,
+        public readonly bool $active,
+        public readonly DateTime $created_at,
+        public readonly Collection $cars,
+        public readonly Collection $employees
     )
     {
         $this->validate();

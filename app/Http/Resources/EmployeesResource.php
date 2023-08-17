@@ -18,7 +18,6 @@ class EmployeesResource extends JsonResource
             'cargo' => $this->office,
             'ativo' => $this->active,
             'estacionamento_id' => $this->parking_id,
-            'criado' => Carbon::make($this->created_at)->format('d-m-Y'),
         ];
     }
 }

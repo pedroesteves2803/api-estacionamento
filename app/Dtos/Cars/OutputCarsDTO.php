@@ -15,12 +15,13 @@ class OutputCarsDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
         public readonly int $id,
-        public readonly string $placa,
-        public readonly string $modelo,
-        public readonly string $cor,
-        public readonly string $entrada,
-        public readonly ?string $saida = null,
-        public readonly ?string $valor_para_ser_pago = null,
+        public readonly string $plate,
+        public readonly string $model,
+        public readonly string $color,
+        public readonly string $input,
+        public readonly int $parking_id,
+        public readonly ?string $output = null,
+        public readonly ?string $amountToBePaid = null,
     )
     {
         $this->validate();

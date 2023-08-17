@@ -8,13 +8,9 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class ParkingResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(Request $request): array
+    public function toArray($request): array
     {
+
         return [
             'id' => $this->id,
             'nome' => $this->name,

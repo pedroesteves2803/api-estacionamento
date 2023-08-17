@@ -22,9 +22,22 @@ class CarsController extends Controller
 
     public function index()
     {
-        $carros = $this->cars::all();
+        $cars = $this->cars::all();
 
-        return CarResource::collection($carros);
+        $carsDTOs = collect($cars)->map(function ($car) {
+            return new OutputCarsDTO(
+                $car->id,
+                $car->plate,
+                $car->model,
+                $car->color,
+                $car->input,
+                $car->parking_id,
+            );
+        })->all();
+
+        return CarResource::collection(
+            collect($carsDTOs)
+        );
     }
 
     public function store(Request $request)
@@ -38,30 +51,40 @@ class CarsController extends Controller
             ])
         );
 
+        $dto->toArray()['input'] = now();
+
         $car = $this->cars::create($dto->toArray());
-        $car = $this->cars::find($car->id);
+
+        $car = $this->cars::find($car['id']);
 
         return $this->outputResponse($car);
 
     }
 
-    public function show(string $id)
+    public function show(string $parkingId, string $id)
     {
-        $car = $this->cars::find($id);
+        $car = $this->cars::where([
+            'parking_id' => $parkingId,
+            'id' => $id
+        ])->first();
 
         if(empty($car)){
-            return $this->outputErrorResponse($id);
+            return $this->outputErrorResponse();
         }
 
-        return new CarResource($car);
+        return $this->outputResponse($car);
+
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $parkingId, string $id)
     {
-        $car = $this->cars::find($id);
+        $car = $this->cars::where([
+            'parking_id' => $parkingId,
+            'id' => $id
+        ])->first();
 
         if(empty($car)){
-            return $this->outputErrorResponse($id);
+            return $this->outputErrorResponse();
         }
 
         $dto = new CarsDTO(
@@ -70,31 +93,41 @@ class CarsController extends Controller
                 'model',
                 'color',
                 'parking_id',
-            ])
+            ]),
         );
 
         $car->update($dto->toArray());
 
-        return new CarResource($car);
+        return $this->outputResponse($car);
+
     }
 
-    public function registersCarExit(string $id)
+    public function registersCarExit(string $parkingId, string $id)
     {
-        $car = $this->cars::find($id);
+        $car = $this->cars::where([
+            'parking_id' => $parkingId,
+            'id' => $id
+        ])->first();
 
         if(empty($car)){
-            return $this->outputErrorResponse($id);
+            return $this->outputErrorResponse();
         }
 
         $car->output = now();
         $car->save();
 
-        return new CarResource($car);
+        $car = $this->cars::find($car['id']);
+
+        return $this->outputResponse($car);
+
     }
 
-    public function destroy(string $id)
+    public function destroy(string $parkingId, string $id)
     {
-        $car = $this->cars::find($id);
+        $car = $this->cars::where([
+            'parking_id' => $parkingId,
+            'id' => $id
+        ])->first();
 
         if(empty($car)){
             return $this->outputErrorResponse($id);
@@ -107,20 +140,23 @@ class CarsController extends Controller
 
     private function outputResponse(Car $car){
 
-        $output =  new OutputCarsDTO(
+        $outputDto =  new OutputCarsDTO(
             $car['id'],
             $car['plate'],
             $car['model'],
             $car['color'],
-            $car['input']
+            $car['input'],
+            $car['parking_id'],
+            $car['output'],
         );
 
-        return response()->json($output->toArray());
+        return new CarResource($outputDto);
+
     }
 
-    private function outputErrorResponse(int $id){
+    private function outputErrorResponse(){
 
-        $error = new ErrorDTO("Registro {$id} não encontrado", Response::HTTP_NOT_FOUND);
+        $error = new ErrorDTO("Registro não encontrado", Response::HTTP_NOT_FOUND);
         return response()->json($error->toArray(), Response::HTTP_NOT_FOUND);
     }
 }

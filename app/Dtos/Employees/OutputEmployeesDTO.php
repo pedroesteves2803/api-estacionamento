@@ -13,12 +13,12 @@ class OutputEmployeesDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
         public readonly int $id,
-        public readonly string $nome,
+        public readonly string $name,
         public readonly string $cpf,
         public readonly string $email,
-        public readonly string $cargo,
-        public readonly bool $ativo,
-        public readonly int $estacionamento_id,
+        public readonly string $office,
+        public readonly bool $active,
+        public readonly int $parking_id,
     )
     {
         $this->validate();

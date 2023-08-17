@@ -14,19 +14,28 @@ use Illuminate\Http\Response;
 class EmployeesController extends Controller
 {
 
-    public function __construct(protected Employees $repository)
+    public function __construct(protected Employees $employees)
     {}
 
     public function index()
     {
-        $employees = $this->repository::all();
+        $employees = $this->employees::all();
 
-        return EmployeesResource::collection($employees);
-    }
+        $employeesDTOs = collect($employees)->map(function ($employee) {
+            return new OutputEmployeesDTO(
+                $employee->id,
+                $employee->name,
+                $employee->cpf,
+                $employee->email,
+                $employee->office,
+                $employee->active,
+                $employee->parking_id
+            );
+        })->all();
 
-    public function create()
-    {
-        //
+        return EmployeesResource::collection(
+            collect($employeesDTOs)
+        );
     }
 
     public function store(Request $request)
@@ -42,36 +51,32 @@ class EmployeesController extends Controller
             ])
         );
 
-        $employees = $this->repository::create($dto->toArray());
-        $employees = $this->repository::find($employees->id);
+        $employee = $this->employees::create($dto->toArray());
 
-        return $this->outputResponse($employees);
+        return $this->outputResponse($employee);
     }
 
-    public function show(string $id)
+    public function show(string $parkingId, string $id)
     {
-        $employees = $this->repository::find($id);
+        $employee = $this->employees::find($id);
 
-        if(empty($employees)){
+        $employee = $this->employees::where([
+            'parking_id' => $parkingId,
+            'id' => $id
+        ])->first();
+
+        if(empty($employee)){
             return $this->outputErrorResponse($id);
         }
 
-        return new EmployeesResource($employees);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        return $this->outputResponse($employee);
     }
 
     public function update(Request $request, string $id)
     {
-        $employees = $this->repository::find($id);
+        $employee = $this->employees::find($id);
 
-        if(empty($employees)){
+        if(empty($employee)){
             return $this->outputErrorResponse($id);
         }
 
@@ -86,37 +91,40 @@ class EmployeesController extends Controller
             ])
         );
 
-        $employees->update($dto->toArray());
+        $employee->update($dto->toArray());
 
-        return new EmployeesResource($employees);
+        return $this->outputResponse($employee);
     }
 
-    public function destroy(string $id)
+    public function destroy(string $parkingId, string $id)
     {
-        $employees = $this->repository::find($id);
+        $employee = $this->employees::where([
+            'parking_id' => $parkingId,
+            'id' => $id
+        ])->first();
 
-        if(empty($employees)){
+        if(empty($employeemployeees)){
             return $this->outputErrorResponse($id);
         }
 
-        $employees->delete();
+        $employee->delete();
 
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse(Employees $employees){
+    private function outputResponse(Employees $employee){
 
-        $output =  new OutputEmployeesDTO(
-            $employees['id'],
-            $employees['name'],
-            $employees['cpf'],
-            $employees['email'],
-            $employees['office'],
-            $employees['active'],
-            $employees['parking_id'],
+        $outputDto =  new OutputEmployeesDTO(
+            $employee['id'],
+            $employee['name'],
+            $employee['cpf'],
+            $employee['email'],
+            $employee['office'],
+            $employee['active'],
+            $employee['parking_id']
         );
 
-        return response()->json($output->toArray());
+        return new EmployeesResource($outputDto);
     }
 
     private function outputErrorResponse(int $id){

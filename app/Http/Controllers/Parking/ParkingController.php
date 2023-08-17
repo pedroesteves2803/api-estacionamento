@@ -19,10 +19,23 @@ class ParkingController extends Controller
 
     public function index()
     {
+        $parkings = $this->parking::all();
 
-        $parking = $this->parking::all();
+        $parkingDTOs = collect($parkings)->map(function ($parking) {
+            return new OutputParkingDTO(
+                $parking->id,
+                $parking->name,
+                $parking->numberOfVacancies,
+                $parking->active,
+                $parking->created_at,
+                $parking->cars,
+                $parking->employees,
+            );
+        })->all();
 
-        return ParkingResource::collection($parking);
+        return ParkingResource::collection(
+            collect($parkingDTOs)
+        );
     }
 
     public function store(Request $request)
@@ -87,7 +100,7 @@ class ParkingController extends Controller
 
     private function outputResponse(Parking $parking){
 
-        $output =  new OutputParkingDTO(
+        $outputDto =  new OutputParkingDTO(
             $parking['id'],
             $parking['name'],
             $parking['numberOfVacancies'],
@@ -97,7 +110,7 @@ class ParkingController extends Controller
             $parking['employees'],
         );
 
-        return response()->json($output->toArray());
+        return new ParkingResource($outputDto);
     }
 
     private function outputErrorResponse(int $id){

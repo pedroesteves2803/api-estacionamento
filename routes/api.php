@@ -22,6 +22,11 @@ use Illuminate\Support\Facades\Route;
 Route::apiResource('/parking', ParkingController::class);
 
 Route::apiResource('/car', CarsController::class);
-Route::patch('/car/output/{car}', [CarsController::class, 'registersCarExit']);
+Route::get('/car/{parking}/{id}', [CarsController::class, 'show']);
+Route::get('/car/{parking}/{id}', [CarsController::class, 'destroy']);
+Route::patch('/car/{parking}/{id}', [CarsController::class, 'update']);
+Route::patch('/car/output/{parking}/{car}', [CarsController::class, 'registersCarExit']);
 
 Route::apiResource('/employees', EmployeesController::class);
+Route::get('/employees/{parking}/{id}', [EmployeesController::class, 'show']);
+Route::get('/employees/{parking}/{id}', [EmployeesController::class, 'destroy']);
