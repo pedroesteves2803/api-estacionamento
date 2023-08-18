@@ -13,9 +13,9 @@ use Illuminate\Http\Response;
 
 class EmployeesController extends Controller
 {
-
     public function __construct(protected Employees $employees)
-    {}
+    {
+    }
 
     public function index()
     {
@@ -47,7 +47,7 @@ class EmployeesController extends Controller
                 'email',
                 'office',
                 'active',
-                'parking_id'
+                'parking_id',
             ])
         );
 
@@ -62,10 +62,10 @@ class EmployeesController extends Controller
 
         $employee = $this->employees::where([
             'parking_id' => $parkingId,
-            'id' => $id
+            'id'         => $id,
         ])->first();
 
-        if(empty($employee)){
+        if (empty($employee)) {
             return $this->outputErrorResponse($id);
         }
 
@@ -76,7 +76,7 @@ class EmployeesController extends Controller
     {
         $employee = $this->employees::find($id);
 
-        if(empty($employee)){
+        if (empty($employee)) {
             return $this->outputErrorResponse($id);
         }
 
@@ -87,7 +87,7 @@ class EmployeesController extends Controller
                 'email',
                 'office',
                 'active',
-                'parking_id'
+                'parking_id',
             ])
         );
 
@@ -100,10 +100,10 @@ class EmployeesController extends Controller
     {
         $employee = $this->employees::where([
             'parking_id' => $parkingId,
-            'id' => $id
+            'id'         => $id,
         ])->first();
 
-        if(empty($employeemployeees)){
+        if (empty($employeemployeees)) {
             return $this->outputErrorResponse($id);
         }
 
@@ -112,9 +112,9 @@ class EmployeesController extends Controller
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse(Employees $employee){
-
-        $outputDto =  new OutputEmployeesDTO(
+    private function outputResponse(Employees $employee)
+    {
+        $outputDto = new OutputEmployeesDTO(
             $employee['id'],
             $employee['name'],
             $employee['cpf'],
@@ -127,8 +127,10 @@ class EmployeesController extends Controller
         return new EmployeesResource($outputDto);
     }
 
-    private function outputErrorResponse(int $id){
+    private function outputErrorResponse(int $id)
+    {
         $error = new ErrorDTO("Registro {$id} não encontrado", Response::HTTP_NOT_FOUND);
+
         return response()->json($error->toArray(), Response::HTTP_NOT_FOUND);
     }
 }

@@ -6,19 +6,16 @@ use App\Dtos\Cars\CarsDTO;
 use App\Dtos\Cars\OutputCarsDTO;
 use App\Dtos\Error\ErrorDTO;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreUpdateCarRequest;
 use App\Http\Resources\CarResource;
 use App\Models\Car;
-use App\Models\Parking;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class CarsController extends Controller
 {
-
     public function __construct(protected Car $cars)
-    {}
+    {
+    }
 
     public function index()
     {
@@ -58,32 +55,30 @@ class CarsController extends Controller
         $car = $this->cars::find($car['id']);
 
         return $this->outputResponse($car);
-
     }
 
     public function show(string $parkingId, string $id)
     {
         $car = $this->cars::where([
             'parking_id' => $parkingId,
-            'id' => $id
+            'id'         => $id,
         ])->first();
 
-        if(empty($car)){
+        if (empty($car)) {
             return $this->outputErrorResponse();
         }
 
         return $this->outputResponse($car);
-
     }
 
     public function update(Request $request, string $parkingId, string $id)
     {
         $car = $this->cars::where([
             'parking_id' => $parkingId,
-            'id' => $id
+            'id'         => $id,
         ])->first();
 
-        if(empty($car)){
+        if (empty($car)) {
             return $this->outputErrorResponse();
         }
 
@@ -99,17 +94,16 @@ class CarsController extends Controller
         $car->update($dto->toArray());
 
         return $this->outputResponse($car);
-
     }
 
     public function registersCarExit(string $parkingId, string $id)
     {
         $car = $this->cars::where([
             'parking_id' => $parkingId,
-            'id' => $id
+            'id'         => $id,
         ])->first();
 
-        if(empty($car)){
+        if (empty($car)) {
             return $this->outputErrorResponse();
         }
 
@@ -119,17 +113,16 @@ class CarsController extends Controller
         $car = $this->cars::find($car['id']);
 
         return $this->outputResponse($car);
-
     }
 
     public function destroy(string $parkingId, string $id)
     {
         $car = $this->cars::where([
             'parking_id' => $parkingId,
-            'id' => $id
+            'id'         => $id,
         ])->first();
 
-        if(empty($car)){
+        if (empty($car)) {
             return $this->outputErrorResponse($id);
         }
 
@@ -138,9 +131,9 @@ class CarsController extends Controller
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse(Car $car){
-
-        $outputDto =  new OutputCarsDTO(
+    private function outputResponse(Car $car)
+    {
+        $outputDto = new OutputCarsDTO(
             $car['id'],
             $car['plate'],
             $car['model'],
@@ -151,13 +144,12 @@ class CarsController extends Controller
         );
 
         return new CarResource($outputDto);
-
     }
 
-    private function outputErrorResponse(){
+    private function outputErrorResponse()
+    {
+        $error = new ErrorDTO('Registro não encontrado', Response::HTTP_NOT_FOUND);
 
-        $error = new ErrorDTO("Registro não encontrado", Response::HTTP_NOT_FOUND);
         return response()->json($error->toArray(), Response::HTTP_NOT_FOUND);
     }
 }
-

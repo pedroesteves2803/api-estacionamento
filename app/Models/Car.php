@@ -10,11 +10,11 @@ class Car extends Model
     use HasFactory;
 
     public $guarded = [
-        'id'
+        'id',
     ];
 
     protected $casts = [
-        'input' => 'datetime:d-m-Y h:i:s',
+        'input'  => 'datetime:d-m-Y h:i:s',
         'output' => 'datetime:d-m-Y h:i:s',
     ];
 }

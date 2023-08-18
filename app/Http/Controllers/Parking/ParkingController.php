@@ -13,9 +13,9 @@ use Illuminate\Http\Response;
 
 class ParkingController extends Controller
 {
-
     public function __construct(protected Parking $parking)
-    {}
+    {
+    }
 
     public function index()
     {
@@ -44,7 +44,7 @@ class ParkingController extends Controller
             ...$request->only([
                 'name',
                 'numberOfVacancies',
-                'active'
+                'active',
             ])
         );
 
@@ -57,7 +57,7 @@ class ParkingController extends Controller
     {
         $parking = $this->parking::with('cars')->find($id);
 
-        if(empty($parking)){
+        if (empty($parking)) {
             return $this->outputErrorResponse($id);
         }
 
@@ -68,7 +68,7 @@ class ParkingController extends Controller
     {
         $parking = $this->parking::find($id);
 
-        if(empty($parking)){
+        if (empty($parking)) {
             return $this->outputErrorResponse($id);
         }
 
@@ -76,7 +76,7 @@ class ParkingController extends Controller
             ...$request->only([
                 'name',
                 'numberOfVacancies',
-                'active'
+                'active',
             ])
         );
 
@@ -89,7 +89,7 @@ class ParkingController extends Controller
     {
         $parking = $this->parking::find($id);
 
-        if(empty($parking)){
+        if (empty($parking)) {
             return $this->outputErrorResponse($id);
         }
 
@@ -98,9 +98,9 @@ class ParkingController extends Controller
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse(Parking $parking){
-
-        $outputDto =  new OutputParkingDTO(
+    private function outputResponse(Parking $parking)
+    {
+        $outputDto = new OutputParkingDTO(
             $parking['id'],
             $parking['name'],
             $parking['numberOfVacancies'],
@@ -113,8 +113,10 @@ class ParkingController extends Controller
         return new ParkingResource($outputDto);
     }
 
-    private function outputErrorResponse(int $id){
+    private function outputErrorResponse(int $id)
+    {
         $error = new ErrorDTO("Registro {$id} não encontrado", Response::HTTP_NOT_FOUND);
+
         return response()->json($error->toArray(), Response::HTTP_NOT_FOUND);
     }
 }

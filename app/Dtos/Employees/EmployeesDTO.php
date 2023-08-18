@@ -16,58 +16,59 @@ class EmployeesDTO extends AbstractDTO implements InterfaceDTO
         public readonly string $office,
         public readonly bool $active,
         public readonly int $parking_id,
-    )
-    {
+    ) {
         $this->validate();
     }
 
-    public function rules():array
+    public function rules(): array
     {
         return [
             'name' => [
                 'required',
                 'string',
-                Rule::unique('employees')->ignore(request()->employees)
+                Rule::unique('employees')->ignore(request()->employees),
             ],
 
             'cpf' => [
                 'required',
                 'string',
-                Rule::unique('employees')->ignore(request()->employees)
+                Rule::unique('employees')->ignore(request()->employees),
             ],
 
             'email' => [
                 'required',
-                'string'
+                'string',
             ],
 
             'office' => [
                 'required',
-                'string'
+                'string',
             ],
 
             'active' => [
                 'required',
-                'boolean'
+                'boolean',
             ],
 
             'parking_id' => [
                 'required',
-                'int'
+                'int',
             ],
         ];
-
     }
 
-    public function messages():array{
+    public function messages(): array
+    {
         return [];
     }
 
-    public function validator(): Validator{
+    public function validator(): Validator
+    {
         return validator($this->toArray(), $this->rules(), $this->messages());
     }
 
-    public function validate():array{
+    public function validate(): array
+    {
         return $this->validator()->validate();
     }
 }

@@ -5,10 +5,8 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-
 class StoreUpdateFuncionarioRequest extends FormRequest
 {
-
     public function authorize(): bool
     {
         return true;
@@ -26,18 +24,18 @@ class StoreUpdateFuncionarioRequest extends FormRequest
                 'cpf',
                 'required',
                 'string',
-                'unique:funcionarios'
+                'unique:funcionarios',
             ],
 
             'email' => [
                 'required',
                 'email',
-                'unique:funcionarios'
+                'unique:funcionarios',
             ],
 
             'cargo' => [
                 'required',
-                'string'
+                'string',
             ],
 
             'ativo' => [
@@ -47,11 +45,11 @@ class StoreUpdateFuncionarioRequest extends FormRequest
 
             'estacionamento_id' => [
                 'required',
-                'int'
+                'int',
             ],
         ];
 
-        if($this->method() === 'PATCH'){
+        if ('PATCH' === $this->method()) {
             $rules['nome'] = [
                 'nullable',
                 'string',
@@ -61,13 +59,13 @@ class StoreUpdateFuncionarioRequest extends FormRequest
                 'cpf',
                 'nullable',
                 'string',
-                Rule::unique('funcionarios')->ignore($this->funcionario)
+                Rule::unique('funcionarios')->ignore($this->funcionario),
             ];
 
             $rules['email'] = [
                 'nullable',
                 'email',
-                Rule::unique('funcionarios')->ignore($this->funcionario)
+                Rule::unique('funcionarios')->ignore($this->funcionario),
             ];
 
             $rules['ativo'] = [

@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-
 class StoreUpdateCarRequest extends FormRequest
 {
     /**
@@ -27,7 +26,7 @@ class StoreUpdateCarRequest extends FormRequest
             'placa' => [
                 'required',
                 'string',
-                Rule::unique('carros')
+                Rule::unique('carros'),
             ],
 
             'modelo' => [
@@ -37,20 +36,20 @@ class StoreUpdateCarRequest extends FormRequest
 
             'cor' => [
                 'required',
-                'string'
+                'string',
             ],
 
             'estacionamento_id' => [
                 'required',
-                'int'
+                'int',
             ],
         ];
 
-        if($this->method() === 'PATCH'){
+        if ('PATCH' === $this->method()) {
             $rules['placa'] = [
                 'required',
                 'string',
-                Rule::unique('carros')->ignore($this->carro)
+                Rule::unique('carros')->ignore($this->carro),
             ];
 
             $rules['modelo'] = [
@@ -60,7 +59,7 @@ class StoreUpdateCarRequest extends FormRequest
 
             $rules['cor'] = [
                 'nullable',
-                'string'
+                'string',
             ];
         }
 

@@ -4,9 +4,7 @@ namespace App\Dtos\Cars;
 
 use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
-use DateTime;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Validation\Rule;
 
 class CarsDTO extends AbstractDTO implements InterfaceDTO
@@ -16,18 +14,17 @@ class CarsDTO extends AbstractDTO implements InterfaceDTO
         public readonly string $model,
         public readonly string $color,
         public readonly int $parking_id,
-    )
-    {
+    ) {
         $this->validate();
     }
 
-    public function rules():array
+    public function rules(): array
     {
         return [
             'plate' => [
                 'required',
                 'string',
-                Rule::unique('cars')->ignore(request()->cars)
+                Rule::unique('cars')->ignore(request()->cars),
             ],
 
             'model' => [
@@ -37,26 +34,28 @@ class CarsDTO extends AbstractDTO implements InterfaceDTO
 
             'color' => [
                 'required',
-                'string'
+                'string',
             ],
 
             'parking_id' => [
                 'required',
-                'int'
+                'int',
             ],
         ];
-
     }
 
-    public function messages():array{
+    public function messages(): array
+    {
         return [];
     }
 
-    public function validator(): Validator{
+    public function validator(): Validator
+    {
         return validator($this->toArray(), $this->rules(), $this->messages());
     }
 
-    public function validate():array{
+    public function validate(): array
+    {
         return $this->validator()->validate();
     }
 }

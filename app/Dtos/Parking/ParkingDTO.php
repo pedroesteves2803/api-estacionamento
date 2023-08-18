@@ -13,12 +13,12 @@ class ParkingDTO extends AbstractDTO implements InterfaceDTO
         public readonly string $name,
         public readonly int $numberOfVacancies,
         public readonly bool $active,
-    )
-    {
+    ) {
         $this->validate();
     }
 
-    public function rules():array{
+    public function rules(): array
+    {
         return [
             'name' => [
                 'required',
@@ -36,20 +36,23 @@ class ParkingDTO extends AbstractDTO implements InterfaceDTO
 
             'active' => [
                 'required',
-                'boolean'
-            ]
+                'boolean',
+            ],
         ];
     }
 
-    public function messages():array{
+    public function messages(): array
+    {
         return [];
     }
 
-    public function validator(): Validator{
+    public function validator(): Validator
+    {
         return validator($this->toArray(), $this->rules(), $this->messages());
     }
 
-    public function validate():array{
+    public function validate(): array
+    {
         return $this->validator()->validate();
     }
 }

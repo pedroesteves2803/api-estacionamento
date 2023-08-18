@@ -10,7 +10,7 @@ class Employees extends Model
     use HasFactory;
 
     public $guarded = [
-        'id'
+        'id',
     ];
 
     protected $casts = [

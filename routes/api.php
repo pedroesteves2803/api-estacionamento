@@ -1,10 +1,7 @@
 <?php
 
-use App\Http\Controllers\Carro\CarroController;
 use App\Http\Controllers\Cars\CarsController;
 use App\Http\Controllers\Employees\EmployeesController;
-use App\Http\Controllers\Estacionamento\EstacionamentoController;
-use App\Http\Controllers\Funcionario\FuncionarioController;
 use App\Http\Controllers\Parking\ParkingController;
 use Illuminate\Support\Facades\Route;
 
