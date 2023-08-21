@@ -78,8 +78,8 @@ class CarsController extends Controller
             'id'         => $id,
         ])->first();
 
-        if (empty($car)) {
-            return $this->outputErrorResponse();
+        if (!$car) {
+            return $this->outputResponse($car);
         }
 
         $dto = new CarsDTO(
@@ -103,8 +103,8 @@ class CarsController extends Controller
             'id'         => $id,
         ])->first();
 
-        if (empty($car)) {
-            return $this->outputErrorResponse();
+        if (!$car) {
+            return $this->outputResponse($car);
         }
 
         $car->output = now();
@@ -122,8 +122,8 @@ class CarsController extends Controller
             'id'         => $id,
         ])->first();
 
-        if (empty($car)) {
-            return $this->outputErrorResponse($id);
+        if (!$car) {
+            return $this->outputResponse($car);
         }
 
         $car->delete();
@@ -131,16 +131,28 @@ class CarsController extends Controller
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse(Car $car)
+    private function outputResponse($car)
     {
+        $error = [];
+
+        if (is_null($car)) {
+            $error = [
+                'erro'    => true,
+                'message' => 'Registro não encontrado',
+            ];
+        }
+
         $outputDto = new OutputCarsDTO(
-            $car['id'],
-            $car['plate'],
-            $car['model'],
-            $car['color'],
-            $car['input'],
-            $car['parking_id'],
-            $car['output'],
+            $car['id'] ?? null,
+            $car['plate'] ?? null,
+            $car['model'] ?? null,
+            $car['color'] ?? null,
+            $car['input'] ?? null,
+            $car['parking_id'] ?? null,
+            $car['output'] ?? null,
+            $car['amountToBePaid'] ?? null,
+            $error['erro'] ?? false,
+            $error['message'] ?? '',
         );
 
         return new CarResource($outputDto);

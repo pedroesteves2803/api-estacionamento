@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Parking;
 
-use App\Dtos\Error\ErrorDTO;
 use App\Dtos\Parking\OutputParkingDTO;
 use App\Dtos\Parking\ParkingDTO;
 use App\Http\Controllers\Controller;
@@ -57,8 +56,8 @@ class ParkingController extends Controller
     {
         $parking = $this->parking::with('cars')->find($id);
 
-        if (empty($parking)) {
-            return $this->outputErrorResponse($id);
+        if (!$parking) {
+            return $this->outputResponse($parking);
         }
 
         return $this->outputResponse($parking);
@@ -68,8 +67,8 @@ class ParkingController extends Controller
     {
         $parking = $this->parking::find($id);
 
-        if (empty($parking)) {
-            return $this->outputErrorResponse($id);
+        if (!$parking) {
+            return $this->outputResponse($parking);
         }
 
         $dto = new ParkingDTO(
@@ -89,8 +88,8 @@ class ParkingController extends Controller
     {
         $parking = $this->parking::find($id);
 
-        if (empty($parking)) {
-            return $this->outputErrorResponse($id);
+        if (!$parking) {
+            return $this->outputResponse($parking);
         }
 
         $parking->delete();
@@ -98,25 +97,28 @@ class ParkingController extends Controller
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse(Parking $parking)
+    private function outputResponse($parking)
     {
+        $error = [];
+
+        if (is_null($parking)) {
+            $error = [
+                'erro'    => true,
+                'message' => 'Registro não encontrado',
+            ];
+        }
         $outputDto = new OutputParkingDTO(
-            $parking['id'],
-            $parking['name'],
-            $parking['numberOfVacancies'],
-            $parking['active'],
-            $parking['created_at'],
-            $parking['cars'],
-            $parking['employees'],
+            $parking['id'] ?? null,
+            $parking['name'] ?? null,
+            $parking['numberOfVacancies'] ?? null,
+            $parking['active'] ?? null,
+            $parking['created_at'] ?? null,
+            $parking['cars'] ?? null,
+            $parking['employees'] ?? null,
+            $error['erro'] ?? null,
+            $error['message'] ?? null
         );
 
         return new ParkingResource($outputDto);
-    }
-
-    private function outputErrorResponse(int $id)
-    {
-        $error = new ErrorDTO("Registro {$id} não encontrado", Response::HTTP_NOT_FOUND);
-
-        return response()->json($error->toArray(), Response::HTTP_NOT_FOUND);
     }
 }

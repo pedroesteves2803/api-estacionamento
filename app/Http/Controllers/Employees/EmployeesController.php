@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Employees;
 
 use App\Dtos\Employees\EmployeesDTO;
 use App\Dtos\Employees\OutputEmployeesDTO;
-use App\Dtos\Error\ErrorDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EmployeesResource;
 use App\Models\Employees;
@@ -58,15 +57,13 @@ class EmployeesController extends Controller
 
     public function show(string $parkingId, string $id)
     {
-        $employee = $this->employees::find($id);
-
         $employee = $this->employees::where([
             'parking_id' => $parkingId,
             'id'         => $id,
         ])->first();
 
-        if (empty($employee)) {
-            return $this->outputErrorResponse($id);
+        if (!$employee) {
+            return $this->outputResponse($employee);
         }
 
         return $this->outputResponse($employee);
@@ -76,8 +73,8 @@ class EmployeesController extends Controller
     {
         $employee = $this->employees::find($id);
 
-        if (empty($employee)) {
-            return $this->outputErrorResponse($id);
+        if (!$employee) {
+            return $this->outputResponse($employee);
         }
 
         $dto = new EmployeesDTO(
@@ -103,8 +100,8 @@ class EmployeesController extends Controller
             'id'         => $id,
         ])->first();
 
-        if (empty($employeemployeees)) {
-            return $this->outputErrorResponse($id);
+        if (!$employee) {
+            return $this->outputResponse($employee);
         }
 
         $employee->delete();
@@ -112,25 +109,29 @@ class EmployeesController extends Controller
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse(Employees $employee)
+    private function outputResponse($employee)
     {
+        $error = [];
+
+        if (is_null($employee)) {
+            $error = [
+                'erro'    => true,
+                'message' => 'Registro não encontrado',
+            ];
+        }
+
         $outputDto = new OutputEmployeesDTO(
-            $employee['id'],
-            $employee['name'],
-            $employee['cpf'],
-            $employee['email'],
-            $employee['office'],
-            $employee['active'],
-            $employee['parking_id']
+            $employee['id'] ?? null,
+            $employee['name'] ?? null,
+            $employee['cpf'] ?? null,
+            $employee['email'] ?? null,
+            $employee['office'] ?? null,
+            $employee['active'] ?? null,
+            $employee['parking_id'] ?? null,
+            $error['erro'] ?? false,
+            $error['message'] ?? '',
         );
 
         return new EmployeesResource($outputDto);
-    }
-
-    private function outputErrorResponse(int $id)
-    {
-        $error = new ErrorDTO("Registro {$id} não encontrado", Response::HTTP_NOT_FOUND);
-
-        return response()->json($error->toArray(), Response::HTTP_NOT_FOUND);
     }
 }

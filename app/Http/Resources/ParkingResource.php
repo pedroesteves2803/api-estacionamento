@@ -9,14 +9,20 @@ class ParkingResource extends JsonResource
 {
     public function toArray($request): array
     {
+        $created_at = isset($this->created_at) ? Carbon::make($this->created_at)->format('d-m-Y') : null;
+
         return [
-            'id'              => $this->id,
-            'nome'            => $this->name,
-            'numero_de_vagas' => $this->numberOfVacancies,
-            'ativo'           => $this->active,
-            'criado'          => Carbon::make($this->created_at)->format('d-m-Y'),
-            'carros'          => $this->cars,
-            'funcionarios'    => $this->employees,
+            'errors'  => isset($this->erro) ? $this->erro : null,
+            'message' => isset($this->erro) ? $this->message : null,
+            'content' => [
+                'id'              => $this->id,
+                'nome'            => $this->name,
+                'numero_de_vagas' => $this->numberOfVacancies,
+                'ativo'           => $this->active,
+                'criado'          => $created_at,
+                'carros'          => $this->cars,
+                'funcionarios'    => $this->employees,
+            ],
         ];
     }
 }

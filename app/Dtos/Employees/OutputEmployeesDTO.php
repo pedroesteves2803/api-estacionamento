@@ -9,14 +9,15 @@ use Illuminate\Contracts\Validation\Validator;
 class OutputEmployeesDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
-        public readonly int $id,
-        public readonly string $name,
-        public readonly string $cpf,
-        public readonly string $email,
-        public readonly string $office,
-        public readonly bool $active,
-        public readonly int $parking_id,
-        public readonly ?string $error = null,
+        public readonly ?int $id = null,
+        public readonly ?string $name = null,
+        public readonly ?string $cpf = null,
+        public readonly ?string $email = null,
+        public readonly ?string $office = null,
+        public readonly ?bool $active = null,
+        public readonly ?int $parking_id = null,
+        public readonly ?bool $erro = false,
+        public readonly ?string $message = null,
     ) {
         $this->validate();
     }

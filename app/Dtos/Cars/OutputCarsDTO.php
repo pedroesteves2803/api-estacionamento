@@ -9,14 +9,16 @@ use Illuminate\Contracts\Validation\Validator;
 class OutputCarsDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
-        public readonly int $id,
-        public readonly string $plate,
-        public readonly string $model,
-        public readonly string $color,
-        public readonly string $input,
-        public readonly int $parking_id,
+        public readonly ?int $id = null,
+        public readonly ?string $plate = null,
+        public readonly ?string $model = null,
+        public readonly ?string $color = null,
+        public readonly ?string $input = null,
+        public readonly ?int $parking_id = null,
         public readonly ?string $output = null,
         public readonly ?string $amountToBePaid = null,
+        public readonly ?bool $erro = false,
+        public readonly ?string $message = null,
     ) {
         $this->validate();
     }

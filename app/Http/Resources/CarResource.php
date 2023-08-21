@@ -13,6 +13,7 @@ class CarResource extends JsonResource
     {
         $output = null;
         $amount_to_pay = null;
+        $input = !is_null($this->input) ? Carbon::make($this->input)->format('d-m-Y h:i:s') : null;
 
         if (isset($this->output) && !empty($this->output)) {
             $output = Carbon::make($this->output)->format('d-m-Y h:i:s');
@@ -20,14 +21,18 @@ class CarResource extends JsonResource
         }
 
         return [
-            'id'                   => $this->id,
-            'placa'                => $this->plate,
-            'modelo'               => $this->model,
-            'cor'                  => $this->color,
-            'entrada'              => Carbon::make($this->input)->format('d-m-Y h:i:s'),
-            'estacionamento_id'    => $this->parking_id,
-            'saida'                => $output,
-            'valor_para_pagamento' => $amount_to_pay,
+            'errors'  => isset($this->erro) ? $this->erro : null,
+            'message' => isset($this->erro) ? $this->message : null,
+            'content' => [
+                'id'                   => $this->id,
+                'placa'                => $this->plate,
+                'modelo'               => $this->model,
+                'cor'                  => $this->color,
+                'entrada'              => $input,
+                'estacionamento_id'    => $this->parking_id,
+                'saida'                => $output,
+                'valor_para_pagamento' => $amount_to_pay,
+            ],
         ];
     }
 }

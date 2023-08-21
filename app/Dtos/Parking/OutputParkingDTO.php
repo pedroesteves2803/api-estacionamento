@@ -10,13 +10,15 @@ use Illuminate\Database\Eloquent\Collection;
 class OutputParkingDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
-        public readonly int $id,
-        public readonly string $name,
-        public readonly int $numberOfVacancies,
-        public readonly bool $active,
-        public readonly \DateTime $created_at,
-        public readonly Collection $cars,
-        public readonly Collection $employees
+        public readonly ?int $id = null,
+        public readonly ?string $name = null,
+        public readonly ?int $numberOfVacancies = null,
+        public readonly ?bool $active = null,
+        public readonly ?\DateTime $created_at = null,
+        public readonly ?Collection $cars = null,
+        public readonly ?Collection $employees = null,
+        public readonly ?bool $erro = false,
+        public readonly ?string $message = null,
     ) {
         $this->validate();
     }
