@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Cars;
 
 use App\Dtos\Cars\CarsDTO;
 use App\Dtos\Cars\OutputCarsDTO;
-use App\Dtos\Error\ErrorDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CarResource;
 use App\Models\Car;
@@ -59,28 +58,14 @@ class CarsController extends Controller
 
     public function show(string $parkingId, string $id)
     {
-        $car = $this->cars::where([
-            'parking_id' => $parkingId,
-            'id'         => $id,
-        ])->first();
-
-        if (empty($car)) {
-            return $this->outputErrorResponse();
-        }
+        $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
         return $this->outputResponse($car);
     }
 
     public function update(Request $request, string $parkingId, string $id)
     {
-        $car = $this->cars::where([
-            'parking_id' => $parkingId,
-            'id'         => $id,
-        ])->first();
-
-        if (!$car) {
-            return $this->outputResponse($car);
-        }
+        $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
         $dto = new CarsDTO(
             ...$request->only([
@@ -98,14 +83,7 @@ class CarsController extends Controller
 
     public function registersCarExit(string $parkingId, string $id)
     {
-        $car = $this->cars::where([
-            'parking_id' => $parkingId,
-            'id'         => $id,
-        ])->first();
-
-        if (!$car) {
-            return $this->outputResponse($car);
-        }
+        $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
         $car->output = now();
         $car->save();
@@ -117,14 +95,7 @@ class CarsController extends Controller
 
     public function destroy(string $parkingId, string $id)
     {
-        $car = $this->cars::where([
-            'parking_id' => $parkingId,
-            'id'         => $id,
-        ])->first();
-
-        if (!$car) {
-            return $this->outputResponse($car);
-        }
+        $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
         $car->delete();
 
@@ -158,10 +129,17 @@ class CarsController extends Controller
         return new CarResource($outputDto);
     }
 
-    private function outputErrorResponse()
+    private function getCarByParkingIdAndCarId($parkingId, $carId)
     {
-        $error = new ErrorDTO('Registro não encontrado', Response::HTTP_NOT_FOUND);
+        $car = $this->cars::where([
+            'parking_id' => $parkingId,
+            'id'         => $carId,
+        ])->first();
 
-        return response()->json($error->toArray(), Response::HTTP_NOT_FOUND);
+        if (!$car) {
+            return $this->outputResponse($car);
+        }
+
+        return $car;
     }
 }
