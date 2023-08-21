@@ -28,4 +28,5 @@ Route::patch('/car/output/{parking}/{car}', [CarsController::class, 'registersCa
 
 Route::apiResource('/employees', EmployeesController::class);
 Route::get('/employees/{parking}/{id}', [EmployeesController::class, 'show']);
+Route::patch('/employees/{parking}/{id}', [EmployeesController::class, 'update']);
 Route::delete('/employees/{parking}/{id}', [EmployeesController::class, 'destroy']);
