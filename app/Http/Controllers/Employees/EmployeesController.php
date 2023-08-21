@@ -57,25 +57,14 @@ class EmployeesController extends Controller
 
     public function show(string $parkingId, string $id)
     {
-        $employee = $this->employees::where([
-            'parking_id' => $parkingId,
-            'id'         => $id,
-        ])->first();
-
-        if (!$employee) {
-            return $this->outputResponse($employee);
-        }
+        $employee = $this->getEmployeeByParkingIdAndCarId($parkingId, $id);
 
         return $this->outputResponse($employee);
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $parkingId, string $id)
     {
-        $employee = $this->employees::find($id);
-
-        if (!$employee) {
-            return $this->outputResponse($employee);
-        }
+        $employee = $this->getEmployeeByParkingIdAndCarId($parkingId, $id);
 
         $dto = new EmployeesDTO(
             ...$request->only([
@@ -95,14 +84,7 @@ class EmployeesController extends Controller
 
     public function destroy(string $parkingId, string $id)
     {
-        $employee = $this->employees::where([
-            'parking_id' => $parkingId,
-            'id'         => $id,
-        ])->first();
-
-        if (!$employee) {
-            return $this->outputResponse($employee);
-        }
+        $employee = $this->getEmployeeByParkingIdAndCarId($parkingId, $id);
 
         $employee->delete();
 
@@ -133,5 +115,19 @@ class EmployeesController extends Controller
         );
 
         return new EmployeesResource($outputDto);
+    }
+
+    private function getEmployeeByParkingIdAndCarId($parkingId, $employeeId)
+    {
+        $employee = $this->employees::where([
+            'parking_id' => $parkingId,
+            'id'         => $employeeId,
+        ])->first();
+
+        if (!$employee) {
+            return $this->outputResponse($employee);
+        }
+
+        return $employee;
     }
 }
