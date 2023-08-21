@@ -54,22 +54,14 @@ class ParkingController extends Controller
 
     public function show(string $id)
     {
-        $parking = $this->parking::with('cars')->find($id);
-
-        if (!$parking) {
-            return $this->outputResponse($parking);
-        }
+        $parking = $this->getParkingById($id);
 
         return $this->outputResponse($parking);
     }
 
     public function update(Request $request, string $id)
     {
-        $parking = $this->parking::find($id);
-
-        if (!$parking) {
-            return $this->outputResponse($parking);
-        }
+        $parking = $this->getParkingById($id);
 
         $dto = new ParkingDTO(
             ...$request->only([
@@ -86,11 +78,7 @@ class ParkingController extends Controller
 
     public function destroy(string $id)
     {
-        $parking = $this->parking::find($id);
-
-        if (!$parking) {
-            return $this->outputResponse($parking);
-        }
+        $parking = $this->getParkingById($id);
 
         $parking->delete();
 
@@ -115,10 +103,21 @@ class ParkingController extends Controller
             $parking['created_at'] ?? null,
             $parking['cars'] ?? null,
             $parking['employees'] ?? null,
-            $error['erro'] ?? null,
+            $error['erro'] ?? false,
             $error['message'] ?? null
         );
 
         return new ParkingResource($outputDto);
+    }
+
+    private function getParkingById($parkingId)
+    {
+        $parking = $this->parking::with('cars')->find($parkingId);
+
+        if (!$parking) {
+            return $this->outputResponse($parking);
+        }
+
+        return $parking;
     }
 }
