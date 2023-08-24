@@ -6,6 +6,22 @@ use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
 use Illuminate\Contracts\Validation\Validator;
 
+/**
+ * @OA\Schema(
+ *     schema="OutputEmployeesDTO",
+ *     type="object",
+ *
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Pedro"),
+ *     @OA\Property(property="cpf", type="string", example="123123123"),
+ *     @OA\Property(property="email", type="string", example="exemplo@exemplo.com"),
+ *     @OA\Property(property="office", type="string", example="CEO"),
+ *     @OA\Property(property="active", type="boolean", example=true),
+ *     @OA\Property(property="parking_id", type="integer", example=1),
+ *     @OA\Property(property="erro", type="boolean", example=false),
+ *     @OA\Property(property="message", type="string", example=null),
+ * )
+ */
 class OutputEmployeesDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(

@@ -10,12 +10,38 @@ use App\Models\Parking;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/**
+ * Class ParkingController.
+ *
+ * @OA\Tag(
+ *     name="Estacionamento",
+ *     description="API endpoints de estacionamentos"
+ * )
+ */
 class ParkingController extends Controller
 {
     public function __construct(protected Parking $parking)
     {
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/parking",
+     *     summary="Buscar todas as informações",
+     *     tags={"Estacionamento"},
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             type="array",
+     *
+     *             @OA\Items(ref="#/components/schemas/ParkingResource")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $parkings = $this->parking::all();
@@ -37,6 +63,28 @@ class ParkingController extends Controller
         );
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/parking",
+     *     summary="Criar novo estacionamento",
+     *     tags={"Estacionamento"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(ref="#/components/schemas/ParkingDTO")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ParkingResource"
+     *         )
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $dto = new ParkingDTO(
@@ -52,16 +100,80 @@ class ParkingController extends Controller
         return $this->outputResponse($parking);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/parking/{id}",
+     *     summary="Buscar estacionamento pelo id",
+     *     tags={"Estacionamento"},
+     *
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ParkingResource"
+     *         )
+     *     )
+     * )
+     */
     public function show(string $id)
     {
         $parking = $this->getParkingById($id);
 
+        if ($parking->erro) {
+            return $parking;
+        }
+
         return $this->outputResponse($parking);
     }
 
+    /**
+     * @OA\Patch(
+     *     path="/api/parking/{id}",
+     *     summary="Atualizar estacionamento pelo id",
+     *     tags={"Estacionamento"},
+     *
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(ref="#/components/schemas/ParkingDTO")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/ParkingResource"
+     *         )
+     *     )
+     * )
+     */
     public function update(Request $request, string $id)
     {
         $parking = $this->getParkingById($id);
+
+        if ($parking->erro) {
+            return $parking;
+        }
 
         $dto = new ParkingDTO(
             ...$request->only([
@@ -76,9 +188,34 @@ class ParkingController extends Controller
         return $this->outputResponse($parking);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/parking/{id}",
+     *     summary="Deletar por ID",
+     *     tags={"Estacionamento"},
+     *
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=204,
+     *         description="No content"
+     *     )
+     * )
+     */
     public function destroy(string $id)
     {
         $parking = $this->getParkingById($id);
+
+        if ($parking->erro) {
+            return $parking;
+        }
 
         $parking->delete();
 

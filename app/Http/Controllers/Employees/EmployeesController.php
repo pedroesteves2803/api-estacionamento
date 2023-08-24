@@ -10,12 +10,38 @@ use App\Models\Employees;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/**
+ * Class ParkingController.
+ *
+ * @OA\Tag(
+ *     name="Funcionários",
+ *     description="API endpoints de funcionários"
+ * )
+ */
 class EmployeesController extends Controller
 {
     public function __construct(protected Employees $employees)
     {
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/employees",
+     *     summary="Buscar todas os funcionários",
+     *     tags={"Funcionários"},
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             type="array",
+     *
+     *             @OA\Items(ref="#/components/schemas/EmployeesResource")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $employees = $this->employees::all();
@@ -37,6 +63,28 @@ class EmployeesController extends Controller
         );
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/employees",
+     *     summary="Criar novo funcionário",
+     *     tags={"Funcionários"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(ref="#/components/schemas/EmployeesDTO")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/EmployeesResource"
+     *         )
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $dto = new EmployeesDTO(
@@ -55,16 +103,98 @@ class EmployeesController extends Controller
         return $this->outputResponse($employee);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/employees/{parking_id}/{employees_id}",
+     *     summary="Buscar funcionário por ID do estacionamento e ID do funcionário",
+     *     tags={"Funcionários"},
+     *
+     *     @OA\Parameter(
+     *         name="parking_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="employees_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do Funcionário",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/EmployeesResource"
+     *         )
+     *     )
+     * )
+     */
     public function show(string $parkingId, string $id)
     {
         $employee = $this->getEmployeeByParkingIdAndCarId($parkingId, $id);
 
+        if ($employee->erro) {
+            return $employee;
+        }
+
         return $this->outputResponse($employee);
     }
 
+    /**
+     * @OA\Patch(
+     *     path="/api/employees/{parking_id}/{employees_id}",
+     *     summary="Atualizar funcionário por ID do estacionamento e ID do funcionário",
+     *     tags={"Funcionários"},
+     *
+     *     @OA\Parameter(
+     *         name="parking_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="employees_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do funcionário",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(ref="#/components/schemas/EmployeesDTO")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/EmployeesResource"
+     *         )
+     *     )
+     * )
+     */
     public function update(Request $request, string $parkingId, string $id)
     {
         $employee = $this->getEmployeeByParkingIdAndCarId($parkingId, $id);
+
+        if ($employee->erro) {
+            return $employee;
+        }
 
         $dto = new EmployeesDTO(
             ...$request->only([
@@ -82,9 +212,43 @@ class EmployeesController extends Controller
         return $this->outputResponse($employee);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/employees/{parking_id}/{employees_id}",
+     *     summary="Deletar funcionário por ID do estacionamento e ID do funcionário",
+     *     tags={"Funcionários"},
+     *
+     *     @OA\Parameter(
+     *         name="parking_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="employees_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do funcionário",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=204,
+     *         description="No content"
+     *     )
+     * )
+     */
     public function destroy(string $parkingId, string $id)
     {
         $employee = $this->getEmployeeByParkingIdAndCarId($parkingId, $id);
+
+        if ($employee->erro) {
+            return $employee;
+        }
 
         $employee->delete();
 

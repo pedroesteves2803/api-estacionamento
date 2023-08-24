@@ -7,6 +7,27 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @OA\Schema(
+ *     schema="CarResource",
+ *     type="object",
+ *
+ *     @OA\Property(property="errors", type="boolean"),
+ *     @OA\Property(property="message", type="string"),
+ *     @OA\Property(
+ *         property="content",
+ *         type="object",
+ *         @OA\Property(property="id", type="integer"),
+ *         @OA\Property(property="placa", type="string"),
+ *         @OA\Property(property="modelo", type="strign"),
+ *         @OA\Property(property="cor", type="string"),
+ *         @OA\Property(property="entrada", type="string", format="date"),
+ *         @OA\Property(property="estacionamento_id", type="integer"),
+ *         @OA\Property(property="saida", type="string", format="date"),
+ *         @OA\Property(property="valor_para_pagamento", type="string"),
+ *     ),
+ * )
+ */
 class CarResource extends JsonResource
 {
     public function toArray(Request $request): array

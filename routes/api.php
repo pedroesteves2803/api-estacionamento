@@ -17,8 +17,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::apiResource('/parking', ParkingController::class);
-Route::delete('/car/{id}', [ParkingController::class, 'destroy']);
-Route::patch('/car/{id}', [ParkingController::class, 'update']);
 
 Route::apiResource('/car', CarsController::class);
 Route::get('/car/{parking}/{id}', [CarsController::class, 'show']);

@@ -7,6 +7,17 @@ use App\Dtos\InterfaceDTO;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
 
+/**
+ * @OA\Schema(
+ *     schema="CarsDTO",
+ *     type="object",
+ *
+ *     @OA\Property(property="plate", type="string", example="ABC-123"),
+ *     @OA\Property(property="model", type="string", example="Uno"),
+ *     @OA\Property(property="color", type="string", example="Verde"),
+ *     @OA\Property(property="parking_id", type="integer", example=1),
+ * )
+ */
 class CarsDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
@@ -24,7 +35,7 @@ class CarsDTO extends AbstractDTO implements InterfaceDTO
             'plate' => [
                 'required',
                 'string',
-                Rule::unique('cars')->ignore(request()->cars),
+                Rule::unique('cars')->ignore(request()->id),
             ],
 
             'model' => [

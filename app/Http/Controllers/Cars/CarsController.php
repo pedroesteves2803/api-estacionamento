@@ -10,12 +10,38 @@ use App\Models\Car;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/**
+ * Class CarsController.
+ *
+ * @OA\Tag(
+ *     name="Carros",
+ *     description="API endpoints de carros"
+ * )
+ */
 class CarsController extends Controller
 {
     public function __construct(protected Car $cars)
     {
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/car",
+     *     summary="Buscar todas as informações",
+     *     tags={"Carros"},
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             type="array",
+     *
+     *             @OA\Items(ref="#/components/schemas/CarResource")
+     *         )
+     *     )
+     * )
+     */
     public function index()
     {
         $cars = $this->cars::all();
@@ -36,6 +62,28 @@ class CarsController extends Controller
         );
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/car",
+     *     summary="Criar novo carro",
+     *     tags={"Carros"},
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(ref="#/components/schemas/CarsDTO")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/CarResource"
+     *         )
+     *     )
+     * )
+     */
     public function store(Request $request)
     {
         $dto = new CarsDTO(
@@ -56,16 +104,98 @@ class CarsController extends Controller
         return $this->outputResponse($car);
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/car/{parking_id}/{car_id}",
+     *     summary="Buscar carro por ID do estacionamento e ID do carro",
+     *     tags={"Carros"},
+     *
+     *     @OA\Parameter(
+     *         name="parking_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="car_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do carro",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/CarResource"
+     *         )
+     *     )
+     * )
+     */
     public function show(string $parkingId, string $id)
     {
         $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
+        if ($car->erro) {
+            return $car;
+        }
+
         return $this->outputResponse($car);
     }
 
+    /**
+     * @OA\Patch(
+     *     path="/api/car/{parking_id}/{car_id}",
+     *     summary="Atualizar carro por ID do estacionamento e ID do carro",
+     *     tags={"Carros"},
+     *
+     *     @OA\Parameter(
+     *         name="parking_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="car_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do carro",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\RequestBody(
+     *         required=true,
+     *
+     *         @OA\JsonContent(ref="#/components/schemas/CarsDTO")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/CarResource"
+     *         )
+     *     )
+     * )
+     */
     public function update(Request $request, string $parkingId, string $id)
     {
         $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
+
+        if ($car->erro) {
+            return $car;
+        }
 
         $dto = new CarsDTO(
             ...$request->only([
@@ -81,9 +211,47 @@ class CarsController extends Controller
         return $this->outputResponse($car);
     }
 
+    /**
+     * @OA\Patch(
+     *     path="/api/car/output/{parking_id}/{car_id}",
+     *     summary="Adiconar saida para por ID do estacionamento e ID do carro",
+     *     tags={"Carros"},
+     *
+     *     @OA\Parameter(
+     *         name="parking_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="car_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do carro",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=200,
+     *         description="Resposta bem sucedida",
+     *
+     *         @OA\JsonContent(
+     *             ref="#/components/schemas/CarResource"
+     *         )
+     *     )
+     * )
+     */
     public function registersCarExit(string $parkingId, string $id)
     {
         $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
+
+        if ($car->erro) {
+            return $car;
+        }
 
         $car->output = now();
         $car->save();
@@ -93,9 +261,44 @@ class CarsController extends Controller
         return $this->outputResponse($car);
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/car/{parking_id}/{car_id}",
+     *     summary="Deletar carro por ID do estacionamento e ID do funcionário",
+     *
+     *     tags={"Carros"},
+     *
+     *     @OA\Parameter(
+     *         name="parking_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Parameter(
+     *         name="car_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do carro",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
+     *
+     *     @OA\Response(
+     *         response=204,
+     *         description="No content"
+     *     )
+     * )
+     */
     public function destroy(string $parkingId, string $id)
     {
         $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
+
+        if ($car->erro) {
+            return $car;
+        }
 
         $car->delete();
 

@@ -6,6 +6,22 @@ use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
 use Illuminate\Contracts\Validation\Validator;
 
+/**
+ * @OA\Schema(
+ *     schema="OutputCarsDTO",
+ *     type="object",
+ *
+ *     @OA\Property(property="plate", type="string", example="ABC-123"),
+ *     @OA\Property(property="model", type="string", example="Uno"),
+ *     @OA\Property(property="color", type="string", example="Verde"),
+ *     @OA\Property(property="input", type="string", example="2023-08-24", format="date"),
+ *     @OA\Property(property="parking_id", type="integer", example=1),
+ *     @OA\Property(property="output", type="string", example="2023-08-24", format="date"),
+ *     @OA\Property(property="amountToBePaid", type="string", example="100"),
+ *     @OA\Property(property="erro", type="boolean", example=1),
+ *     @OA\Property(property="message", type="string", example="Erro"),
+ * )
+ */
 class OutputCarsDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(

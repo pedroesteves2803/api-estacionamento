@@ -1,0 +1,861 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Estacionamento API",
+        "version": "0.1"
+    },
+    "paths": {
+        "/api/car": {
+            "get": {
+                "tags": [
+                    "Carros"
+                ],
+                "summary": "Buscar todas as informações",
+                "operationId": "ad16506d8ae145d931d69365fdd67765",
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CarResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Carros"
+                ],
+                "summary": "Criar novo carro",
+                "operationId": "f8c3a41fbed6397a429d561fd82e0b62",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CarsDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/car/{parking_id}/{car_id}": {
+            "get": {
+                "tags": [
+                    "Carros"
+                ],
+                "summary": "Buscar carro por ID do estacionamento e ID do carro",
+                "operationId": "63b8a41fa2907b5d27063bcf68b698f2",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "car_id",
+                        "in": "path",
+                        "description": "ID do carro",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Carros"
+                ],
+                "summary": "Deletar carro por ID do estacionamento e ID do funcionário",
+                "operationId": "f0f8d3d3ea06554e03a0698a77ae7c36",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "car_id",
+                        "in": "path",
+                        "description": "ID do carro",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Carros"
+                ],
+                "summary": "Atualizar carro por ID do estacionamento e ID do carro",
+                "operationId": "4a69a074addcb17150091b61e9e53aa0",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "car_id",
+                        "in": "path",
+                        "description": "ID do carro",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CarsDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/car/output/{parking_id}/{car_id}": {
+            "patch": {
+                "tags": [
+                    "Carros"
+                ],
+                "summary": "Adiconar saida para por ID do estacionamento e ID do carro",
+                "operationId": "8fe341668cea40f2f91ce859cfba5f97",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "car_id",
+                        "in": "path",
+                        "description": "ID do carro",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CarResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/employees": {
+            "get": {
+                "tags": [
+                    "Funcionários"
+                ],
+                "summary": "Buscar todas os funcionários",
+                "operationId": "e7707cd772b42c62a4f8dcec4eac24dd",
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/EmployeesResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Funcionários"
+                ],
+                "summary": "Criar novo funcionário",
+                "operationId": "8feefa7a242d755fa119bf6a4d8ca6f1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeesDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeesResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/employees/{parking_id}/{employees_id}": {
+            "get": {
+                "tags": [
+                    "Funcionários"
+                ],
+                "summary": "Buscar funcionário por ID do estacionamento e ID do funcionário",
+                "operationId": "48d4d5f395f6030705814c50aebf4c86",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "employees_id",
+                        "in": "path",
+                        "description": "ID do Funcionário",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeesResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Funcionários"
+                ],
+                "summary": "Deletar funcionário por ID do estacionamento e ID do funcionário",
+                "operationId": "4994cac8fb13fdb5cd0c89dbc007ab09",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "employees_id",
+                        "in": "path",
+                        "description": "ID do funcionário",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Funcionários"
+                ],
+                "summary": "Atualizar funcionário por ID do estacionamento e ID do funcionário",
+                "operationId": "c0b6fa5f3f63b72ad1f6e4db7e74d03a",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "employees_id",
+                        "in": "path",
+                        "description": "ID do funcionário",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/EmployeesDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EmployeesResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/parking": {
+            "get": {
+                "tags": [
+                    "Estacionamento"
+                ],
+                "summary": "Buscar todas as informações",
+                "operationId": "0860ca8ede2e9d07b0fee76d4c7478e7",
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ParkingResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Estacionamento"
+                ],
+                "summary": "Criar novo estacionamento",
+                "operationId": "6dd607e2f83930164d6ed33eb3af6875",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ParkingDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ParkingResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/parking/{id}": {
+            "get": {
+                "tags": [
+                    "Estacionamento"
+                ],
+                "summary": "Buscar estacionamento pelo id",
+                "operationId": "8824adde947cc86432f5f581ec21259d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ParkingResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Estacionamento"
+                ],
+                "summary": "Deletar por ID",
+                "operationId": "b0545907c9f2311287f7c69d193416f9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Estacionamento"
+                ],
+                "summary": "Atualizar estacionamento pelo id",
+                "operationId": "cec41ce10b0e4f39189a589cd2b39ee9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ParkingDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ParkingResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CarsDTO": {
+                "properties": {
+                    "plate": {
+                        "type": "string",
+                        "example": "ABC-123"
+                    },
+                    "model": {
+                        "type": "string",
+                        "example": "Uno"
+                    },
+                    "color": {
+                        "type": "string",
+                        "example": "Verde"
+                    },
+                    "parking_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "OutputCarsDTO": {
+                "properties": {
+                    "plate": {
+                        "type": "string",
+                        "example": "ABC-123"
+                    },
+                    "model": {
+                        "type": "string",
+                        "example": "Uno"
+                    },
+                    "color": {
+                        "type": "string",
+                        "example": "Verde"
+                    },
+                    "input": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-08-24"
+                    },
+                    "parking_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "output": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2023-08-24"
+                    },
+                    "amountToBePaid": {
+                        "type": "string",
+                        "example": "100"
+                    },
+                    "erro": {
+                        "type": "boolean",
+                        "example": 1
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Erro"
+                    }
+                },
+                "type": "object"
+            },
+            "EmployeesDTO": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Pedro"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "123123123"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "exemplo@exemplo.com"
+                    },
+                    "office": {
+                        "type": "string",
+                        "example": "CEO"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "parking_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "OutputEmployeesDTO": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Pedro"
+                    },
+                    "cpf": {
+                        "type": "string",
+                        "example": "123123123"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "exemplo@exemplo.com"
+                    },
+                    "office": {
+                        "type": "string",
+                        "example": "CEO"
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "parking_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "erro": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": null
+                    }
+                },
+                "type": "object"
+            },
+            "OutputParkingDTO": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Estacionamento A"
+                    },
+                    "numberOfVacancies": {
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "erro": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": null
+                    }
+                },
+                "type": "object"
+            },
+            "ParkingDTO": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Estacionamento A"
+                    },
+                    "numberOfVacancies": {
+                        "type": "integer",
+                        "example": 50
+                    },
+                    "active": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "CarResource": {
+                "properties": {
+                    "errors": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "placa": {
+                                "type": "string"
+                            },
+                            "modelo": {
+                                "type": "strign"
+                            },
+                            "cor": {
+                                "type": "string"
+                            },
+                            "entrada": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "estacionamento_id": {
+                                "type": "integer"
+                            },
+                            "saida": {
+                                "type": "string",
+                                "format": "date"
+                            },
+                            "valor_para_pagamento": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "EmployeesResource": {
+                "properties": {
+                    "errors": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "nome": {
+                                "type": "string"
+                            },
+                            "cpf": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            },
+                            "cargo": {
+                                "type": "string"
+                            },
+                            "ativo": {
+                                "type": "boolean"
+                            },
+                            "estacionamento_id": {
+                                "type": "integer"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "ParkingResource": {
+                "properties": {
+                    "errors": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "nome": {
+                                "type": "string"
+                            },
+                            "numero_de_vagas": {
+                                "type": "integer"
+                            },
+                            "ativo": {
+                                "type": "boolean"
+                            },
+                            "criado": {
+                                "type": "string",
+                                "format": "date"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Carros",
+            "description": "API endpoints de carros"
+        },
+        {
+            "name": "Funcionários",
+            "description": "API endpoints de funcionários"
+        },
+        {
+            "name": "Estacionamento",
+            "description": "API endpoints de estacionamentos"
+        }
+    ]
+}

@@ -7,6 +7,19 @@ use App\Dtos\InterfaceDTO;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
 
+/**
+ * @OA\Schema(
+ *     schema="EmployeesDTO",
+ *     type="object",
+ *
+ *     @OA\Property(property="name", type="string", example="Pedro"),
+ *     @OA\Property(property="cpf", type="string", example="123123123"),
+ *     @OA\Property(property="email", type="string", example="exemplo@exemplo.com"),
+ *     @OA\Property(property="office", type="string", example="CEO"),
+ *     @OA\Property(property="active", type="boolean", example=true),
+ *     @OA\Property(property="parking_id", type="integer", example=1),
+ * )
+ */
 class EmployeesDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
@@ -26,18 +39,18 @@ class EmployeesDTO extends AbstractDTO implements InterfaceDTO
             'name' => [
                 'required',
                 'string',
-                Rule::unique('employees')->ignore(request()->employees),
             ],
 
             'cpf' => [
                 'required',
                 'string',
-                Rule::unique('employees')->ignore(request()->employees),
+                Rule::unique('employees')->ignore(request()->id),
             ],
 
             'email' => [
                 'required',
                 'string',
+                Rule::unique('employees')->ignore(request()->id),
             ],
 
             'office' => [

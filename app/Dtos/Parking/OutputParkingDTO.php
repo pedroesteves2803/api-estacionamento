@@ -7,6 +7,20 @@ use App\Dtos\InterfaceDTO;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Collection;
 
+/**
+ * @OA\Schema(
+ *     schema="OutputParkingDTO",
+ *     type="object",
+ *
+ *     @OA\Property(property="id", type="integer", example=1),
+ *     @OA\Property(property="name", type="string", example="Estacionamento A"),
+ *     @OA\Property(property="numberOfVacancies", type="integer", example=50),
+ *     @OA\Property(property="active", type="boolean", example=true),
+ *     @OA\Property(property="created_at", type="string", format="date-time"),
+ *     @OA\Property(property="erro", type="boolean", example=false),
+ *     @OA\Property(property="message", type="string", example=null),
+ * )
+ */
 class OutputParkingDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(

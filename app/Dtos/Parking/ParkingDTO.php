@@ -7,6 +7,16 @@ use App\Dtos\InterfaceDTO;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
 
+/**
+ * @OA\Schema(
+ *     schema="ParkingDTO",
+ *     type="object",
+ *
+ *     @OA\Property(property="name", type="string", example="Estacionamento A"),
+ *     @OA\Property(property="numberOfVacancies", type="integer", example=50),
+ *     @OA\Property(property="active", type="boolean", example=true),
+ * )
+ */
 class ParkingDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
