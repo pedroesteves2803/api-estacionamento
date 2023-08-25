@@ -214,7 +214,7 @@ class CarsController extends Controller
     /**
      * @OA\Patch(
      *     path="/api/car/output/{parking_id}/{car_id}",
-     *     summary="Adiconar saida para por ID do estacionamento e ID do carro",
+     *     summary="Adicionar saida para por ID do estacionamento e ID do carro",
      *     tags={"Carros"},
      *
      *     @OA\Parameter(
