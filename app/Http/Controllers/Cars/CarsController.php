@@ -29,6 +29,7 @@ class CarsController extends Controller
      *     path="/api/car",
      *     summary="Buscar todas as informações",
      *     tags={"Carros"},
+     *     security={{ "bearerAuth": {} }},
      *
      *     @OA\Response(
      *         response=200,
@@ -67,6 +68,7 @@ class CarsController extends Controller
      *     path="/api/car",
      *     summary="Criar novo carro",
      *     tags={"Carros"},
+     *     security={{ "bearerAuth": {} }},
      *
      *     @OA\RequestBody(
      *         required=true,
@@ -109,6 +111,7 @@ class CarsController extends Controller
      *     path="/api/car/{parking_id}/{car_id}",
      *     summary="Buscar carro por ID do estacionamento e ID do carro",
      *     tags={"Carros"},
+     *     security={{ "bearerAuth": {} }},
      *
      *     @OA\Parameter(
      *         name="parking_id",
@@ -154,6 +157,7 @@ class CarsController extends Controller
      *     path="/api/car/{parking_id}/{car_id}",
      *     summary="Atualizar carro por ID do estacionamento e ID do carro",
      *     tags={"Carros"},
+     *     security={{ "bearerAuth": {} }},
      *
      *     @OA\Parameter(
      *         name="parking_id",

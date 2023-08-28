@@ -5,6 +5,37 @@
         "version": "0.1"
     },
     "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Autenticar na API",
+                "operationId": "9194184ef6980e24638f86aefc3086de",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AuthDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/car": {
             "get": {
                 "tags": [
@@ -26,7 +57,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -55,7 +91,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/car/{parking_id}/{car_id}": {
@@ -96,7 +137,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -177,7 +223,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/car/output/{parking_id}/{car_id}": {
@@ -185,7 +236,7 @@
                 "tags": [
                     "Carros"
                 ],
-                "summary": "Adiconar saida para por ID do estacionamento e ID do carro",
+                "summary": "Adicionar saida para por ID do estacionamento e ID do carro",
                 "operationId": "8fe341668cea40f2f91ce859cfba5f97",
                 "parameters": [
                     {
@@ -242,7 +293,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -271,7 +327,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/employees/{parking_id}/{employees_id}": {
@@ -312,7 +373,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -344,7 +410,12 @@
                     "204": {
                         "description": "No content"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -393,7 +464,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/parking": {
@@ -417,7 +493,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "tags": [
@@ -446,7 +527,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/parking/{id}": {
@@ -478,7 +564,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "tags": [
@@ -501,7 +592,12 @@
                     "204": {
                         "description": "No content"
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             },
             "patch": {
                 "tags": [
@@ -541,12 +637,51 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         }
     },
     "components": {
         "schemas": {
+            "AuthDTO": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "example": "teste@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "12345678"
+                    },
+                    "device_name": {
+                        "type": "string",
+                        "example": "Test"
+                    }
+                },
+                "type": "object"
+            },
+            "OutputAuthDTO": {
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "example": "1|dfsdsdfjhkdshkhdfskjhfjkshfksfhkdshfksjfh"
+                    },
+                    "erro": {
+                        "type": "boolean",
+                        "example": 1
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": "Erro"
+                    }
+                },
+                "type": "object"
+            },
             "CarsDTO": {
                 "properties": {
                     "plate": {
@@ -731,6 +866,25 @@
                 },
                 "type": "object"
             },
+            "AuthResource": {
+                "properties": {
+                    "errors": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "properties": {
+                            "token": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
             "CarResource": {
                 "properties": {
                     "errors": {
@@ -841,6 +995,14 @@
                     }
                 },
                 "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "name": "Autenticação",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
             }
         }
     },
