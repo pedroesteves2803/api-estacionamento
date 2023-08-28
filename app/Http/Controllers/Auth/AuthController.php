@@ -8,14 +8,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * @OA\SecurityScheme(
  *     name="Autenticação",
  *     type="http",
  *     scheme="bearer",
- *     bearerFormat="JWT",
- *     securityScheme="bearerAuth"
+ *     bearerFormat="API token",
+ *     securityScheme="Autenticação"
+ *
  * )
  */
 class AuthController extends Controller
@@ -54,7 +56,7 @@ class AuthController extends Controller
 
         $user = User::where('email', $authDTO->email)->first();
 
-        if (!$user) {
+        if (!$user or !Hash::check($request->password, $user->password)) {
             return $this->outputResponse(null);
         }
 

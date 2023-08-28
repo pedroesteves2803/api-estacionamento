@@ -60,7 +60,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             },
@@ -94,7 +94,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             }
@@ -140,7 +140,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             },
@@ -226,7 +226,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             }
@@ -296,7 +296,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             },
@@ -330,7 +330,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             }
@@ -376,7 +376,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             },
@@ -413,7 +413,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             },
@@ -467,7 +467,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             }
@@ -496,7 +496,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             },
@@ -530,7 +530,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             }
@@ -567,7 +567,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             },
@@ -595,7 +595,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             },
@@ -640,7 +640,7 @@
                 },
                 "security": [
                     {
-                        "bearerAuth": []
+                        "Autenticação": []
                     }
                 ]
             }
@@ -998,10 +998,10 @@
             }
         },
         "securitySchemes": {
-            "bearerAuth": {
+            "Autenticação": {
                 "type": "http",
                 "name": "Autenticação",
-                "bearerFormat": "JWT",
+                "bearerFormat": "API token",
                 "scheme": "bearer"
             }
         }

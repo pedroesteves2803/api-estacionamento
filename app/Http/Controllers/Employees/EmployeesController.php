@@ -29,7 +29,7 @@ class EmployeesController extends Controller
      *     path="/api/employees",
      *     summary="Buscar todas os funcionários",
      *     tags={"Funcionários"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\Response(
      *         response=200,
@@ -69,7 +69,7 @@ class EmployeesController extends Controller
      *     path="/api/employees",
      *     summary="Criar novo funcionário",
      *     tags={"Funcionários"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\RequestBody(
      *         required=true,
@@ -110,7 +110,7 @@ class EmployeesController extends Controller
      *     path="/api/employees/{parking_id}/{employees_id}",
      *     summary="Buscar funcionário por ID do estacionamento e ID do funcionário",
      *     tags={"Funcionários"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\Parameter(
      *         name="parking_id",
@@ -156,7 +156,7 @@ class EmployeesController extends Controller
      *     path="/api/employees/{parking_id}/{employees_id}",
      *     summary="Atualizar funcionário por ID do estacionamento e ID do funcionário",
      *     tags={"Funcionários"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\Parameter(
      *         name="parking_id",
@@ -221,7 +221,7 @@ class EmployeesController extends Controller
      *     path="/api/employees/{parking_id}/{employees_id}",
      *     summary="Deletar funcionário por ID do estacionamento e ID do funcionário",
      *     tags={"Funcionários"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\Parameter(
      *         name="parking_id",

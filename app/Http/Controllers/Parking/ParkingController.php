@@ -30,7 +30,7 @@ class ParkingController extends Controller
      *     path="/api/parking",
      *     summary="Buscar todas as informações",
      *     tags={"Estacionamento"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\Response(
      *         response=200,
@@ -70,7 +70,7 @@ class ParkingController extends Controller
      *     path="/api/parking",
      *     summary="Criar novo estacionamento",
      *     tags={"Estacionamento"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\RequestBody(
      *         required=true,
@@ -108,7 +108,7 @@ class ParkingController extends Controller
      *     path="/api/parking/{id}",
      *     summary="Buscar estacionamento pelo id",
      *     tags={"Estacionamento"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\Parameter(
      *         name="id",
@@ -145,7 +145,7 @@ class ParkingController extends Controller
      *     path="/api/parking/{id}",
      *     summary="Atualizar estacionamento pelo id",
      *     tags={"Estacionamento"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\Parameter(
      *         name="id",
@@ -198,7 +198,7 @@ class ParkingController extends Controller
      *     path="/api/parking/{id}",
      *     summary="Deletar por ID",
      *     tags={"Estacionamento"},
-     *     security={{ "bearerAuth": {} }},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\Parameter(
      *         name="id",
