@@ -12,7 +12,6 @@ class ParkingTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->withoutMiddleware(\Illuminate\Auth\Middleware\Authenticate::class);
 
         $this->user = User::factory()->create();
     }
