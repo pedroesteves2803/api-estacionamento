@@ -88,6 +88,11 @@ class CarsController extends Controller
      */
     public function store(Request $request)
     {
+
+        if(empty($request->all())){
+            return $this->outputResponse(null, 'Não foi possivel adicionar um novo carro!');
+        }
+
         $dto = new CarsDTO(
             ...$request->only([
                 'plate',
@@ -220,6 +225,7 @@ class CarsController extends Controller
      *     path="/api/car/output/{parking_id}/{car_id}",
      *     summary="Adicionar saida para por ID do estacionamento e ID do carro",
      *     tags={"Carros"},
+     *     security={{ "Autenticação": {} }},
      *
      *     @OA\Parameter(
      *         name="parking_id",
@@ -309,14 +315,14 @@ class CarsController extends Controller
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse($car)
+    private function outputResponse($car, $message = 'Registro não encontrado')
     {
         $error = [];
 
         if (is_null($car)) {
             $error = [
                 'erro'    => true,
-                'message' => 'Registro não encontrado',
+                'message' => $message,
             ];
         }
 

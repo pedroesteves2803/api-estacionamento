@@ -4,6 +4,7 @@ namespace App\Dtos\Cars;
 
 use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
 
@@ -51,6 +52,11 @@ class CarsDTO extends AbstractDTO implements InterfaceDTO
             'parking_id' => [
                 'required',
                 'int',
+                Rule::exists('parkings', 'id')->where(function ($query) {
+                    if(!empty(request()->input('parking_id'))){
+                        $query->where('id', request()->input('parking_id'));
+                    }
+                }),
             ],
         ];
     }
