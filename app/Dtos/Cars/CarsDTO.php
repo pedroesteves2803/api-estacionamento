@@ -4,6 +4,7 @@ namespace App\Dtos\Cars;
 
 use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
+use App\Rules\ValidatePlate;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Validation\Rule;
 
@@ -35,6 +36,7 @@ class CarsDTO extends AbstractDTO implements InterfaceDTO
             'plate' => [
                 'required',
                 'string',
+                new ValidatePlate(),
                 Rule::unique('cars')->ignore(request()->id),
             ],
 
@@ -51,6 +53,11 @@ class CarsDTO extends AbstractDTO implements InterfaceDTO
             'parking_id' => [
                 'required',
                 'int',
+                Rule::exists('parkings', 'id')->where(function ($query) {
+                    if (!empty(request()->input('parking_id'))) {
+                        $query->where('id', request()->input('parking_id'));
+                    }
+                }),
             ],
         ];
     }
