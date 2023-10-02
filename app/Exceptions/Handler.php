@@ -6,6 +6,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
+
     /**
      * The list of the inputs that are never flashed to the session on validation exceptions.
      *
@@ -25,4 +26,5 @@ class Handler extends ExceptionHandler
         $this->reportable(function (\Throwable $e) {
         });
     }
+
 }

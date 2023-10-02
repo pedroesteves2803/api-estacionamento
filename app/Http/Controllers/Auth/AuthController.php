@@ -7,8 +7,10 @@ use App\Dtos\Auth\OutputAuthDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 /**
  * @OA\SecurityScheme(
@@ -44,7 +46,7 @@ class AuthController extends Controller
      *     )
      * )
      */
-    public function auth(Request $request)
+    public function login(Request $request)
     {
         $requestData = $request->only([
             'email',
@@ -54,11 +56,11 @@ class AuthController extends Controller
 
         $authDTO = new AuthDTO(...$requestData);
 
-        $user = User::where('email', $authDTO->email)->first();
-
-        if (!$user or !Hash::check($request->password, $user->password)) {
+        if (!Auth::attempt($authDTO)) {
             return $this->outputResponse(null);
         }
+
+        $user = Auth::user();
 
         $user->tokens()->delete();
 
