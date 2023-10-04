@@ -88,7 +88,7 @@ class CarsController extends Controller
      */
     public function store(Request $request)
     {
-        if(empty($request->all())){
+        if (empty($request->all())) {
             return $this->outputResponse(null, 'Não foi possivel adicionar um novo carro!');
         }
 
