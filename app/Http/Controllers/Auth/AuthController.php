@@ -47,13 +47,13 @@ class AuthController extends Controller
     {
         $requestData = $request->only([
             'email',
-            'password',
-            'device_name',
+            'password'
         ]);
 
         $authDTO = new AuthDTO(...$requestData);
 
-        if (!Auth::attempt($authDTO)) {
+
+        if (!Auth::attempt($authDTO->toArray())) {
             return $this->outputResponse(null);
         }
 
@@ -61,7 +61,7 @@ class AuthController extends Controller
 
         $user->tokens()->delete();
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
+        $token = $user->createToken($user->device_name)->plainTextToken;
 
         return $this->outputResponse($token);
     }

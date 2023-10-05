@@ -13,15 +13,13 @@ use Illuminate\Contracts\Validation\Validator;
  *
  *     @OA\Property(property="email", type="string", example="teste@example.com"),
  *     @OA\Property(property="password", type="string", example="12345678"),
- *     @OA\Property(property="device_name", type="string", example="Test"),
  * )
  */
 class AuthDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
         public readonly string $email,
-        public readonly string $password,
-        public readonly string $device_name,
+        public readonly string $password
     ) {
         $this->validate();
     }
@@ -36,11 +34,6 @@ class AuthDTO extends AbstractDTO implements InterfaceDTO
             ],
 
             'password' => [
-                'required',
-                'string',
-            ],
-
-            'device_name' => [
                 'required',
                 'string',
             ],

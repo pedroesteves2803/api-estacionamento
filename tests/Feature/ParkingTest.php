@@ -11,6 +11,10 @@ class ParkingTest extends TestCase
 {
     use RefreshDatabase;
 
+    const API_LOGIN_PATH = '/api/login';
+    const API_PARKING_PATH = '/api/parking';
+    const UNAUTHENTICATED_MESSAGE = 'Unauthenticated.';
+
     protected $user;
     protected $token;
 
@@ -22,12 +26,31 @@ class ParkingTest extends TestCase
         $this->token = $this->user->createToken($this->user->device_name)->plainTextToken;
     }
 
+    public function testLogin(){
+
+        $body = [
+            'email' => $this->user->email,
+            'password' => 'password',
+        ];
+
+        $response = $this->withHeaders([
+            'Accept'        => 'application/json',
+        ])->post(self::API_LOGIN_PATH, $body);
+
+        $this->token = $response->json()['data']['content']['token'];
+
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'data' => [],
+            ]);
+    }
+
     public function testGetParkings(): void
     {
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '.$this->token,
             'Accept'        => 'application/json',
-        ])->get('/api/parking');
+        ])->get(self::API_PARKING_PATH);
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -46,7 +69,7 @@ class ParkingTest extends TestCase
         $response = $this->withHeaders([
             'Authorization' => 'Bearer '.$this->token,
             'Accept'        => 'application/json',
-        ])->post('/api/parking', $body);
+        ])->post(self::API_PARKING_PATH, $body);
 
         $response->assertStatus(200);
 
@@ -119,10 +142,10 @@ class ParkingTest extends TestCase
     {
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-        ])->get('/api/parking');
+        ])->get(self::API_PARKING_PATH);
 
         $response->assertStatus(401);
-        $this->assertEquals($response['message'], 'Unauthenticated.');
+        $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
     public function testCreateNotAuthenticate(): void
@@ -135,10 +158,10 @@ class ParkingTest extends TestCase
 
         $response = $this->withHeaders([
             'Accept' => 'application/json',
-        ])->post('/api/parking', $body);
+        ])->post(self::API_PARKING_PATH, $body);
 
         $response->assertStatus(401);
-        $this->assertEquals($response['message'], 'Unauthenticated.');
+        $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
     public function testUpdateParkingNotAuthenticate(): void
@@ -156,7 +179,7 @@ class ParkingTest extends TestCase
         ])->patch("/api/parking/{$parking->id}", $body);
 
         $response->assertStatus(401);
-        $this->assertEquals($response['message'], 'Unauthenticated.');
+        $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
     public function testGetParkingByIdNotAuthenticate(): void
@@ -168,7 +191,7 @@ class ParkingTest extends TestCase
         ])->get("/api/parking/{$parking->id}");
 
         $response->assertStatus(401);
-        $this->assertEquals($response['message'], 'Unauthenticated.');
+        $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
     public function testDeleteByIdNotAuthenticate(): void
@@ -180,6 +203,8 @@ class ParkingTest extends TestCase
         ])->delete("/api/parking/{$parking->id}");
 
         $response->assertStatus(401);
-        $this->assertEquals($response['message'], 'Unauthenticated.');
+        $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
+
+
 }

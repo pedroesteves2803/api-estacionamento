@@ -11,7 +11,7 @@
                     "Autenticação"
                 ],
                 "summary": "Autenticar na API",
-                "operationId": "9194184ef6980e24638f86aefc3086de",
+                "operationId": "c373bc4cffa4a56fc64e3979b8ee7b96",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -662,10 +662,6 @@
                     "password": {
                         "type": "string",
                         "example": "12345678"
-                    },
-                    "device_name": {
-                        "type": "string",
-                        "example": "Test"
                     }
                 },
                 "type": "object"
