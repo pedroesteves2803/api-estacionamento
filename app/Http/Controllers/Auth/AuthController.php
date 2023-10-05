@@ -6,11 +6,8 @@ use App\Dtos\Auth\AuthDTO;
 use App\Dtos\Auth\OutputAuthDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\AuthResource;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 
 /**
  * @OA\SecurityScheme(

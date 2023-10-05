@@ -19,4 +19,5 @@ yarn-error.log
 /.vscode
 /tools
 .php-cs-fixer.cache
+/tests/Logs
 

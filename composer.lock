@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f6b8fc0f374cc1a7ca50dab5fc542f24",
+    "content-hash": "678ebb5520d4020aea863b8633d52b3b",
     "packages": [
         {
             "name": "brick/math",
@@ -1127,16 +1127,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v10.25.2",
+            "version": "v10.26.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "6014dd456b414b305fb0b408404efdcec18e64bc"
+                "reference": "6e5440f7c518f26b4495e5d7e4796ec239e26df9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/6014dd456b414b305fb0b408404efdcec18e64bc",
-                "reference": "6014dd456b414b305fb0b408404efdcec18e64bc",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/6e5440f7c518f26b4495e5d7e4796ec239e26df9",
+                "reference": "6e5440f7c518f26b4495e5d7e4796ec239e26df9",
                 "shasum": ""
             },
             "require": {
@@ -1323,20 +1323,20 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2023-09-28T14:08:59+00:00"
+            "time": "2023-10-03T14:24:20+00:00"
         },
         {
             "name": "laravel/prompts",
-            "version": "v0.1.10",
+            "version": "v0.1.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/prompts.git",
-                "reference": "37ed55f6950d921a87d5beeab16d03f8de26b060"
+                "reference": "cce65a90e64712909ea1adc033e1d88de8455ffd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/prompts/zipball/37ed55f6950d921a87d5beeab16d03f8de26b060",
-                "reference": "37ed55f6950d921a87d5beeab16d03f8de26b060",
+                "url": "https://api.github.com/repos/laravel/prompts/zipball/cce65a90e64712909ea1adc033e1d88de8455ffd",
+                "reference": "cce65a90e64712909ea1adc033e1d88de8455ffd",
                 "shasum": ""
             },
             "require": {
@@ -1378,9 +1378,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/prompts/issues",
-                "source": "https://github.com/laravel/prompts/tree/v0.1.10"
+                "source": "https://github.com/laravel/prompts/tree/v0.1.11"
             },
-            "time": "2023-09-29T07:26:07+00:00"
+            "time": "2023-10-03T01:07:35+00:00"
         },
         {
             "name": "laravel/sanctum",
@@ -2903,16 +2903,16 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.1",
+            "version": "2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
+                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
-                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/402d35bcb92c70c026d1a6a9883f06b2ead23d71",
+                "reference": "402d35bcb92c70c026d1a6a9883f06b2ead23d71",
                 "shasum": ""
             },
             "require": {
@@ -2921,7 +2921,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "2.0.x-dev"
                 }
             },
             "autoload": {
@@ -2936,7 +2936,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common interface for HTTP messages",
@@ -2950,9 +2950,9 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/1.1"
+                "source": "https://github.com/php-fig/http-message/tree/2.0"
             },
-            "time": "2023-04-04T09:50:52+00:00"
+            "time": "2023-04-04T09:54:51+00:00"
         },
         {
             "name": "psr/log",
@@ -7544,16 +7544,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "10.1.6",
+            "version": "10.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "56f33548fe522c8d82da7ff3824b42829d324364"
+                "reference": "355324ca4980b8916c18b9db29f3ef484078f26e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/56f33548fe522c8d82da7ff3824b42829d324364",
-                "reference": "56f33548fe522c8d82da7ff3824b42829d324364",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/355324ca4980b8916c18b9db29f3ef484078f26e",
+                "reference": "355324ca4980b8916c18b9db29f3ef484078f26e",
                 "shasum": ""
             },
             "require": {
@@ -7610,7 +7610,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/10.1.6"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/10.1.7"
             },
             "funding": [
                 {
@@ -7618,7 +7618,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-09-19T04:59:03+00:00"
+            "time": "2023-10-04T15:34:17+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
