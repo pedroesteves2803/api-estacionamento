@@ -14,5 +14,5 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect('http://api.estacionamento/api/documentation');
+    return redirect(config('url').'/api/documentation');
 });
