@@ -26,6 +26,21 @@ class ParkingTest extends TestCase
         $this->token = $this->user->createToken($this->user->device_name)->plainTextToken;
     }
 
+    private function AuthHeaders() : array
+    {
+        return [
+            'Authorization' => 'Bearer '.$this->token,
+            'Accept'        => 'application/json',
+        ];
+    }
+
+    private function UnauthenticatedHeader() : array
+    {
+        return [
+            'Accept'        => 'application/json',
+        ];
+    }
+
     public function testLogin(){
 
         $body = [
@@ -47,33 +62,59 @@ class ParkingTest extends TestCase
 
     public function testGetParkings(): void
     {
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer '.$this->token,
-            'Accept'        => 'application/json',
-        ])->get(self::API_PARKING_PATH);
+        $response = $this->get(self::API_PARKING_PATH, $this->AuthHeaders());
 
         $response->assertStatus(200)
             ->assertJsonStructure([
                 'data' => [],
             ]);
     }
-
-    public function testCreateParking(): void
+    /**
+     * Data Provider para testar diferentes cenários de criação de estacionamento.
+     */
+    public static function createParkingDataProvider()
     {
-        $body = [
-            'name'              => 'Estacionamento',
-            'numberOfVacancies' => 100,
-            'active'            => 1,
+        return [
+            // Caso de sucesso
+            [
+                [
+                    'name' => 'Estacionamento de sucesso 0',
+                    'numberOfVacancies' => 50,
+                    'active' => 1,
+                ],
+                200,
+            ],
+            [
+                [
+                    'name' => 'Estacionamento de sucesso 1',
+                    'numberOfVacancies' => 100,
+                    'active' => 1,
+                ],
+                200,
+            ],
+            [
+                [
+                    'name' => 'Estacionamento de sucesso 2',
+                    'numberOfVacancies' => 150,
+                    'active' => 0,
+                ],
+                200,
+            ],
         ];
+    }
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer '.$this->token,
-            'Accept'        => 'application/json',
-        ])->post(self::API_PARKING_PATH, $body);
+    /**
+     * @dataProvider createParkingDataProvider
+     */
+    public function testCreateParking($requestData, $expectedStatusCode): void
+    {
+        $response = $this->post(self::API_PARKING_PATH, $requestData, $this->AuthHeaders());
 
-        $response->assertStatus(200);
+        $response->assertStatus($expectedStatusCode);
 
-        $this->assertDatabaseHas('parkings', $body);
+        if ($expectedStatusCode === 200) {
+            $this->assertDatabaseHas('parkings', $requestData);
+        }
     }
 
     public function testUpdateParking(): void
@@ -81,15 +122,12 @@ class ParkingTest extends TestCase
         $parking = Parking::factory()->create();
 
         $body = [
-            'name'              => 'Estacionamento alteraro',
+            'name'              => 'Estacionamento alterado',
             'numberOfVacancies' => 12,
             'active'            => 1,
         ];
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer '.$this->token,
-            'Accept'        => 'application/json',
-        ])->patch("/api/parking/{$parking->id}", $body);
+        $response = $this->patch("/api/parking/{$parking->id}", $body, $this->AuthHeaders());
 
         $response->assertStatus(200);
 
@@ -104,10 +142,7 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer '.$this->token,
-            'Accept'        => 'application/json',
-        ])->get("/api/parking/{$parking->id}");
+        $response = $this->get("/api/parking/{$parking->id}", $this->AuthHeaders());
 
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -130,19 +165,14 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->withHeaders([
-            'Authorization' => 'Bearer '.$this->token,
-            'Accept'        => 'application/json',
-        ])->delete("/api/parking/{$parking->id}");
+        $response = $this->delete("/api/parking/{$parking->id}", [],$this->AuthHeaders());
 
         $response->assertStatus(204);
     }
 
     public function testGetParkingsNotAuthenticate(): void
     {
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-        ])->get(self::API_PARKING_PATH);
+        $response = $this->get(self::API_PARKING_PATH, $this->UnauthenticatedHeader());
 
         $response->assertStatus(401);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
@@ -156,9 +186,7 @@ class ParkingTest extends TestCase
             'active'            => 1,
         ];
 
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-        ])->post(self::API_PARKING_PATH, $body);
+        $response = $this->post(self::API_PARKING_PATH, $body, $this->UnauthenticatedHeader());
 
         $response->assertStatus(401);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
@@ -169,14 +197,12 @@ class ParkingTest extends TestCase
         $parking = Parking::factory()->create();
 
         $body = [
-            'name'              => 'Estacionamento alteraro',
+            'name'              => 'Estacionamento alterado',
             'numberOfVacancies' => 12,
             'active'            => 1,
         ];
 
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-        ])->patch("/api/parking/{$parking->id}", $body);
+        $response = $this->patch("/api/parking/{$parking->id}", $body, $this->UnauthenticatedHeader());
 
         $response->assertStatus(401);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
@@ -186,9 +212,7 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-        ])->get("/api/parking/{$parking->id}");
+        $response = $this->get("/api/parking/{$parking->id}", $this->UnauthenticatedHeader());
 
         $response->assertStatus(401);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
@@ -198,9 +222,7 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->withHeaders([
-            'Accept' => 'application/json',
-        ])->delete("/api/parking/{$parking->id}");
+        $response = $this->delete("/api/parking/{$parking->id}", [], $this->UnauthenticatedHeader());
 
         $response->assertStatus(401);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
