@@ -7,6 +7,7 @@ use App\Dtos\Parking\ParkingDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ParkingResource;
 use App\Models\Parking;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -90,8 +91,12 @@ class ParkingController extends Controller
      */
     public function store(Request $request)
     {
+        if($this->verifiedRequest($request->all(), 3)){
+            return $this->outputResponse(null);
+        };
+
         $dto = new ParkingDTO(
-            ...$request->only([
+            ...$request->all([
                 'name',
                 'numberOfVacancies',
                 'active',
@@ -174,6 +179,10 @@ class ParkingController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        if($this->verifiedRequest($request->all(), 3)){
+           return $this->outputResponse(null);
+        };
+
         $parking = $this->getParkingById($id);
 
         if ($parking->erro) {
@@ -262,5 +271,14 @@ class ParkingController extends Controller
         }
 
         return $parking;
+    }
+
+    private function verifiedRequest(array $request, int $numberOfParameters)
+    {
+        if(count($request) < $numberOfParameters){
+            return true;
+        }
+
+        return false;
     }
 }

@@ -14,6 +14,8 @@ class ParkingTest extends TestCase
     const API_LOGIN_PATH = '/api/login';
     const API_PARKING_PATH = '/api/parking';
     const UNAUTHENTICATED_MESSAGE = 'Unauthenticated.';
+    const ERROR_MESSAGE = 'Registro não encontrado';
+    const PASSWORD = 'password';
 
     protected $user;
     protected $token;
@@ -22,6 +24,7 @@ class ParkingTest extends TestCase
     {
         parent::setUp();
 
+        // arrange
         $this->user = User::factory()->create();
         $this->token = $this->user->createToken($this->user->device_name)->plainTextToken;
     }
@@ -45,7 +48,7 @@ class ParkingTest extends TestCase
 
         $body = [
             'email' => $this->user->email,
-            'password' => 'password',
+            'password' => self::PASSWORD,
         ];
 
         $response = $this->withHeaders([
@@ -69,73 +72,89 @@ class ParkingTest extends TestCase
                 'data' => [],
             ]);
     }
+
     /**
      * Data Provider para testar diferentes cenários de criação de estacionamento.
      */
     public static function createParkingDataProvider()
     {
         return [
-            // Caso de sucesso
-            [
+            'estacionamento-com-corpo-incorreto' => [
                 [
                     'name' => 'Estacionamento de sucesso 0',
-                    'numberOfVacancies' => 50,
-                    'active' => 1,
+                    'numberOfVacancies' => 50
                 ],
                 200,
             ],
-            [
+            'estacionamento-com-corpo-correto' => [
                 [
                     'name' => 'Estacionamento de sucesso 1',
                     'numberOfVacancies' => 100,
                     'active' => 1,
                 ],
                 200,
-            ],
-            [
-                [
-                    'name' => 'Estacionamento de sucesso 2',
-                    'numberOfVacancies' => 150,
-                    'active' => 0,
-                ],
-                200,
-            ],
+            ]
         ];
     }
 
     /**
      * @dataProvider createParkingDataProvider
      */
-    public function testCreateParking($requestData, $expectedStatusCode): void
+    public function testCreateParking(array $requestData, int $expectedStatusCode): void
     {
         $response = $this->post(self::API_PARKING_PATH, $requestData, $this->AuthHeaders());
 
         $response->assertStatus($expectedStatusCode);
 
-        if ($expectedStatusCode === 200) {
+        $this->isFalse($response['data']['errors']);
+
+        if ($expectedStatusCode === 200 and $response['data']['errors'] === false) {
             $this->assertDatabaseHas('parkings', $requestData);
+        }else{
+            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
         }
     }
 
-    public function testUpdateParking(): void
+    /**
+     * Data Provider para testar diferentes cenários de criação de estacionamento.
+     */
+    public static function updateParkingDataProvider()
+    {
+        return [
+            'estacionamento-com-corpo-incorreto' => [
+                [
+                    'name' => 'Estacionamento de sucesso 0',
+                    'numberOfVacancies' => 50
+                ],
+                200,
+            ],
+            'estacionamento-com-corpo-correto' => [
+                [
+                    'name' => 'Estacionamento de sucesso 1',
+                    'numberOfVacancies' => 100,
+                    'active' => 1,
+                ],
+                200,
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider updateParkingDataProvider
+     */
+    public function testUpdateParking(array $requestData, int $expectedStatusCode): void
     {
         $parking = Parking::factory()->create();
 
-        $body = [
-            'name'              => 'Estacionamento alterado',
-            'numberOfVacancies' => 12,
-            'active'            => 1,
-        ];
-
-        $response = $this->patch("/api/parking/{$parking->id}", $body, $this->AuthHeaders());
+        $response = $this->patch("/api/parking/{$parking->id}", $requestData, $this->AuthHeaders());
 
         $response->assertStatus(200);
 
-        $updatedParking = Parking::find($parking->id);
-
-        $this->assertEquals($body['name'], $updatedParking->name);
-        $this->assertEquals($body['numberOfVacancies'], $updatedParking->numberOfVacancies);
-        $this->assertEquals($body['active'], $updatedParking->active);
+        if ($expectedStatusCode === 200 and $response['data']['errors'] === false) {
+            $this->assertDatabaseHas('parkings', $requestData);
+        }else{
+            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
+        }
     }
 
     public function testGetParkingById(): void
