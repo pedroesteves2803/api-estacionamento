@@ -16,6 +16,8 @@ class ParkingTest extends TestCase
     const UNAUTHENTICATED_MESSAGE = 'Unauthenticated.';
     const ERROR_MESSAGE = 'Registro não encontrado';
     const PASSWORD = 'password';
+    const STATUS_CODE_CORRECT = 200;
+    const STATUS_CODE_ERROR = 401;
 
     protected $user;
     protected $token;
@@ -57,7 +59,7 @@ class ParkingTest extends TestCase
 
         $this->token = $response->json()['data']['content']['token'];
 
-        $response->assertStatus(200)
+        $response->assertStatus(self::STATUS_CODE_CORRECT)
             ->assertJsonStructure([
                 'data' => [],
             ]);
@@ -67,7 +69,7 @@ class ParkingTest extends TestCase
     {
         $response = $this->get(self::API_PARKING_PATH, $this->AuthHeaders());
 
-        $response->assertStatus(200)
+        $response->assertStatus(self::STATUS_CODE_CORRECT)
             ->assertJsonStructure([
                 'data' => [],
             ]);
@@ -84,7 +86,7 @@ class ParkingTest extends TestCase
                     'name' => 'Estacionamento de sucesso 0',
                     'numberOfVacancies' => 50
                 ],
-                200,
+                self::STATUS_CODE_CORRECT,
             ],
             'estacionamento-com-corpo-correto' => [
                 [
@@ -92,7 +94,7 @@ class ParkingTest extends TestCase
                     'numberOfVacancies' => 100,
                     'active' => 1,
                 ],
-                200,
+                self::STATUS_CODE_CORRECT,
             ]
         ];
     }
@@ -108,7 +110,7 @@ class ParkingTest extends TestCase
 
         $this->isFalse($response['data']['errors']);
 
-        if ($expectedStatusCode === 200 and $response['data']['errors'] === false) {
+        if ($expectedStatusCode === self::STATUS_CODE_CORRECT and $response['data']['errors'] === false) {
             $this->assertDatabaseHas('parkings', $requestData);
         }else{
             $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
@@ -126,7 +128,7 @@ class ParkingTest extends TestCase
                     'name' => 'Estacionamento de sucesso 0',
                     'numberOfVacancies' => 50
                 ],
-                200,
+                self::STATUS_CODE_CORRECT,
             ],
             'estacionamento-com-corpo-correto' => [
                 [
@@ -134,7 +136,7 @@ class ParkingTest extends TestCase
                     'numberOfVacancies' => 100,
                     'active' => 1,
                 ],
-                200,
+                self::STATUS_CODE_CORRECT,
             ]
         ];
     }
@@ -148,9 +150,9 @@ class ParkingTest extends TestCase
 
         $response = $this->patch("/api/parking/{$parking->id}", $requestData, $this->AuthHeaders());
 
-        $response->assertStatus(200);
+        $response->assertStatus(self::STATUS_CODE_CORRECT);
 
-        if ($expectedStatusCode === 200 and $response['data']['errors'] === false) {
+        if ($expectedStatusCode === self::STATUS_CODE_CORRECT and $response['data']['errors'] === false) {
             $this->assertDatabaseHas('parkings', $requestData);
         }else{
             $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
@@ -163,7 +165,7 @@ class ParkingTest extends TestCase
 
         $response = $this->get("/api/parking/{$parking->id}", $this->AuthHeaders());
 
-        $response->assertStatus(200)
+        $response->assertStatus(self::STATUS_CODE_CORRECT)
             ->assertJsonStructure([
                 'data' => [],
             ]);
@@ -193,37 +195,79 @@ class ParkingTest extends TestCase
     {
         $response = $this->get(self::API_PARKING_PATH, $this->UnauthenticatedHeader());
 
-        $response->assertStatus(401);
+        $response->assertStatus(self::STATUS_CODE_ERROR);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
-    public function testCreateNotAuthenticate(): void
+    /**
+     * Data Provider para testar diferentes cenários de criação de estacionamento.
+     */
+    public static function createParkingNotAuthenticateDataProvider()
     {
-        $body = [
-            'name'              => 'Estacionamento',
-            'numberOfVacancies' => 100,
-            'active'            => 1,
+        return [
+            'estacionamento-com-corpo-incorreto' => [
+                [
+                    'name' => 'Estacionamento de sucesso 0',
+                    'numberOfVacancies' => 50
+                ],
+                self::STATUS_CODE_ERROR,
+            ],
+            'estacionamento-com-corpo-correto' => [
+                [
+                    'name' => 'Estacionamento de sucesso 1',
+                    'numberOfVacancies' => 100,
+                    'active' => 1,
+                ],
+                self::STATUS_CODE_ERROR,
+            ]
         ];
+    }
 
-        $response = $this->post(self::API_PARKING_PATH, $body, $this->UnauthenticatedHeader());
+    /**
+     * @dataProvider createParkingNotAuthenticateDataProvider
+     */
+    public function testCreateNotAuthenticate(array $requestData, int $expectedStatusCode): void
+    {
+        $response = $this->post(self::API_PARKING_PATH, $requestData, $this->UnauthenticatedHeader());
 
-        $response->assertStatus(401);
+        $response->assertStatus($expectedStatusCode);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
-    public function testUpdateParkingNotAuthenticate(): void
+    /**
+     * Data Provider para testar diferentes cenários de criação de estacionamento.
+     */
+    public static function updateParkingNotAuthenticateDataProvider()
+    {
+        return [
+            'estacionamento-com-corpo-incorreto' => [
+                [
+                    'name' => 'Estacionamento de sucesso 0',
+                    'numberOfVacancies' => 50
+                ],
+                self::STATUS_CODE_ERROR,
+            ],
+            'estacionamento-com-corpo-correto' => [
+                [
+                    'name' => 'Estacionamento de sucesso 1',
+                    'numberOfVacancies' => 100,
+                    'active' => 1,
+                ],
+                self::STATUS_CODE_ERROR,
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider updateParkingNotAuthenticateDataProvider
+     */
+    public function testUpdateParkingNotAuthenticate(array $requestData, int $expectedStatusCode): void
     {
         $parking = Parking::factory()->create();
 
-        $body = [
-            'name'              => 'Estacionamento alterado',
-            'numberOfVacancies' => 12,
-            'active'            => 1,
-        ];
+        $response = $this->patch("/api/parking/{$parking->id}", $requestData, $this->UnauthenticatedHeader());
 
-        $response = $this->patch("/api/parking/{$parking->id}", $body, $this->UnauthenticatedHeader());
-
-        $response->assertStatus(401);
+        $response->assertStatus($expectedStatusCode);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
@@ -233,7 +277,7 @@ class ParkingTest extends TestCase
 
         $response = $this->get("/api/parking/{$parking->id}", $this->UnauthenticatedHeader());
 
-        $response->assertStatus(401);
+        $response->assertStatus(self::STATUS_CODE_ERROR);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
@@ -243,7 +287,7 @@ class ParkingTest extends TestCase
 
         $response = $this->delete("/api/parking/{$parking->id}", [], $this->UnauthenticatedHeader());
 
-        $response->assertStatus(401);
+        $response->assertStatus(self::STATUS_CODE_ERROR);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
