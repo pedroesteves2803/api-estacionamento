@@ -88,6 +88,10 @@ class CarsController extends Controller
      */
     public function store(Request $request)
     {
+        if($this->verifiedRequest($request->all(), 4)){
+            return $this->outputResponse(null);
+        };
+
         if (empty($request->all())) {
             return $this->outputResponse(null, 'Não foi possivel adicionar um novo carro!');
         }
@@ -353,5 +357,14 @@ class CarsController extends Controller
         }
 
         return $car;
+    }
+
+    private function verifiedRequest(array $request, int $numberOfParameters)
+    {
+        if(count($request) < $numberOfParameters){
+            return true;
+        }
+
+        return false;
     }
 }
