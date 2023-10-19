@@ -148,7 +148,7 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->patch("/api/parking/{$parking->id}", $requestData, $this->AuthHeaders());
+        $response = $this->patch(self::API_PARKING_PATH."/{$parking->id}", $requestData, $this->AuthHeaders());
 
         $response->assertStatus(self::STATUS_CODE_CORRECT);
 
@@ -163,7 +163,7 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->get("/api/parking/{$parking->id}", $this->AuthHeaders());
+        $response = $this->get(self::API_PARKING_PATH."/{$parking->id}", $this->AuthHeaders());
 
         $response->assertStatus(self::STATUS_CODE_CORRECT)
             ->assertJsonStructure([
@@ -186,7 +186,7 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->delete("/api/parking/{$parking->id}", [],$this->AuthHeaders());
+        $response = $this->delete(self::API_PARKING_PATH."/{$parking->id}", [],$this->AuthHeaders());
 
         $response->assertStatus(204);
     }
@@ -265,7 +265,7 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->patch("/api/parking/{$parking->id}", $requestData, $this->UnauthenticatedHeader());
+        $response = $this->patch(self::API_PARKING_PATH."/{$parking->id}", $requestData, $this->UnauthenticatedHeader());
 
         $response->assertStatus($expectedStatusCode);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
@@ -275,7 +275,7 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->get("/api/parking/{$parking->id}", $this->UnauthenticatedHeader());
+        $response = $this->get(self::API_PARKING_PATH."/{$parking->id}", $this->UnauthenticatedHeader());
 
         $response->assertStatus(self::STATUS_CODE_ERROR);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
@@ -285,7 +285,7 @@ class ParkingTest extends TestCase
     {
         $parking = Parking::factory()->create();
 
-        $response = $this->delete("/api/parking/{$parking->id}", [], $this->UnauthenticatedHeader());
+        $response = $this->delete(self::API_PARKING_PATH."/{$parking->id}", [], $this->UnauthenticatedHeader());
 
         $response->assertStatus(self::STATUS_CODE_ERROR);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);

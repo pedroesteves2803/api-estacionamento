@@ -203,6 +203,10 @@ class CarsController extends Controller
      */
     public function update(Request $request, string $parkingId, string $id)
     {
+        if($this->verifiedRequest($request->all(), 4)){
+            return $this->outputResponse(null);
+        };
+
         $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
         if ($car->erro) {
@@ -339,7 +343,7 @@ class CarsController extends Controller
             $car['output'] ?? null,
             $car['amountToBePaid'] ?? null,
             $error['erro'] ?? false,
-            $error['message'] ?? '',
+            $error['message'] ?? null,
         );
 
         return new CarResource($outputDto);
