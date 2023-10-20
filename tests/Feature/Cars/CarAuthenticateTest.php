@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Cars;
 
 use App\Models\Car;
 use App\Models\Parking;
@@ -8,13 +8,12 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class CarTest extends TestCase
+class CarAuthenticateTest extends TestCase
 {
     use RefreshDatabase;
 
     const API_LOGIN_PATH = '/api/login';
     const API_CAR_PATH = '/api/car';
-    const UNAUTHENTICATED_MESSAGE = 'Unauthenticated.';
     const ERROR_MESSAGE = 'Registro não encontrado';
     const PASSWORD = 'password';
     const STATUS_CODE_CORRECT = 200;
@@ -40,13 +39,6 @@ class CarTest extends TestCase
     {
         return [
             'Authorization' => 'Bearer '.$this->token,
-            'Accept'        => 'application/json',
-        ];
-    }
-
-    private function UnauthenticatedHeader() : array
-    {
-        return [
             'Accept'        => 'application/json',
         ];
     }
@@ -139,7 +131,6 @@ class CarTest extends TestCase
         }
     }
 
-
     public static function updateCarDataProvider()
     {
         return [
@@ -219,6 +210,31 @@ class CarTest extends TestCase
         $this->assertEquals($this->car->color, $content['cor']);
         $this->assertEquals($this->car->parking_id, $content['estacionamento_id']);
 
+    }
+
+    public function testDeleteById()
+    {
+        $response = $this->delete(self::API_CAR_PATH."/{$this->parking->id}/{$this->car->id}", [], $this->AuthHeaders());
+
+        $response->assertStatus(204);
+    }
+
+    public function testRegistersCarExit()
+    {
+        $response = $this->patch(self::API_CAR_PATH."/output/{$this->parking->id}/{$this->car->id}", [], $this->AuthHeaders());
+
+        $content = $response['data']['content'];
+
+        $count = count($content);
+
+        $this->assertNotNull($response['data']);
+        $this->assertEquals($response['data']['errors'], false);
+        $this->assertNull($response['data']['message']);
+        $this->assertIsArray($response['data']['content']);
+
+        $this->assertNotNull($content['saida']);
+        $this->assertNotNull($content['valor_para_pagamento']);
+        $this->assertEquals($count, 8);
     }
 
 }
