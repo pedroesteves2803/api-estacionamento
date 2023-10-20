@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\CarResource;
 use App\Models\Car;
 use App\Models\Parking;
+use App\Services\Utils\UtilsRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -21,8 +22,11 @@ use Illuminate\Http\Response;
  */
 class CarsController extends Controller
 {
-    public function __construct(protected Car $cars)
-    {
+
+    public function __construct(
+        protected Car $cars,
+        protected UtilsRequestService $utilsRequestService
+    ){
     }
 
     /**
@@ -89,9 +93,10 @@ class CarsController extends Controller
      */
     public function store(Request $request)
     {
-        if($this->verifiedRequest($request->all(), 4)){
+
+        if ($this->utilsRequestService->verifiedRequest($request->all(), 4)) {
             return $this->outputResponse(null);
-        };
+        }
 
         if (empty($request->all())) {
             return $this->outputResponse(null, 'Não foi possivel adicionar um novo carro!');
@@ -212,9 +217,9 @@ class CarsController extends Controller
         string $id
     )
     {
-        if($this->verifiedRequest($request->all(), 4)){
+        if ($this->utilsRequestService->verifiedRequest($request->all(), 4)) {
             return $this->outputResponse(null);
-        };
+        }
 
         if(!Parking::where('id', $request->id)->exists()){
             return $this->outputResponse(null, 'Estacionamento não existe!');

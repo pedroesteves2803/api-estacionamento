@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\EmployeesResource;
 use App\Models\Employees;
 use App\Models\Parking;
+use App\Services\Utils\UtilsRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -21,8 +22,10 @@ use Illuminate\Http\Response;
  */
 class EmployeesController extends Controller
 {
-    public function __construct(protected Employees $employees)
-    {
+    public function __construct(
+        protected Employees $employees,
+        protected UtilsRequestService $utilsRequestService
+    ){
     }
 
     /**
@@ -90,7 +93,7 @@ class EmployeesController extends Controller
      */
     public function store(Request $request)
     {
-        if ($this->verifiedRequest($request->all(), 6)) {
+        if ($this->utilsRequestService->verifiedRequest($request->all(), 6)) {
             return $this->outputResponse(null);
         }
 
@@ -203,7 +206,7 @@ class EmployeesController extends Controller
      */
     public function update(Request $request, string $parkingId, string $id)
     {
-        if ($this->verifiedRequest($request->all(), 6)) {
+        if ($this->utilsRequestService->verifiedRequest($request->all(), 6)) {
             return $this->outputResponse(null);
         }
 

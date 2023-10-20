@@ -13,7 +13,8 @@ class EmployeesAuthenticateTest extends TestCase
     use RefreshDatabase;
 
     public const API_EMPLOYEES_PATH = '/api/employees';
-    public const ERROR_MESSAGE = 'Registro não encontrado';
+    public const ERROR_MESSAGE_PARKING = 'Estacionamento não existe!';
+    public const ERROR_MESSAGE= 'Registro não encontrado';
     public const PASSWORD = 'password';
     public const STATUS_CODE_CORRECT = 200;
     public const STATUS_CODE_ERROR = 401;
@@ -104,7 +105,7 @@ class EmployeesAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('employees', $requestData);
         } else {
-            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
+            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE_PARKING);
         }
     }
 

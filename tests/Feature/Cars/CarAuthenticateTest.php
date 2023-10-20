@@ -13,7 +13,8 @@ class CarAuthenticateTest extends TestCase
     use RefreshDatabase;
 
     public const API_CAR_PATH = '/api/car';
-    public const ERROR_MESSAGE = 'Registro não encontrado';
+    public const ERROR_MESSAGE_PARKING = 'Estacionamento não existe!';
+    public const ERROR_MESSAGE= 'Registro não encontrado';
     public const PASSWORD = 'password';
     public const STATUS_CODE_CORRECT = 200;
     public const STATUS_CODE_ERROR = 401;

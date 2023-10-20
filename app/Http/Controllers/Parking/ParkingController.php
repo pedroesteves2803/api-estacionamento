@@ -7,6 +7,7 @@ use App\Dtos\Parking\ParkingDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ParkingResource;
 use App\Models\Parking;
+use App\Services\Utils\UtilsRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -21,8 +22,10 @@ use Illuminate\Http\Response;
  */
 class ParkingController extends Controller
 {
-    public function __construct(protected Parking $parking)
-    {
+    public function __construct(
+        protected Parking $parking,
+        protected UtilsRequestService $utilsRequestService
+    ){
     }
 
     /**
@@ -90,7 +93,7 @@ class ParkingController extends Controller
      */
     public function store(Request $request)
     {
-        if ($this->verifiedRequest($request->all(), 3)) {
+        if ($this->utilsRequestService->verifiedRequest($request->all(), 3)) {
             return $this->outputResponse(null);
         }
 
@@ -178,7 +181,7 @@ class ParkingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if ($this->verifiedRequest($request->all(), 3)) {
+        if ($this->utilsRequestService->verifiedRequest($request->all(), 3)) {
             return $this->outputResponse(null);
         }
 
