@@ -47,11 +47,10 @@ class AuthController extends Controller
     {
         $requestData = $request->only([
             'email',
-            'password'
+            'password',
         ]);
 
         $authDTO = new AuthDTO(...$requestData);
-
 
         if (!Auth::attempt($authDTO->toArray())) {
             return $this->outputResponse(null);
@@ -80,7 +79,7 @@ class AuthController extends Controller
         $outputDto = new OutputAuthDTO(
             $token ?? null,
             $error['erro'] ?? false,
-            $error['message'] ?? '',
+            $error['message'] ?? null,
         );
 
         return new AuthResource($outputDto);

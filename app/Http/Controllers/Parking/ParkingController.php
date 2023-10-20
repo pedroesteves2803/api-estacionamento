@@ -7,7 +7,6 @@ use App\Dtos\Parking\ParkingDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ParkingResource;
 use App\Models\Parking;
-use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -91,9 +90,9 @@ class ParkingController extends Controller
      */
     public function store(Request $request)
     {
-        if($this->verifiedRequest($request->all(), 3)){
+        if ($this->verifiedRequest($request->all(), 3)) {
             return $this->outputResponse(null);
-        };
+        }
 
         $dto = new ParkingDTO(
             ...$request->all([
@@ -179,9 +178,9 @@ class ParkingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if($this->verifiedRequest($request->all(), 3)){
-           return $this->outputResponse(null);
-        };
+        if ($this->verifiedRequest($request->all(), 3)) {
+            return $this->outputResponse(null);
+        }
 
         $parking = $this->getParkingById($id);
 
@@ -247,6 +246,7 @@ class ParkingController extends Controller
                 'message' => 'Registro não encontrado',
             ];
         }
+
         $outputDto = new OutputParkingDTO(
             $parking['id'] ?? null,
             $parking['name'] ?? null,
@@ -275,7 +275,7 @@ class ParkingController extends Controller
 
     private function verifiedRequest(array $request, int $numberOfParameters)
     {
-        if(count($request) < $numberOfParameters){
+        if (count($request) < $numberOfParameters) {
             return true;
         }
 

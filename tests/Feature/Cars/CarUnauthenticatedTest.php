@@ -12,10 +12,10 @@ class CarUnauthenticatedTest extends TestCase
 {
     use RefreshDatabase;
 
-    const API_CAR_PATH = '/api/car';
-    const UNAUTHENTICATED_MESSAGE = 'Unauthenticated.';
-    const STATUS_CODE_CORRECT = 200;
-    const STATUS_CODE_ERROR = 401;
+    public const API_CAR_PATH = '/api/car';
+    public const UNAUTHENTICATED_MESSAGE = 'Unauthenticated.';
+    public const STATUS_CODE_CORRECT = 200;
+    public const STATUS_CODE_ERROR = 401;
 
     protected $user;
     protected $token;
@@ -32,10 +32,10 @@ class CarUnauthenticatedTest extends TestCase
         $this->car = Car::factory()->create();
     }
 
-    private function UnauthenticatedHeader() : array
+    private function UnauthenticatedHeader(): array
     {
         return [
-            'Accept'        => 'application/json',
+            'Accept' => 'application/json',
         ];
     }
 
@@ -45,7 +45,7 @@ class CarUnauthenticatedTest extends TestCase
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
 
-    //Não autenticados
+    // Não autenticados
 
     public function testGetCarsNotAuthenticate(): void
     {
@@ -59,39 +59,39 @@ class CarUnauthenticatedTest extends TestCase
         return [
             'carro-com-corpo-incorreto' => [
                 [
-                    "plate" =>  "NEJ1472",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
+                    'plate'      => 'NEJ1472',
+                    'model'      => 'Uno',
+                    'color'      => 'Verde',
+                    'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
             'carro-com-corpo-correto-placa-padrão' => [
                 [
-                    "plate" =>  "HEU0535",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
+                    'plate'      => 'HEU0535',
+                    'model'      => 'Uno',
+                    'color'      => 'Verde',
+                    'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
             'carro-com-corpo-correto-placa-mercosul' => [
                 [
-                    "plate" =>  "FBR2A23",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
+                    'plate'      => 'FBR2A23',
+                    'model'      => 'Uno',
+                    'color'      => 'Verde',
+                    'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
             'carro-com-corpo-correto-sem-id-do-estacionamento' => [
                 [
-                    "plate" =>  "JTU2074",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
+                    'plate' => 'JTU2074',
+                    'model' => 'Uno',
+                    'color' => 'Verde',
                 ],
                 self::STATUS_CODE_CORRECT,
-            ]
+            ],
         ];
     }
 
@@ -110,39 +110,39 @@ class CarUnauthenticatedTest extends TestCase
         return [
             'carro-com-corpo-incorreto' => [
                 [
-                    "plate" =>  "NEJ1472",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
+                    'plate'      => 'NEJ1472',
+                    'model'      => 'Uno',
+                    'color'      => 'Verde',
+                    'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
             'carro-com-corpo-correto-placa-padrão' => [
                 [
-                    "plate" =>  "HEU0535",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
+                    'plate'      => 'HEU0535',
+                    'model'      => 'Uno',
+                    'color'      => 'Verde',
+                    'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
             'carro-com-corpo-correto-placa-mercosul' => [
                 [
-                    "plate" =>  "FBR2A23",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
+                    'plate'      => 'FBR2A23',
+                    'model'      => 'Uno',
+                    'color'      => 'Verde',
+                    'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
             'carro-com-corpo-correto-sem-id-do-estacionamento' => [
                 [
-                    "plate" =>  "JTU2074",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
+                    'plate' => 'JTU2074',
+                    'model' => 'Uno',
+                    'color' => 'Verde',
                 ],
                 self::STATUS_CODE_CORRECT,
-            ]
+            ],
         ];
     }
 

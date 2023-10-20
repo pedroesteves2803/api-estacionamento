@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Parking>
  */
-class CarFactory extends Factory
+class EmployeesFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -17,9 +17,11 @@ class CarFactory extends Factory
     public function definition(): array
     {
         return [
-            'plate'      => 'ZZZ2Y00',
-            'model'      => fake()->name(),
-            'color'      => fake()->name(),
+            'name'       => fake()->name(),
+            'cpf'        => '123123123',
+            'email'      => 'exemplo@exemplo.com',
+            'office'     => fake()->name(),
+            'active'     => (bool) rand(0, 1),
             'parking_id' => 1,
         ];
     }

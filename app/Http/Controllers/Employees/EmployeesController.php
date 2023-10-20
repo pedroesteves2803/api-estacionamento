@@ -7,6 +7,7 @@ use App\Dtos\Employees\OutputEmployeesDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EmployeesResource;
 use App\Models\Employees;
+use App\Models\Parking;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -89,6 +90,14 @@ class EmployeesController extends Controller
      */
     public function store(Request $request)
     {
+        if ($this->verifiedRequest($request->all(), 6)) {
+            return $this->outputResponse(null);
+        }
+
+        if(!Parking::where('id', $request->id)->exists()){
+            return $this->outputResponse(null, 'Estacionamento não existe!');
+        };
+
         $dto = new EmployeesDTO(
             ...$request->only([
                 'name',
@@ -194,6 +203,14 @@ class EmployeesController extends Controller
      */
     public function update(Request $request, string $parkingId, string $id)
     {
+        if ($this->verifiedRequest($request->all(), 6)) {
+            return $this->outputResponse(null);
+        }
+
+        if(!Parking::where('id', $request->id)->exists()){
+            return $this->outputResponse(null, 'Estacionamento não existe!');
+        };
+
         $employee = $this->getEmployeeByParkingIdAndCarId($parkingId, $id);
 
         if ($employee->erro) {
@@ -260,14 +277,14 @@ class EmployeesController extends Controller
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse($employee)
+    private function outputResponse($employee, $message = 'Registro não encontrado')
     {
         $error = [];
 
         if (is_null($employee)) {
             $error = [
                 'erro'    => true,
-                'message' => 'Registro não encontrado',
+                'message' => $message,
             ];
         }
 
@@ -280,7 +297,7 @@ class EmployeesController extends Controller
             $employee['active'] ?? null,
             $employee['parking_id'] ?? null,
             $error['erro'] ?? false,
-            $error['message'] ?? '',
+            $error['message'] ?? null,
         );
 
         return new EmployeesResource($outputDto);
@@ -298,5 +315,14 @@ class EmployeesController extends Controller
         }
 
         return $employee;
+    }
+
+    private function verifiedRequest(array $request, int $numberOfParameters)
+    {
+        if (count($request) < $numberOfParameters) {
+            return true;
+        }
+
+        return false;
     }
 }

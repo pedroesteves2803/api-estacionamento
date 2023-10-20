@@ -7,6 +7,7 @@ use App\Dtos\Cars\OutputCarsDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CarResource;
 use App\Models\Car;
+use App\Models\Parking;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -95,6 +96,10 @@ class CarsController extends Controller
         if (empty($request->all())) {
             return $this->outputResponse(null, 'Não foi possivel adicionar um novo carro!');
         }
+
+        if(!Parking::where('id', $request->id)->exists()){
+            return $this->outputResponse(null, 'Estacionamento não existe!');
+        };
 
         $dto = new CarsDTO(
             ...$request->only([
@@ -201,10 +206,18 @@ class CarsController extends Controller
      *     )
      * )
      */
-    public function update(Request $request, string $parkingId, string $id)
+    public function update(
+        Request $request,
+        string $parkingId,
+        string $id
+    )
     {
         if($this->verifiedRequest($request->all(), 4)){
             return $this->outputResponse(null);
+        };
+
+        if(!Parking::where('id', $request->id)->exists()){
+            return $this->outputResponse(null, 'Estacionamento não existe!');
         };
 
         $car = $this->getCarByParkingIdAndCarId($parkingId, $id);

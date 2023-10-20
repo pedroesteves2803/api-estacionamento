@@ -81,7 +81,7 @@ class ParkingAuthenticateTest extends TestCase
     /**
      * Data Provider para testar diferentes cenários de criação de estacionamento.
      */
-    public static function createParkingDataProvider()
+    public static function createOrUpdateParkingDataProvider()
     {
         return [
             'estacionamento-com-corpo-incorreto' => [
@@ -103,7 +103,7 @@ class ParkingAuthenticateTest extends TestCase
     }
 
     /**
-     * @dataProvider createParkingDataProvider
+     * @dataProvider createOrUpdateParkingDataProvider
      */
     public function testCreateParking(array $requestData, int $expectedStatusCode): void
     {
@@ -121,31 +121,7 @@ class ParkingAuthenticateTest extends TestCase
     }
 
     /**
-     * Data Provider para testar diferentes cenários de criação de estacionamento.
-     */
-    public static function updateParkingDataProvider()
-    {
-        return [
-            'estacionamento-com-corpo-incorreto' => [
-                [
-                    'name' => 'Estacionamento de sucesso 0',
-                    'numberOfVacancies' => 50
-                ],
-                self::STATUS_CODE_CORRECT,
-            ],
-            'estacionamento-com-corpo-correto' => [
-                [
-                    'name' => 'Estacionamento de sucesso 1',
-                    'numberOfVacancies' => 100,
-                    'active' => 1,
-                ],
-                self::STATUS_CODE_CORRECT,
-            ]
-        ];
-    }
-
-    /**
-     * @dataProvider updateParkingDataProvider
+     * @dataProvider createOrUpdateParkingDataProvider
      */
     public function testUpdateParking(array $requestData, int $expectedStatusCode): void
     {

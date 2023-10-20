@@ -42,6 +42,7 @@ class EmployeesDTO extends AbstractDTO implements InterfaceDTO
             ],
 
             'cpf' => [
+                'cpf',
                 'required',
                 'string',
                 Rule::unique('employees')->ignore(request()->id),

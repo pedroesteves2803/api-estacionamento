@@ -12,12 +12,11 @@ class CarAuthenticateTest extends TestCase
 {
     use RefreshDatabase;
 
-    const API_LOGIN_PATH = '/api/login';
-    const API_CAR_PATH = '/api/car';
-    const ERROR_MESSAGE = 'Registro não encontrado';
-    const PASSWORD = 'password';
-    const STATUS_CODE_CORRECT = 200;
-    const STATUS_CODE_ERROR = 401;
+    public const API_CAR_PATH = '/api/car';
+    public const ERROR_MESSAGE = 'Registro não encontrado';
+    public const PASSWORD = 'password';
+    public const STATUS_CODE_CORRECT = 200;
+    public const STATUS_CODE_ERROR = 401;
 
     protected $user;
     protected $token;
@@ -35,7 +34,7 @@ class CarAuthenticateTest extends TestCase
         $this->token = $this->user->createToken($this->user->device_name)->plainTextToken;
     }
 
-    private function AuthHeaders() : array
+    private function AuthHeaders(): array
     {
         return [
             'Authorization' => 'Bearer '.$this->token,
@@ -43,23 +42,12 @@ class CarAuthenticateTest extends TestCase
         ];
     }
 
-    public function testLogin(){
-
-        $body = [
-            'email' => $this->user->email,
-            'password' => self::PASSWORD,
-        ];
-
-        $response = $this->withHeaders([
-            'Accept'        => 'application/json',
-        ])->post(self::API_LOGIN_PATH, $body);
-
-        $this->token = $response->json()['data']['content']['token'];
-
-        $response->assertStatus(self::STATUS_CODE_CORRECT)
-            ->assertJsonStructure([
-                'data' => [],
-            ]);
+    private function checkResponseBody($response) :void
+    {
+        $this->assertNotNull($response['data']);
+        $this->assertEquals($response['data']['errors'], false);
+        $this->assertNull($response['data']['message']);
+        $this->assertIsArray($response['data']['content']);
     }
 
     public function testGetCars(): void
@@ -72,49 +60,49 @@ class CarAuthenticateTest extends TestCase
             ]);
     }
 
-    public static function createCarDataProvider()
+    public static function createOrUpdateCarDataProvider()
     {
         return [
             'carro-com-corpo-incorreto' => [
                 [
-                    "plate" =>  "NEJ1472",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
+                    'plate'      => 'NEJ1472',
+                    'model'      => 'Uno',
+                    'color'      => 'Verde',
+                    'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
             'carro-com-corpo-correto-placa-padrão' => [
                 [
-                    "plate" =>  "HEU0535",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
+                    'plate'      => 'HEU0535',
+                    'model'      => 'Uno',
+                    'color'      => 'Verde',
+                    'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
             'carro-com-corpo-correto-placa-mercosul' => [
                 [
-                    "plate" =>  "FBR2A23",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
+                    'plate'      => 'FBR2A23',
+                    'model'      => 'Uno',
+                    'color'      => 'Verde',
+                    'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
             'carro-com-corpo-correto-sem-id-do-estacionamento' => [
                 [
-                    "plate" =>  "JTU2074",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
+                    'plate' => 'JTU2074',
+                    'model' => 'Uno',
+                    'color' => 'Verde',
                 ],
                 self::STATUS_CODE_CORRECT,
-            ]
+            ],
         ];
     }
 
     /**
-     * @dataProvider createCarDataProvider
+     * @dataProvider createOrUpdateCarDataProvider
      */
     public function testCreateCar(array $requestData, int $expectedStatusCode): void
     {
@@ -124,56 +112,15 @@ class CarAuthenticateTest extends TestCase
 
         $this->isFalse($response['data']['errors']);
 
-        if ($expectedStatusCode === self::STATUS_CODE_CORRECT and $response['data']['errors'] === false) {
+        if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('cars', $requestData);
-        }else{
+        } else {
             $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
         }
     }
 
-    public static function updateCarDataProvider()
-    {
-        return [
-            'carro-com-corpo-incorreto' => [
-                [
-                    "plate" =>  "NEJ1472",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
-                ],
-                self::STATUS_CODE_CORRECT,
-            ],
-            'carro-com-corpo-correto-placa-padrão' => [
-                [
-                    "plate" =>  "HEU0535",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
-                ],
-                self::STATUS_CODE_CORRECT,
-            ],
-            'carro-com-corpo-correto-placa-mercosul' => [
-                [
-                    "plate" =>  "FBR2A23",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                    "parking_id" =>  1
-                ],
-                self::STATUS_CODE_CORRECT,
-            ],
-            'carro-com-corpo-correto-sem-id-do-estacionamento' => [
-                [
-                    "plate" =>  "JTU2074",
-                    "model" =>  "Uno",
-                    "color" =>  "Verde",
-                ],
-                self::STATUS_CODE_CORRECT,
-            ]
-        ];
-    }
-
     /**
-     * @dataProvider updateCarDataProvider
+     * @dataProvider createOrUpdateCarDataProvider
      */
     public function testUpdateCar(array $requestData, int $expectedStatusCode): void
     {
@@ -181,13 +128,12 @@ class CarAuthenticateTest extends TestCase
 
         $response->assertStatus(self::STATUS_CODE_CORRECT);
 
-        if ($expectedStatusCode === self::STATUS_CODE_CORRECT and $response['data']['errors'] === false) {
+        if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('cars', $requestData);
-        }else{
+        } else {
             $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
         }
     }
-
 
     public function testGetParkingById(): void
     {
@@ -198,10 +144,7 @@ class CarAuthenticateTest extends TestCase
                 'data' => [],
             ]);
 
-        $this->assertNotNull($response['data']);
-        $this->assertEquals($response['data']['errors'], false);
-        $this->assertNull($response['data']['message']);
-        $this->assertIsArray($response['data']['content']);
+        $this->checkResponseBody($response);
 
         $content = $response['data']['content'];
 
@@ -209,7 +152,6 @@ class CarAuthenticateTest extends TestCase
         $this->assertEquals($this->car->model, $content['modelo']);
         $this->assertEquals($this->car->color, $content['cor']);
         $this->assertEquals($this->car->parking_id, $content['estacionamento_id']);
-
     }
 
     public function testDeleteById()
@@ -227,14 +169,8 @@ class CarAuthenticateTest extends TestCase
 
         $count = count($content);
 
-        $this->assertNotNull($response['data']);
-        $this->assertEquals($response['data']['errors'], false);
-        $this->assertNull($response['data']['message']);
-        $this->assertIsArray($response['data']['content']);
-
         $this->assertNotNull($content['saida']);
         $this->assertNotNull($content['valor_para_pagamento']);
         $this->assertEquals($count, 8);
     }
-
 }

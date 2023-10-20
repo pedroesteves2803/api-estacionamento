@@ -3,8 +3,6 @@
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Support\Str;
-
 
 class ValidatePlate implements ValidationRule
 {
@@ -13,7 +11,6 @@ class ValidatePlate implements ValidationRule
 
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-
         if (!preg_match(self::mercosurStandardPlate, $value) && !preg_match(self::pivStandardPlate, $value)) {
             $fail('Placa não é válida!');
         }

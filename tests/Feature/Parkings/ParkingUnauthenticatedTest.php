@@ -11,16 +11,15 @@ class ParkingUnauthenticatedTest extends TestCase
 {
     use RefreshDatabase;
 
-    const API_PARKING_PATH = '/api/parking';
-    const UNAUTHENTICATED_MESSAGE = 'Unauthenticated.';
-    const ERROR_MESSAGE = 'Registro não encontrado';
-    const STATUS_CODE_CORRECT = 200;
-    const STATUS_CODE_ERROR = 401;
+    public const API_PARKING_PATH = '/api/parking';
+    public const UNAUTHENTICATED_MESSAGE = 'Unauthenticated.';
+    public const ERROR_MESSAGE = 'Registro não encontrado';
+    public const STATUS_CODE_CORRECT = 200;
+    public const STATUS_CODE_ERROR = 401;
 
     protected $user;
     protected $parking;
     protected $token;
-
 
     protected function setUp(): void
     {
@@ -33,12 +32,13 @@ class ParkingUnauthenticatedTest extends TestCase
         $this->token = $this->user->createToken($this->user->device_name)->plainTextToken;
     }
 
-    private function UnauthenticatedHeader() : array
+    private function UnauthenticatedHeader(): array
     {
         return [
-            'Accept'        => 'application/json',
+            'Accept' => 'application/json',
         ];
     }
+
     /**
      * Data Provider para testar diferentes cenários de criação de estacionamento.
      */
@@ -47,19 +47,19 @@ class ParkingUnauthenticatedTest extends TestCase
         return [
             'estacionamento-com-corpo-incorreto' => [
                 [
-                    'name' => 'Estacionamento de sucesso 0',
-                    'numberOfVacancies' => 50
+                    'name'              => 'Estacionamento de sucesso 0',
+                    'numberOfVacancies' => 50,
                 ],
                 self::STATUS_CODE_ERROR,
             ],
             'estacionamento-com-corpo-correto' => [
                 [
-                    'name' => 'Estacionamento de sucesso 1',
+                    'name'              => 'Estacionamento de sucesso 1',
                     'numberOfVacancies' => 100,
-                    'active' => 1,
+                    'active'            => 1,
                 ],
                 self::STATUS_CODE_ERROR,
-            ]
+            ],
         ];
     }
 
@@ -71,19 +71,19 @@ class ParkingUnauthenticatedTest extends TestCase
         return [
             'estacionamento-com-corpo-incorreto' => [
                 [
-                    'name' => 'Estacionamento de sucesso 0',
-                    'numberOfVacancies' => 50
+                    'name'              => 'Estacionamento de sucesso 0',
+                    'numberOfVacancies' => 50,
                 ],
                 self::STATUS_CODE_ERROR,
             ],
             'estacionamento-com-corpo-correto' => [
                 [
-                    'name' => 'Estacionamento de sucesso 1',
+                    'name'              => 'Estacionamento de sucesso 1',
                     'numberOfVacancies' => 100,
-                    'active' => 1,
+                    'active'            => 1,
                 ],
                 self::STATUS_CODE_ERROR,
-            ]
+            ],
         ];
     }
 
@@ -132,6 +132,4 @@ class ParkingUnauthenticatedTest extends TestCase
         $response->assertStatus(self::STATUS_CODE_ERROR);
         $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
     }
-
-
 }
