@@ -116,7 +116,7 @@ class ParkingAuthenticateTest extends TestCase
         if ($expectedStatusCode === self::STATUS_CODE_CORRECT and $response['data']['errors'] === false) {
             $this->assertDatabaseHas('parkings', $requestData);
         }else{
-            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
+            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
         }
     }
 
@@ -132,7 +132,7 @@ class ParkingAuthenticateTest extends TestCase
         if ($expectedStatusCode === self::STATUS_CODE_CORRECT and $response['data']['errors'] === false) {
             $this->assertDatabaseHas('parkings', $requestData);
         }else{
-            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
+            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
         }
     }
 
@@ -146,7 +146,7 @@ class ParkingAuthenticateTest extends TestCase
             ]);
 
         $this->assertNotNull($response['data']);
-        $this->assertEquals($response['data']['errors'], false);
+        $this->assertEquals(false, $response['data']['errors']);
         $this->assertNull($response['data']['message']);
         $this->assertIsArray($response['data']['content']);
 

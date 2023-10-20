@@ -102,7 +102,7 @@ class CarsController extends Controller
             return $this->outputResponse(null, 'Não foi possivel adicionar um novo carro!');
         }
 
-        if(!Parking::where('id', $request->id)->exists()){
+        if(!Parking::where('id', $request->parking_id)->exists()){
             return $this->outputResponse(null, 'Estacionamento não existe!');
         };
 
@@ -221,7 +221,7 @@ class CarsController extends Controller
             return $this->outputResponse(null);
         }
 
-        if(!Parking::where('id', $request->id)->exists()){
+        if(!Parking::where('id', $request->parking_id)->exists()){
             return $this->outputResponse(null, 'Estacionamento não existe!');
         };
 

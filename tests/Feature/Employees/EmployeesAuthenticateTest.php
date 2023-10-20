@@ -46,7 +46,7 @@ class EmployeesAuthenticateTest extends TestCase
     private function checkResponseBody($response) :void
     {
         $this->assertNotNull($response['data']);
-        $this->assertEquals($response['data']['errors'], false);
+        $this->assertEquals(false, $response['data']['errors']);
         $this->assertNull($response['data']['message']);
         $this->assertIsArray($response['data']['content']);
     }
@@ -87,7 +87,18 @@ class EmployeesAuthenticateTest extends TestCase
                     'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
-            ],
+            ]
+            // 'estacionamento-sem-id-de-estacionamento-valido' => [
+            //     [
+            //         'name'       => 'Giovanna',
+            //         'cpf'        => '95817965097',
+            //         'email'      => 'giovanna@teste.com',
+            //         'office'     => 'CEO',
+            //         'active'     => true,
+            //         'parking_id' => 100,
+            //     ],
+            //     self::STATUS_CODE_CORRECT,
+            // ],
         ];
     }
 
@@ -105,7 +116,7 @@ class EmployeesAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('employees', $requestData);
         } else {
-            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE_PARKING);
+            $this->assertEquals(self::ERROR_MESSAGE,$response['data']['message']);
         }
     }
 
@@ -121,7 +132,7 @@ class EmployeesAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('employees', $requestData);
         } else {
-            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
+            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
         }
     }
 

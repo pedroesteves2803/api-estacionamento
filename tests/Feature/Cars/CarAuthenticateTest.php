@@ -14,7 +14,7 @@ class CarAuthenticateTest extends TestCase
 
     public const API_CAR_PATH = '/api/car';
     public const ERROR_MESSAGE_PARKING = 'Estacionamento não existe!';
-    public const ERROR_MESSAGE= 'Registro não encontrado';
+    public const ERROR_MESSAGE = 'Registro não encontrado';
     public const PASSWORD = 'password';
     public const STATUS_CODE_CORRECT = 200;
     public const STATUS_CODE_ERROR = 401;
@@ -46,7 +46,7 @@ class CarAuthenticateTest extends TestCase
     private function checkResponseBody($response) :void
     {
         $this->assertNotNull($response['data']);
-        $this->assertEquals($response['data']['errors'], false);
+        $this->assertEquals(false, $response['data']['errors']);
         $this->assertNull($response['data']['message']);
         $this->assertIsArray($response['data']['content']);
     }
@@ -116,7 +116,7 @@ class CarAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('cars', $requestData);
         } else {
-            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
+            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
         }
     }
 
@@ -132,7 +132,7 @@ class CarAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('cars', $requestData);
         } else {
-            $this->assertEquals($response['data']['message'], self::ERROR_MESSAGE);
+            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
         }
     }
 
@@ -172,6 +172,6 @@ class CarAuthenticateTest extends TestCase
 
         $this->assertNotNull($content['saida']);
         $this->assertNotNull($content['valor_para_pagamento']);
-        $this->assertEquals($count, 8);
+        $this->assertEquals(8, $count);
     }
 }

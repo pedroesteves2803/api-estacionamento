@@ -39,6 +39,12 @@ class ParkingUnauthenticatedTest extends TestCase
         ];
     }
 
+    private function UnauthenticatedResponse($response)
+    {
+        $response->assertStatus(self::STATUS_CODE_ERROR);
+        $this->assertEquals(self::UNAUTHENTICATED_MESSAGE, $response['message']);
+    }
+
     /**
      * Data Provider para testar diferentes cenários de criação de estacionamento.
      */
@@ -91,8 +97,7 @@ class ParkingUnauthenticatedTest extends TestCase
     {
         $response = $this->get(self::API_PARKING_PATH, $this->UnauthenticatedHeader());
 
-        $response->assertStatus(self::STATUS_CODE_ERROR);
-        $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
+        $this->UnauthenticatedResponse($response);
     }
 
     /**
@@ -121,15 +126,13 @@ class ParkingUnauthenticatedTest extends TestCase
     {
         $response = $this->get(self::API_PARKING_PATH."/{$this->parking->id}", $this->UnauthenticatedHeader());
 
-        $response->assertStatus(self::STATUS_CODE_ERROR);
-        $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
+        $this->UnauthenticatedResponse($response);
     }
 
     public function testDeleteByIdNotAuthenticate(): void
     {
         $response = $this->delete(self::API_PARKING_PATH."/{$this->parking->id}", [], $this->UnauthenticatedHeader());
 
-        $response->assertStatus(self::STATUS_CODE_ERROR);
-        $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
+        $this->UnauthenticatedResponse($response);
     }
 }

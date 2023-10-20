@@ -50,7 +50,7 @@ class AuthenticateTest extends TestCase
 
 
         $this->assertNotNull($response['data']);
-        $this->assertEquals($response['data']['errors'], false);
+        $this->assertEquals(false, $response['data']['errors']);
         $this->assertNull($response['data']['message']);
         $this->assertIsArray($response['data']['content']);
 

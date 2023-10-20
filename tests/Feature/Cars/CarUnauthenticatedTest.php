@@ -42,7 +42,7 @@ class CarUnauthenticatedTest extends TestCase
     private function UnauthenticatedResponse($response)
     {
         $response->assertStatus(self::STATUS_CODE_ERROR);
-        $this->assertEquals($response['message'], self::UNAUTHENTICATED_MESSAGE);
+        $this->assertEquals(self::UNAUTHENTICATED_MESSAGE, $response['message']);
     }
 
     // Não autenticados
