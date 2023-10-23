@@ -8,6 +8,4 @@ class UtilsRequestService
     {
         return count($request) < $numberOfParameters;
     }
-
-    // Outros métodos comuns podem ser adicionados aqui
 }

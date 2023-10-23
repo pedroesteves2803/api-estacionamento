@@ -275,13 +275,4 @@ class ParkingController extends Controller
 
         return $parking;
     }
-
-    private function verifiedRequest(array $request, int $numberOfParameters)
-    {
-        if (count($request) < $numberOfParameters) {
-            return true;
-        }
-
-        return false;
-    }
 }

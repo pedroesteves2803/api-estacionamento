@@ -5,21 +5,26 @@
          colors="true"
 >
     <testsuites>
-        <!-- <testsuite name="Unit">
-            <directory>tests/Unit</directory>
-        </testsuite> -->
+        <testsuite name="unit-utils-request">
+            <directory>tests/Unit/UtilsRequest</directory>
+        </testsuite>
+
         <testsuite name="feature-authenticate">
             <directory>tests/Feature/Authenticate</directory>
         </testsuite>
+
         <testsuite name="feature-parkings">
             <directory>tests/Feature/Parkings</directory>
         </testsuite>
+
         <testsuite name="feature-employees">
             <directory>tests/Feature/Employees</directory>
         </testsuite>
+
         <testsuite name="feature-cars">
             <directory>tests/Feature/Cars</directory>
         </testsuite>
+
     </testsuites>
     <source>
         <include>

@@ -65,14 +65,14 @@ class AuthController extends Controller
         return $this->outputResponse($token);
     }
 
-    private function outputResponse($token)
+    private function outputResponse($token, $message = 'Usuário não encontrado!')
     {
         $error = [];
 
         if (is_null($token)) {
             $error = [
                 'erro'    => true,
-                'message' => 'Registro não encontrado',
+                'message' => $message,
             ];
         }
 

@@ -380,13 +380,4 @@ class CarsController extends Controller
 
         return $car;
     }
-
-    private function verifiedRequest(array $request, int $numberOfParameters)
-    {
-        if(count($request) < $numberOfParameters){
-            return true;
-        }
-
-        return false;
-    }
 }
