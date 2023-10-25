@@ -36,13 +36,24 @@
                 }
             }
         },
-        "/api/car": {
+        "/api/car/{parking_id}": {
             "get": {
                 "tags": [
                     "Carros"
                 ],
-                "summary": "Buscar todas as informações",
-                "operationId": "ad16506d8ae145d931d69365fdd67765",
+                "summary": "Buscar carros por ID do estacionamento",
+                "operationId": "08ac417297e85b6a73c1181ff9c5bf2b",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Resposta bem sucedida",
@@ -63,7 +74,9 @@
                         "Autenticação": []
                     }
                 ]
-            },
+            }
+        },
+        "/api/car": {
             "post": {
                 "tags": [
                     "Carros"

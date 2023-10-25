@@ -22,8 +22,9 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/parking', ParkingController::class);
 
-    Route::apiResource('/car', CarsController::class);
+    Route::get('/car/{parking}', [CarsController::class, 'index']);
     Route::get('/car/{parking}/{id}', [CarsController::class, 'show']);
+    Route::post('/car', [CarsController::class, 'store']);
     Route::delete('/car/{parking}/{id}', [CarsController::class, 'destroy']);
     Route::patch('/car/{parking}/{id}', [CarsController::class, 'update']);
     Route::patch('/car/output/{parking}/{car}', [CarsController::class, 'registersCarExit']);

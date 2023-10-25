@@ -4,11 +4,16 @@ namespace App\Http\Controllers\Cars;
 
 use App\Dtos\Cars\CarsDTO;
 use App\Dtos\Cars\OutputCarsDTO;
+use App\Exceptions\FailureCreateCarException;
+use App\Exceptions\FailureUpdateCarException;
+use App\Exceptions\NoParkingException;
+use App\Exceptions\RequestFailureException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CarResource;
 use App\Models\Car;
 use App\Models\Parking;
 use App\Services\Utils\UtilsRequestService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -23,6 +28,8 @@ use Illuminate\Http\Response;
 class CarsController extends Controller
 {
 
+    const NUMBER_OF_PARAMETERS = 4;
+
     public function __construct(
         protected Car $cars,
         protected UtilsRequestService $utilsRequestService
@@ -31,10 +38,19 @@ class CarsController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/car",
-     *     summary="Buscar todas as informações",
+     *     path="/api/car/{parking_id}",
+     *     summary="Buscar carros por ID do estacionamento",
      *     tags={"Carros"},
      *     security={{ "Autenticação": {} }},
+     *
+     *     @OA\Parameter(
+     *         name="parking_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
      *
      *     @OA\Response(
      *         response=200,
@@ -48,20 +64,11 @@ class CarsController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function index(string $parkingId)
     {
-        $cars = $this->cars::all();
+        $cars = $this->cars::where('parking_id', $parkingId)->get();
 
-        $carsDTOs = collect($cars)->map(function ($car) {
-            return new OutputCarsDTO(
-                $car->id,
-                $car->plate,
-                $car->model,
-                $car->color,
-                $car->input,
-                $car->parking_id,
-            );
-        })->all();
+        $carsDTOs = $this->mapToOutputCarsDTO($cars);
 
         return CarResource::collection(
             collect($carsDTOs)
@@ -93,35 +100,21 @@ class CarsController extends Controller
      */
     public function store(Request $request)
     {
+        try{
+            $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
-        if ($this->utilsRequestService->verifiedRequest($request->all(), 4)) {
-            return $this->outputResponse(null);
+            $this->checkParkingExistence($request->parking_id);
+
+            $car = $this->createCar($request);
+
+            return $this->outputResponse($car);
+        }catch(NoParkingException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }catch(RequestFailureException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }catch(FailureCreateCarException $e){
+            return $this->outputResponse(null, $e->getMessage());
         }
-
-        if (empty($request->all())) {
-            return $this->outputResponse(null, 'Não foi possivel adicionar um novo carro!');
-        }
-
-        if(!Parking::where('id', $request->parking_id)->exists()){
-            return $this->outputResponse(null, 'Estacionamento não existe!');
-        };
-
-        $dto = new CarsDTO(
-            ...$request->only([
-                'plate',
-                'model',
-                'color',
-                'parking_id',
-            ])
-        );
-
-        $dto->toArray()['input'] = now();
-
-        $car = $this->cars::create($dto->toArray());
-
-        $car = $this->cars::find($car['id']);
-
-        return $this->outputResponse($car);
     }
 
     /**
@@ -217,32 +210,25 @@ class CarsController extends Controller
         string $id
     )
     {
-        if ($this->utilsRequestService->verifiedRequest($request->all(), 4)) {
-            return $this->outputResponse(null);
+        try{
+            $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
+
+            $this->checkParkingExistence($request->parking_id);
+
+            $car = $this->updateCar($request, $parkingId, $id);
+
+            if ($car->erro) {
+                return $car;
+            }
+
+            return $this->outputResponse($car);
+        }catch(NoParkingException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }catch(RequestFailureException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }catch(FailureUpdateCarException $e){
+            return $this->outputResponse(null, $e->getMessage());
         }
-
-        if(!Parking::where('id', $request->parking_id)->exists()){
-            return $this->outputResponse(null, 'Estacionamento não existe!');
-        };
-
-        $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
-
-        if ($car->erro) {
-            return $car;
-        }
-
-        $dto = new CarsDTO(
-            ...$request->only([
-                'plate',
-                'model',
-                'color',
-                'parking_id',
-            ]),
-        );
-
-        $car->update($dto->toArray());
-
-        return $this->outputResponse($car);
     }
 
     /**
@@ -379,5 +365,73 @@ class CarsController extends Controller
         }
 
         return $car;
+    }
+
+    private function mapToOutputCarsDTO($cars)
+    {
+
+        return $cars->map(function ($car) {
+            return new OutputCarsDTO(
+                $car->id,
+                $car->plate,
+                $car->model,
+                $car->color,
+                $car->input,
+                $car->parking_id,
+            );
+        })->all();
+    }
+
+    private function createCar(Request $request) : Car | FailureCreateCarException
+    {
+        $dto = new CarsDTO(
+            ...$request->only([
+                'plate',
+                'model',
+                'color',
+                'parking_id',
+            ]),
+        );
+
+        $dto->toArray()['input'] = now();
+
+        $car = $this->cars::create($dto->toArray());
+
+        if (is_null($car)) {
+            throw new FailureCreateCarException('Não foi possível criar o carro.');
+        }
+
+        $car = $this->cars::find($car['id']);
+
+        return $car;
+    }
+
+    private function updateCar(Request $request, string $parkingId, string $id) : Car | FailureUpdateCarException
+    {
+        $dto = new CarsDTO(
+            ...$request->only([
+                'plate',
+                'model',
+                'color',
+                'parking_id',
+            ]),
+        );
+
+        $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
+
+        $car->update($dto->toArray());
+
+        if (is_null($car)) {
+            throw new FailureUpdateCarException('Não foi possível atualizar o carro.');
+        }
+
+        return $car;
+    }
+
+    private function checkParkingExistence(string $parkingId)
+    {
+        if (!Parking::where('id', $parkingId)->exists()) {
+            throw new NoParkingException('Estacionamento não existe!');
+        }
     }
 }

@@ -51,6 +51,9 @@
         ],
         "fixer": [
             "@php tools/php-cs-fixer/vendor/bin/php-cs-fixer fix"
+        ],
+        "doc": [
+            "@php artisan l5-swagger:generate"
         ]
     },
     "extra": {
