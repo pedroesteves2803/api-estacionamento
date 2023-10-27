@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\UtilsRequest;
 
+use App\Exceptions\RequestFailureException;
 use App\Services\Utils\UtilsRequestService;
 use PHPUnit\Framework\TestCase;
 
@@ -11,10 +12,20 @@ class UtilsRequestTest extends TestCase
     const STATUS_CORRECT = true;
     const STATUS_INCORRECT = false;
 
-    /**
-     * Data Provider para testar diferentes cenários de criação de estacionamento.
-     */
-    public static function RequestsDataProvider()
+    public static function RequestsDataProviderIncorrect()
+    {
+        return [
+            'pasando-dois-parametros-esperando-tres' => [
+                [
+                    'name' => 'Estacionamento de sucesso 0',
+                    'numberOfVacancies' => 50
+                ],
+                3,
+            ]
+        ];
+    }
+
+    public static function RequestsDataProviderCorrect()
     {
         return [
             'pasando-dois-parametros-esperando-dois' => [
@@ -24,29 +35,30 @@ class UtilsRequestTest extends TestCase
                 ],
                 2,
                 self::STATUS_CORRECT,
-            ],
-            'pasando-dois-parametros-esperando-tres' => [
-                [
-                    'name' => 'Estacionamento de sucesso 1',
-                    'numberOfVacancies' => 100,
-                ],
-                3,
-                self::STATUS_INCORRECT,
             ]
         ];
     }
 
     /**
-     * @dataProvider RequestsDataProvider
+     * @dataProvider RequestsDataProviderIncorrect
      */
-    public function testVerifiedRequestIsCorrect(array $requestData, int $numberOfParameters, bool $expectedStatus): void
+    public function testVerifiedRequestIsIncorrect(array $requestData, int $numberOfParameters): void
+    {
+        $this->expectException(RequestFailureException::class);
+        $this->expectExceptionMessage('Não foi possivel adicionar um novo carro!');
+
+        (new UtilsRequestService())->verifiedRequest($requestData, $numberOfParameters);
+
+    }
+
+    /**
+     * @dataProvider RequestsDataProviderCorrect
+     */
+    public function testVerifiedRequestIsCorrect(array $requestData, int $numberOfParameters): void
     {
         $response = (new UtilsRequestService())->verifiedRequest($requestData, $numberOfParameters);
 
-        if($expectedStatus){
-            $this->assertFalse($response);
-        }else{
-            $this->assertTrue($response);
-        }
+        $this->assertTrue($response);
+
     }
 }
