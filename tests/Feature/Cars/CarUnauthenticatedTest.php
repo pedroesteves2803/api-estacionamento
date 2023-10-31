@@ -49,7 +49,7 @@ class CarUnauthenticatedTest extends TestCase
 
     public function testGetCarsNotAuthenticate(): void
     {
-        $response = $this->get(self::API_CAR_PATH, $this->UnauthenticatedHeader());
+        $response = $this->get(self::API_CAR_PATH."/{$this->parking->id}/", $this->UnauthenticatedHeader());
 
         $this->UnauthenticatedResponse($response);
     }

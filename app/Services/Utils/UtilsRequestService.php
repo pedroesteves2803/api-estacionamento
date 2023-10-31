@@ -10,7 +10,7 @@ class UtilsRequestService
     {
 
         if (empty($request) or count($request) < $numberOfParameters) {
-            throw new RequestFailureException('Não foi possivel adicionar um novo carro!');
+            throw new RequestFailureException('Request incorreto!');
         }
 
         return true;

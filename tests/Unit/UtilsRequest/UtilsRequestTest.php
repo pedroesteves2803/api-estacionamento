@@ -45,7 +45,7 @@ class UtilsRequestTest extends TestCase
     public function testVerifiedRequestIsIncorrect(array $requestData, int $numberOfParameters): void
     {
         $this->expectException(RequestFailureException::class);
-        $this->expectExceptionMessage('Não foi possivel adicionar um novo carro!');
+        $this->expectExceptionMessage('Request incorreto!');
 
         (new UtilsRequestService())->verifiedRequest($requestData, $numberOfParameters);
 

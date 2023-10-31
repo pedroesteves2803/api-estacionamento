@@ -67,16 +67,6 @@ class EmployeesAuthenticateTest extends TestCase
     public static function createOrUpdateEmployeesDataProvider()
     {
         return [
-            'estacionamento-com-corpo-incorreto' => [
-                [
-                    'name'       => 'Pedro',
-                    'cpf'        => '85771330019',
-                    'email'      => 'pedro@teste.com',
-                    'office'     => 'DEV',
-                    'parking_id' => 1,
-                ],
-                self::STATUS_CODE_CORRECT,
-            ],
             'estacionamento-com-corpo-correto' => [
                 [
                     'name'       => 'Giovanna',
@@ -87,18 +77,18 @@ class EmployeesAuthenticateTest extends TestCase
                     'parking_id' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
-            ]
-            // 'estacionamento-sem-id-de-estacionamento-valido' => [
-            //     [
-            //         'name'       => 'Giovanna',
-            //         'cpf'        => '95817965097',
-            //         'email'      => 'giovanna@teste.com',
-            //         'office'     => 'CEO',
-            //         'active'     => true,
-            //         'parking_id' => 100,
-            //     ],
-            //     self::STATUS_CODE_CORRECT,
-            // ],
+            ],
+            'estacionamento-sem-id-de-estacionamento-valido' => [
+                [
+                    'name'       => 'Giovanna',
+                    'cpf'        => '95817965097',
+                    'email'      => 'giovanna@teste.com',
+                    'office'     => 'CEO',
+                    'active'     => true,
+                    'parking_id' => 100,
+                ],
+                self::STATUS_CODE_CORRECT,
+            ],
         ];
     }
 

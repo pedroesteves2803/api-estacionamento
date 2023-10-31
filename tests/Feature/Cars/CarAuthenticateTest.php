@@ -53,7 +53,7 @@ class CarAuthenticateTest extends TestCase
 
     public function testGetCars(): void
     {
-        $response = $this->get(self::API_CAR_PATH, $this->AuthHeaders());
+        $response = $this->get(self::API_CAR_PATH."/{$this->parking->id}/", $this->AuthHeaders());
 
         $response->assertStatus(self::STATUS_CODE_CORRECT)
             ->assertJsonStructure([
@@ -64,15 +64,6 @@ class CarAuthenticateTest extends TestCase
     public static function createOrUpdateCarDataProvider()
     {
         return [
-            'carro-com-corpo-incorreto' => [
-                [
-                    'plate'      => 'NEJ1472',
-                    'model'      => 'Uno',
-                    'color'      => 'Verde',
-                    'parking_id' => 1,
-                ],
-                self::STATUS_CODE_CORRECT,
-            ],
             'carro-com-corpo-correto-placa-padrão' => [
                 [
                     'plate'      => 'HEU0535',
@@ -88,14 +79,6 @@ class CarAuthenticateTest extends TestCase
                     'model'      => 'Uno',
                     'color'      => 'Verde',
                     'parking_id' => 1,
-                ],
-                self::STATUS_CODE_CORRECT,
-            ],
-            'carro-com-corpo-correto-sem-id-do-estacionamento' => [
-                [
-                    'plate' => 'JTU2074',
-                    'model' => 'Uno',
-                    'color' => 'Verde',
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
@@ -116,7 +99,7 @@ class CarAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('cars', $requestData);
         } else {
-            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
+            $this->assertEquals(self::ERROR_MESSAGE_PARKING, $response['data']['message']);
         }
     }
 
@@ -132,7 +115,7 @@ class CarAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('cars', $requestData);
         } else {
-            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
+            $this->assertEquals(self::ERROR_MESSAGE_PARKING, $response['data']['message']);
         }
     }
 

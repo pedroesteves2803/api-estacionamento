@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Cars;
 
 use App\Dtos\Cars\CarsDTO;
 use App\Dtos\Cars\OutputCarsDTO;
-use App\Exceptions\FailureCreateCarException;
-use App\Exceptions\FailureUpdateCarException;
-use App\Exceptions\NoParkingException;
+use App\Exceptions\Car\FailureCreateCarException;
+use App\Exceptions\Car\FailureExitCarException;
+use App\Exceptions\Car\FailureGetCarByParkingIdAndCarIdtCarException;
+use App\Exceptions\Car\FailureUpdateCarException;
+use App\Exceptions\Parking\NoParkingException;
 use App\Exceptions\RequestFailureException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CarResource;
@@ -15,6 +17,7 @@ use App\Models\Parking;
 use App\Services\Utils\UtilsRequestService;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 
 /**
@@ -64,7 +67,9 @@ class CarsController extends Controller
      *     )
      * )
      */
-    public function index(string $parkingId)
+    public function index(
+        string $parkingId
+    ) : JsonResource
     {
         $cars = $this->cars::where('parking_id', $parkingId)->get();
 
@@ -98,7 +103,9 @@ class CarsController extends Controller
      *     )
      * )
      */
-    public function store(Request $request)
+    public function store(
+        Request $request
+    ) : CarResource
     {
         try{
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
@@ -152,15 +159,23 @@ class CarsController extends Controller
      *     )
      * )
      */
-    public function show(string $parkingId, string $id)
+
+    public function show(
+        string $parkingId,
+        string $id
+    ): CarResource
     {
-        $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
+        try{
+            $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
-        if ($car->erro) {
-            return $car;
+            if ($car->erro) {
+                return $car;
+            }
+
+            return $this->outputResponse($car);
+        }catch(FailureGetCarByParkingIdAndCarIdtCarException $e){
+            return $this->outputResponse(null, $e->getMessage());
         }
-
-        return $this->outputResponse($car);
     }
 
     /**
@@ -208,7 +223,7 @@ class CarsController extends Controller
         Request $request,
         string $parkingId,
         string $id
-    )
+    ) : CarResource
     {
         try{
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
@@ -227,6 +242,8 @@ class CarsController extends Controller
         }catch(RequestFailureException $e){
             return $this->outputResponse(null, $e->getMessage());
         }catch(FailureUpdateCarException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }catch(FailureGetCarByParkingIdAndCarIdtCarException $e){
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -266,20 +283,26 @@ class CarsController extends Controller
      *     )
      * )
      */
-    public function registersCarExit(string $parkingId, string $id)
+    public function registersCarExit(
+        string $parkingId,
+        string $id
+    ) : CarResource
     {
-        $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
+        try{
+            $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
-        if ($car->erro) {
-            return $car;
+            if ($car->erro) {
+                return $car;
+            }
+
+            $this->exitCar($car);
+
+            return $this->outputResponse($car);
+        }catch(FailureGetCarByParkingIdAndCarIdtCarException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }catch(FailureExitCarException $e){
+            return $this->outputResponse(null, $e->getMessage());
         }
-
-        $car->output = now();
-        $car->save();
-
-        $car = $this->cars::find($car['id']);
-
-        return $this->outputResponse($car);
     }
 
     /**
@@ -313,20 +336,31 @@ class CarsController extends Controller
      *     )
      * )
      */
-    public function destroy(string $parkingId, string $id)
+    public function destroy(
+        string $parkingId,
+        string $id
+    ) : Response | CarResource
     {
-        $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
+        try{
+            $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
-        if ($car->erro) {
-            return $car;
+            if ($car->erro) {
+                return $car;
+            }
+
+            $car->delete();
+
+            return response()->json([], Response::HTTP_NO_CONTENT);
+        }catch(FailureGetCarByParkingIdAndCarIdtCarException $e){
+            return $this->outputResponse(null, $e->getMessage());
         }
 
-        $car->delete();
-
-        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse($car, $message = 'Registro não encontrado')
+    private function outputResponse(
+        Car|null $car,
+        String $message = 'Registro não encontrado'
+    ) : CarResource
     {
         $error = [];
 
@@ -353,21 +387,26 @@ class CarsController extends Controller
         return new CarResource($outputDto);
     }
 
-    private function getCarByParkingIdAndCarId($parkingId, $carId)
+    private function getCarByParkingIdAndCarId(
+        int $parkingId,
+        int $carId
+    ) : Car | FailureGetCarByParkingIdAndCarIdtCarException
     {
         $car = $this->cars::where([
             'parking_id' => $parkingId,
             'id'         => $carId,
         ])->first();
 
-        if (!$car) {
-            return $this->outputResponse($car);
+        if (is_null($car)) {
+            throw new FailureGetCarByParkingIdAndCarIdtCarException('Não foi possível localizar o carro.');
         }
 
         return $car;
     }
 
-    private function mapToOutputCarsDTO($cars)
+    private function mapToOutputCarsDTO(
+       Car $cars
+    ) : Car
     {
 
         return $cars->map(function ($car) {
@@ -382,7 +421,9 @@ class CarsController extends Controller
         })->all();
     }
 
-    private function createCar(Request $request) : Car | FailureCreateCarException
+    private function createCar(
+        Request $request
+    ) : Car | FailureCreateCarException
     {
         $dto = new CarsDTO(
             ...$request->only([
@@ -406,7 +447,11 @@ class CarsController extends Controller
         return $car;
     }
 
-    private function updateCar(Request $request, string $parkingId, string $id) : Car | FailureUpdateCarException
+    private function updateCar(
+        Request $request,
+        string $parkingId,
+        string $id
+    ) : Car | FailureUpdateCarException
     {
         $dto = new CarsDTO(
             ...$request->only([
@@ -428,7 +473,24 @@ class CarsController extends Controller
         return $car;
     }
 
-    private function checkParkingExistence(string $parkingId)
+    private function exitCar(
+        Car $car
+    ) : Car
+    {
+        $car->output = now();
+        $car->save();
+
+        if(is_null($car)) {
+            throw new FailureExitCarException('Estacionamento não existe!');
+
+        }
+
+        return $this->cars::find($car['id']);
+    }
+
+    private function checkParkingExistence(
+        string $parkingId
+    )
     {
         if (!Parking::where('id', $parkingId)->exists()) {
             throw new NoParkingException('Estacionamento não existe!');
