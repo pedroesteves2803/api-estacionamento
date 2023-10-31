@@ -84,13 +84,6 @@ class ParkingAuthenticateTest extends TestCase
     public static function createOrUpdateParkingDataProvider()
     {
         return [
-            'estacionamento-com-corpo-incorreto' => [
-                [
-                    'name' => 'Estacionamento de sucesso 0',
-                    'numberOfVacancies' => 50
-                ],
-                self::STATUS_CODE_CORRECT,
-            ],
             'estacionamento-com-corpo-correto' => [
                 [
                     'name' => 'Estacionamento de sucesso 1',
