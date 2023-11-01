@@ -5,14 +5,16 @@ namespace App\Http\Controllers\Parking;
 use App\Dtos\Parking\OutputParkingDTO;
 use App\Dtos\Parking\ParkingDTO;
 use App\Exceptions\Car\FailureUpdateCarException;
-use App\Exceptions\Parking\NoParkingException;
 use App\Exceptions\Parking\FailureCreateParkingException;
+use App\Exceptions\Parking\FailureGetParkingByIDException;
 use App\Exceptions\Parking\FailureUpdateParkingException;
 use App\Exceptions\RequestFailureException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ParkingResource;
 use App\Models\Parking;
 use App\Services\Utils\UtilsRequestService;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -32,7 +34,8 @@ class ParkingController extends Controller
     public function __construct(
         protected Parking $parking,
         protected UtilsRequestService $utilsRequestService
-    ){
+    )
+    {
     }
 
     /**
@@ -139,15 +142,22 @@ class ParkingController extends Controller
      *     )
      * )
      */
-    public function show(string $id)
+    public function show(
+        string $id
+    ) : ParkingResource
     {
-        $parking = $this->getParkingById($id);
+        try{
+            $parking = $this->getParkingById($id);
 
-        if ($parking->erro) {
-            return $parking;
+            if ($parking->erro) {
+                return $parking;
+            }
+
+            return $this->outputResponse($parking);
+        }catch(FailureGetParkingByIdException $e){
+            return $this->outputResponse(null, $e->getMessage());
         }
 
-        return $this->outputResponse($parking);
     }
 
     /**
@@ -185,7 +195,8 @@ class ParkingController extends Controller
     public function update(
         Request $request,
         string $id
-    ){
+    ) : ParkingResource
+    {
         try{
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
@@ -225,20 +236,30 @@ class ParkingController extends Controller
      *     )
      * )
      */
-    public function destroy(string $id)
+    public function destroy(
+        string $id
+    ): JsonResponse | ParkingResource
     {
-        $parking = $this->getParkingById($id);
+        try{
+            $parking = $this->getParkingById($id);
 
-        if ($parking->erro) {
-            return $parking;
+            if ($parking->erro) {
+                return $parking;
+            }
+
+            $parking->delete();
+
+            return response()->json([], Response::HTTP_NO_CONTENT);
+        }catch(FailureGetParkingByIDException $e){
+            return $this->outputResponse(null, $e->getMessage());
         }
 
-        $parking->delete();
-
-        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 
-    private function outputResponse($parking, $message = 'Registro não encontrado')
+    private function outputResponse(
+        Parking | null $parking,
+        string $message = 'Registro não encontrado'
+    ) : ParkingResource
     {
         $error = [];
 
@@ -264,18 +285,22 @@ class ParkingController extends Controller
         return new ParkingResource($outputDto);
     }
 
-    private function getParkingById($parkingId)
+    private function getParkingById(
+        int $parkingId
+    ) : Parking | FailureGetParkingByIDException
     {
         $parking = $this->parking::with('cars')->find($parkingId);
 
         if (!$parking) {
-            return $this->outputResponse($parking);
+            throw new FailureGetParkingByIDException('Não foi possível localizar o estacionamento.');
         }
 
         return $parking;
     }
 
-    private function createParking(Request $request) : Parking
+    private function createParking(
+        Request $request
+    ) : Parking
     {
         $dto = new ParkingDTO(
             ...$request->all([
@@ -294,7 +319,10 @@ class ParkingController extends Controller
         return $parking;
     }
 
-    private function updateParking(Request $request, int $id) : Parking
+    private function updateParking(
+        Request $request,
+        int $id
+    ) : Parking
     {
 
         $dto = new ParkingDTO(
