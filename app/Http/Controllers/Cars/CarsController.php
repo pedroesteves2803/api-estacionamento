@@ -16,6 +16,8 @@ use App\Models\Car;
 use App\Models\Parking;
 use App\Services\Utils\UtilsRequestService;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
@@ -36,7 +38,8 @@ class CarsController extends Controller
     public function __construct(
         protected Car $cars,
         protected UtilsRequestService $utilsRequestService
-    ){
+    )
+    {
     }
 
     /**
@@ -69,7 +72,7 @@ class CarsController extends Controller
      */
     public function index(
         string $parkingId
-    ) : JsonResource
+    )
     {
         $cars = $this->cars::where('parking_id', $parkingId)->get();
 
@@ -339,7 +342,7 @@ class CarsController extends Controller
     public function destroy(
         string $parkingId,
         string $id
-    ) : Response | CarResource
+    ) : JsonResponse | CarResource
     {
         try{
             $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
@@ -405,8 +408,8 @@ class CarsController extends Controller
     }
 
     private function mapToOutputCarsDTO(
-       Car $cars
-    ) : Car
+        Collection $cars
+    ) : array
     {
 
         return $cars->map(function ($car) {
@@ -482,7 +485,6 @@ class CarsController extends Controller
 
         if(is_null($car)) {
             throw new FailureExitCarException('Estacionamento não existe!');
-
         }
 
         return $this->cars::find($car['id']);
