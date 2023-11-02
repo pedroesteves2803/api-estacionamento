@@ -4,11 +4,15 @@ namespace App\Http\Controllers\Employees;
 
 use App\Dtos\Employees\EmployeesDTO;
 use App\Dtos\Employees\OutputEmployeesDTO;
+use App\Exceptions\Employees\FailureCreateEmployeesException;
+use App\Exceptions\Parking\NoParkingException;
+use App\Exceptions\RequestFailureException;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\EmployeesResource;
 use App\Models\Employees;
 use App\Models\Parking;
 use App\Services\Utils\UtilsRequestService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -22,10 +26,13 @@ use Illuminate\Http\Response;
  */
 class EmployeesController extends Controller
 {
+    const NUMBER_OF_PARAMETERS = 6;
+
     public function __construct(
         protected Employees $employees,
         protected UtilsRequestService $utilsRequestService
-    ){
+    )
+    {
     }
 
     /**
@@ -34,6 +41,15 @@ class EmployeesController extends Controller
      *     summary="Buscar todas os funcionários",
      *     tags={"Funcionários"},
      *     security={{ "Autenticação": {} }},
+     *
+     *     @OA\Parameter(
+     *         name="parking_id",
+     *         in="path",
+     *         required=true,
+     *         description="ID do estacionamento",
+     *
+     *         @OA\Schema(type="string")
+     *     ),
      *
      *     @OA\Response(
      *         response=200,
@@ -47,21 +63,13 @@ class EmployeesController extends Controller
      *     )
      * )
      */
-    public function index()
+    public function index(
+        string $parkingId
+    )
     {
-        $employees = $this->employees::all();
+        $employees = $this->employees::where('parking_id', $parkingId)->get();
 
-        $employeesDTOs = collect($employees)->map(function ($employee) {
-            return new OutputEmployeesDTO(
-                $employee->id,
-                $employee->name,
-                $employee->cpf,
-                $employee->email,
-                $employee->office,
-                $employee->active,
-                $employee->parking_id
-            );
-        })->all();
+        $employeesDTOs = $this->mapToOutputEmployeesDTO($employees);
 
         return EmployeesResource::collection(
             collect($employeesDTOs)
@@ -93,28 +101,23 @@ class EmployeesController extends Controller
      */
     public function store(Request $request)
     {
-        if ($this->utilsRequestService->verifiedRequest($request->all(), 6)) {
-            return $this->outputResponse(null);
-        }
+        try{
 
-        if(!Parking::where('id', $request->parking_id)->exists()){
-            return $this->outputResponse(null, 'Estacionamento não existe!');
-        };
+        $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
-        $dto = new EmployeesDTO(
-            ...$request->only([
-                'name',
-                'cpf',
-                'email',
-                'office',
-                'active',
-                'parking_id',
-            ])
-        );
+        $this->checkParkingExistence($request->parking_id);
 
-        $employee = $this->employees::create($dto->toArray());
+        $employee = $this->createEmployee($request);
 
         return $this->outputResponse($employee);
+
+        }catch(NoParkingException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }catch(RequestFailureException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }catch(FailureCreateEmployeesException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }
     }
 
     /**
@@ -320,12 +323,56 @@ class EmployeesController extends Controller
         return $employee;
     }
 
-    private function verifiedRequest(array $request, int $numberOfParameters)
+    private function mapToOutputEmployeesDTO(
+        Collection $employees
+    ) : array
     {
-        if (count($request) < $numberOfParameters) {
-            return true;
+
+        return $employees->map(function ($employee) {
+            return new OutputEmployeesDTO(
+                $employee->id,
+                $employee->name,
+                $employee->cpf,
+                $employee->email,
+                $employee->office,
+                $employee->active,
+                $employee->parking_id
+            );
+        })->all();
+    }
+
+    private function checkParkingExistence(
+        string $parkingId
+    )
+    {
+        if (!Parking::where('id', $parkingId)->exists()) {
+            throw new NoParkingException('Estacionamento não existe!');
+        }
+    }
+
+    private function createEmployee(
+        Request $request
+    ) : Employees | FailureCreateEmployeesException
+    {
+        $dto = new EmployeesDTO(
+            ...$request->only([
+                'name',
+                'cpf',
+                'email',
+                'office',
+                'active',
+                'parking_id',
+            ])
+        );
+
+        $employee = $this->employees::create($dto->toArray());
+
+        if (is_null($employee)) {
+            throw new FailureCreateEmployeesException('Não foi possível criar o funcionário.');
         }
 
-        return false;
+        $car = $this->employees::find($employee['id']);
+
+        return $car;
     }
 }

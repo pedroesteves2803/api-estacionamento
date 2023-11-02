@@ -297,6 +297,17 @@
                 ],
                 "summary": "Buscar todas os funcionários",
                 "operationId": "e7707cd772b42c62a4f8dcec4eac24dd",
+                "parameters": [
+                    {
+                        "name": "parking_id",
+                        "in": "path",
+                        "description": "ID do estacionamento",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "Resposta bem sucedida",

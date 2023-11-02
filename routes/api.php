@@ -29,8 +29,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/car/{parking}/{id}', [CarsController::class, 'update']);
     Route::patch('/car/output/{parking}/{car}', [CarsController::class, 'registersCarExit']);
 
-    Route::apiResource('/employees', EmployeesController::class);
+    Route::get('/employees/{parking}', [EmployeesController::class, 'index']);
     Route::get('/employees/{parking}/{id}', [EmployeesController::class, 'show']);
+    Route::post('/employees', [EmployeesController::class, 'store']);
     Route::patch('/employees/{parking}/{id}', [EmployeesController::class, 'update']);
     Route::delete('/employees/{parking}/{id}', [EmployeesController::class, 'destroy']);
 });
