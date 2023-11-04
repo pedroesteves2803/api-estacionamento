@@ -4,6 +4,7 @@ namespace App\Dtos\Employees;
 
 use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
+use App\Models\Employees;
 use Illuminate\Contracts\Validation\Validator;
 
 /**
@@ -56,5 +57,18 @@ class OutputEmployeesDTO extends AbstractDTO implements InterfaceDTO
     public function validate(): array
     {
         return $this->validator()->validate();
+    }
+
+    public static function fromModel(Employees $employee)
+    {
+        return new self(
+            $employee->id,
+            $employee->name,
+            $employee->cpf,
+            $employee->email,
+            $employee->office,
+            $employee->active,
+            $employee->parking_id
+        );
     }
 }

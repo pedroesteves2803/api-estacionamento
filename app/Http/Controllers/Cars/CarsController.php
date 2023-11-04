@@ -397,28 +397,14 @@ class CarsController extends Controller
         Collection $cars
     ): array {
         return $cars->map(function ($car) {
-            return new OutputCarsDTO(
-                $car->id,
-                $car->plate,
-                $car->model,
-                $car->color,
-                $car->input,
-                $car->parking_id,
-            );
+            return OutputCarsDTO::fromModel($car);
         })->all();
     }
 
     private function createCar(
         Request $request
     ): Car|FailureCreateCarException {
-        $dto = new CarsDTO(
-            ...$request->only([
-                'plate',
-                'model',
-                'color',
-                'parking_id',
-            ]),
-        );
+        $dto = $this->createCarDTO($request);
 
         $dto->toArray()['input'] = now();
 
@@ -438,14 +424,7 @@ class CarsController extends Controller
         string $parkingId,
         string $id
     ): Car|FailureUpdateCarException {
-        $dto = new CarsDTO(
-            ...$request->only([
-                'plate',
-                'model',
-                'color',
-                'parking_id',
-            ]),
-        );
+        $dto = $this->createCarDTO($request);
 
         $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
@@ -477,5 +456,23 @@ class CarsController extends Controller
         if (!Parking::where('id', $parkingId)->exists()) {
             throw new NoParkingException('Estacionamento não existe!');
         }
+    }
+
+    private function createCarDTO(
+        Request $request
+    ): CarsDTO {
+        $fields = $request->only([
+            'plate',
+            'model',
+            'color',
+            'parking_id',
+        ]);
+
+        return new CarsDTO(
+            $fields['plate'],
+            $fields['model'],
+            $fields['color'],
+            $fields['parking_id']
+        );
     }
 }

@@ -503,13 +503,13 @@
                 ]
             }
         },
-        "/api/parking": {
+        "parking.index": {
             "get": {
                 "tags": [
                     "Estacionamento"
                 ],
                 "summary": "Buscar todas as informações",
-                "operationId": "0860ca8ede2e9d07b0fee76d4c7478e7",
+                "operationId": "ec201b8109ada456823dceebbcb45cf0",
                 "responses": {
                     "200": {
                         "description": "Resposta bem sucedida",
@@ -530,7 +530,9 @@
                         "Autenticação": []
                     }
                 ]
-            },
+            }
+        },
+        "/api/parking": {
             "post": {
                 "tags": [
                     "Estacionamento"

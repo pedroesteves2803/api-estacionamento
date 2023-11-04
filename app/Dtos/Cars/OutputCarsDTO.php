@@ -4,6 +4,7 @@ namespace App\Dtos\Cars;
 
 use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
+use App\Models\Car;
 use Illuminate\Contracts\Validation\Validator;
 
 /**
@@ -57,5 +58,17 @@ class OutputCarsDTO extends AbstractDTO implements InterfaceDTO
     public function validate(): array
     {
         return $this->validator()->validate();
+    }
+
+    public static function fromModel(Car $car)
+    {
+        return new self(
+            $car->id,
+            $car->plate,
+            $car->model,
+            $car->color,
+            $car->input,
+            $car->parking_id,
+        );
     }
 }

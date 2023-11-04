@@ -43,7 +43,7 @@ class EmployeesUnauthenticateTest extends TestCase
 
     public function testGetEmployees(): void
     {
-        $response = $this->get(self::API_EMPLOYEES_PATH, $this->UnauthenticatedHeader());
+        $response = $this->get(self::API_EMPLOYEES_PATH."/{$this->parking->id}/", $this->UnauthenticatedHeader());
 
         $this->UnauthenticatedResponse($response);
     }

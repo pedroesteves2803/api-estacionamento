@@ -38,7 +38,7 @@ class ParkingController extends Controller
 
     /**
      * @OA\Get(
-     *     path="/api/parking",
+     *     path="parking.index",
      *     summary="Buscar todas as informações",
      *     tags={"Estacionamento"},
      *     security={{ "Autenticação": {} }},
@@ -59,17 +59,7 @@ class ParkingController extends Controller
     {
         $parkings = $this->parking::all();
 
-        $parkingDTOs = collect($parkings)->map(function ($parking) {
-            return new OutputParkingDTO(
-                $parking->id,
-                $parking->name,
-                $parking->numberOfVacancies,
-                $parking->active,
-                $parking->created_at,
-                $parking->cars,
-                $parking->employees,
-            );
-        })->all();
+        $parkingDTOs = $this->mapToOutputParkingsDTOs($parkings);
 
         return ParkingResource::collection(
             collect($parkingDTOs)
@@ -292,13 +282,7 @@ class ParkingController extends Controller
     private function createParking(
         Request $request
     ): Parking {
-        $dto = new ParkingDTO(
-            ...$request->all([
-                'name',
-                'numberOfVacancies',
-                'active',
-            ])
-        );
+        $dto = $this->createParkingDTO($request);
 
         $parking = $this->parking::create($dto->toArray());
 
@@ -313,13 +297,7 @@ class ParkingController extends Controller
         Request $request,
         int $id
     ): Parking {
-        $dto = new ParkingDTO(
-            ...$request->only([
-                'name',
-                'numberOfVacancies',
-                'active',
-            ])
-        );
+        $dto = $this->createParkingDTO($request);
 
         $parking = $this->getParkingById($id);
 
@@ -330,5 +308,29 @@ class ParkingController extends Controller
         }
 
         return $parking;
+    }
+
+    private function mapToOutputParkingsDTOs(
+        $parkings
+    ): array {
+        return $parkings->map(function ($parking) {
+            return OutputParkingDTO::fromModel($parking);
+        })->all();
+    }
+
+    private function createParkingDTO(
+        Request $request
+    ): ParkingDTO {
+        $fields = $request->only([
+            'name',
+            'numberOfVacancies',
+            'active',
+        ]);
+
+        return new ParkingDTO(
+            $fields['name'],
+            $fields['numberOfVacancies'],
+            $fields['active']
+        );
     }
 }

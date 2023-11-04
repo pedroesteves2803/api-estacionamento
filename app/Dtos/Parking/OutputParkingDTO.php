@@ -4,6 +4,7 @@ namespace App\Dtos\Parking;
 
 use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
+use App\Models\Parking;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -55,5 +56,18 @@ class OutputParkingDTO extends AbstractDTO implements InterfaceDTO
     public function validate(): array
     {
         return $this->validator()->validate();
+    }
+
+    public static function fromModel(Parking $parking)
+    {
+        return new self(
+            $parking->id,
+            $parking->name,
+            $parking->numberOfVacancies,
+            $parking->active,
+            $parking->created_at,
+            $parking->cars,
+            $parking->employees,
+        );
     }
 }

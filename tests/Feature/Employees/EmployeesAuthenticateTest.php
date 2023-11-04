@@ -53,7 +53,7 @@ class EmployeesAuthenticateTest extends TestCase
 
     public function testGetEmployees(): void
     {
-        $response = $this->get(self::API_EMPLOYEES_PATH, $this->AuthHeaders());
+        $response = $this->get(self::API_EMPLOYEES_PATH."/{$this->parking->id}/", $this->AuthHeaders());
 
         $response->assertStatus(self::STATUS_CODE_CORRECT)
             ->assertJsonStructure([
@@ -106,7 +106,7 @@ class EmployeesAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('employees', $requestData);
         } else {
-            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
+            $this->assertEquals(self::ERROR_MESSAGE_PARKING, $response['data']['message']);
         }
     }
 
@@ -122,7 +122,7 @@ class EmployeesAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('employees', $requestData);
         } else {
-            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
+            $this->assertEquals(self::ERROR_MESSAGE_PARKING, $response['data']['message']);
         }
     }
 

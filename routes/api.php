@@ -16,22 +16,27 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-Route::post('/login', [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::apiResource('/parking', ParkingController::class);
+    Route::apiResource('/parking', ParkingController::class)->names([
+        'index' => 'parking.index',
+        'store' => 'parking.store',
+        'show' => 'parking.show',
+        'update' => 'parking.update',
+        'destroy' => 'parking.destroy',
+    ]);
 
-    Route::get('/car/{parking}', [CarsController::class, 'index']);
-    Route::get('/car/{parking}/{id}', [CarsController::class, 'show']);
-    Route::post('/car', [CarsController::class, 'store']);
-    Route::delete('/car/{parking}/{id}', [CarsController::class, 'destroy']);
-    Route::patch('/car/{parking}/{id}', [CarsController::class, 'update']);
-    Route::patch('/car/output/{parking}/{car}', [CarsController::class, 'registersCarExit']);
+    Route::get('/car/{parking}', [CarsController::class, 'index'])->name('cars.index');
+    Route::get('/car/{parking}/{id}', [CarsController::class, 'show'])->name('cars.show');
+    Route::post('/car', [CarsController::class, 'store'])->name('cars.store');
+    Route::delete('/car/{parking}/{id}', [CarsController::class, 'destroy'])->name('cars.destroy');
+    Route::patch('/car/{parking}/{id}', [CarsController::class, 'update'])->name('cars.update');
+    Route::patch('/car/output/{parking}/{car}', [CarsController::class, 'registersCarExit'])->name('cars.exit');
 
-    Route::get('/employees/{parking}', [EmployeesController::class, 'index']);
-    Route::get('/employees/{parking}/{id}', [EmployeesController::class, 'show']);
-    Route::post('/employees', [EmployeesController::class, 'store']);
-    Route::patch('/employees/{parking}/{id}', [EmployeesController::class, 'update']);
-    Route::delete('/employees/{parking}/{id}', [EmployeesController::class, 'destroy']);
+    Route::get('/employees/{parking}', [EmployeesController::class, 'index'])->name('employees.index');
+    Route::get('/employees/{parking}/{id}', [EmployeesController::class, 'show'])->name('employees.show');
+    Route::post('/employees', [EmployeesController::class, 'store'])->name('employees.store');
+    Route::patch('/employees/{parking}/{id}', [EmployeesController::class, 'update'])->name('employees.update');
+    Route::delete('/employees/{parking}/{id}', [EmployeesController::class, 'destroy'])->name('employees.destroy');
 });

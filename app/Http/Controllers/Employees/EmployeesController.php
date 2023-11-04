@@ -335,15 +335,7 @@ class EmployeesController extends Controller
         Collection $employees
     ): array {
         return $employees->map(function ($employee) {
-            return new OutputEmployeesDTO(
-                $employee->id,
-                $employee->name,
-                $employee->cpf,
-                $employee->email,
-                $employee->office,
-                $employee->active,
-                $employee->parking_id
-            );
+            return OutputEmployeesDTO::fromModel($employee);
         })->all();
     }
 
@@ -358,16 +350,7 @@ class EmployeesController extends Controller
     private function createEmployee(
         Request $request
     ): Employees|FailureCreateEmployeesException {
-        $dto = new EmployeesDTO(
-            ...$request->only([
-                'name',
-                'cpf',
-                'email',
-                'office',
-                'active',
-                'parking_id',
-            ])
-        );
+        $dto = $this->createEmployeeDTO($request);
 
         $employee = $this->employees::create($dto->toArray());
 
@@ -385,16 +368,7 @@ class EmployeesController extends Controller
         string $parkingId,
         string $id
     ): Employees|FailureUpdateEmployeesException {
-        $dto = new EmployeesDTO(
-            ...$request->only([
-                'name',
-                'cpf',
-                'email',
-                'office',
-                'active',
-                'parking_id',
-            ])
-        );
+        $dto = $this->createEmployeeDTO($request);
 
         $employee = $this->getEmployeeByParkingIdAndEmployeeId($parkingId, $id);
 
@@ -405,5 +379,27 @@ class EmployeesController extends Controller
         }
 
         return $employee;
+    }
+
+    private function createEmployeeDTO(
+        Request $request
+    ): EmployeesDTO {
+        $fields = $request->only([
+            'name',
+            'cpf',
+            'email',
+            'office',
+            'active',
+            'parking_id',
+        ]);
+
+        return new EmployeesDTO(
+            $fields['name'],
+            $fields['cpf'],
+            $fields['email'],
+            $fields['office'],
+            $fields['active'],
+            $fields['parking_id']
+        );
     }
 }
