@@ -2,9 +2,6 @@
 
 namespace App\Exceptions\Parking;
 
-use Exception;
-
-class FailureGetParkingByIdException extends Exception
+class FailureGetParkingByIdException extends \Exception
 {
-    //
 }

@@ -2,9 +2,6 @@
 
 namespace App\Exceptions;
 
-use Exception;
-
-class RequestFailureException extends Exception
+class RequestFailureException extends \Exception
 {
-    //
 }

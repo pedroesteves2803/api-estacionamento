@@ -13,7 +13,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\ParkingResource;
 use App\Models\Parking;
 use App\Services\Utils\UtilsRequestService;
-use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -29,13 +28,12 @@ use Illuminate\Http\Response;
  */
 class ParkingController extends Controller
 {
-    const NUMBER_OF_PARAMETERS = 3;
+    public const NUMBER_OF_PARAMETERS = 3;
 
     public function __construct(
         protected Parking $parking,
         protected UtilsRequestService $utilsRequestService
-    )
-    {
+    ) {
     }
 
     /**
@@ -103,15 +101,15 @@ class ParkingController extends Controller
      */
     public function store(Request $request)
     {
-        try{
+        try {
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
             $parking = $this->createParking($request);
 
             return $this->outputResponse($parking);
-        }catch(RequestFailureException $e){
+        } catch (RequestFailureException $e) {
             return $this->outputResponse(null, $e->getMessage());
-        }catch(FailureCreateParkingException $e){
+        } catch (FailureCreateParkingException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -144,9 +142,8 @@ class ParkingController extends Controller
      */
     public function show(
         string $id
-    ) : ParkingResource
-    {
-        try{
+    ): ParkingResource {
+        try {
             $parking = $this->getParkingById($id);
 
             if ($parking->erro) {
@@ -154,10 +151,9 @@ class ParkingController extends Controller
             }
 
             return $this->outputResponse($parking);
-        }catch(FailureGetParkingByIdException $e){
+        } catch (FailureGetParkingByIdException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
-
     }
 
     /**
@@ -195,9 +191,8 @@ class ParkingController extends Controller
     public function update(
         Request $request,
         string $id
-    ) : ParkingResource
-    {
-        try{
+    ): ParkingResource {
+        try {
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
             $parking = $this->updateParking($request, $id);
@@ -207,9 +202,9 @@ class ParkingController extends Controller
             }
 
             return $this->outputResponse($parking);
-        }catch(RequestFailureException $e){
+        } catch (RequestFailureException $e) {
             return $this->outputResponse(null, $e->getMessage());
-        }catch(FailureUpdateCarException $e){
+        } catch (FailureUpdateCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -238,9 +233,8 @@ class ParkingController extends Controller
      */
     public function destroy(
         string $id
-    ): JsonResponse | ParkingResource
-    {
-        try{
+    ): JsonResponse|ParkingResource {
+        try {
             $parking = $this->getParkingById($id);
 
             if ($parking->erro) {
@@ -250,17 +244,15 @@ class ParkingController extends Controller
             $parking->delete();
 
             return response()->json([], Response::HTTP_NO_CONTENT);
-        }catch(FailureGetParkingByIDException $e){
+        } catch (FailureGetParkingByIDException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
-
     }
 
     private function outputResponse(
-        Parking | null $parking,
+        Parking|null $parking,
         string $message = 'Registro não encontrado'
-    ) : ParkingResource
-    {
+    ): ParkingResource {
         $error = [];
 
         if (is_null($parking)) {
@@ -287,8 +279,7 @@ class ParkingController extends Controller
 
     private function getParkingById(
         int $parkingId
-    ) : Parking | FailureGetParkingByIDException
-    {
+    ): Parking|FailureGetParkingByIDException {
         $parking = $this->parking::with('cars')->find($parkingId);
 
         if (!$parking) {
@@ -300,8 +291,7 @@ class ParkingController extends Controller
 
     private function createParking(
         Request $request
-    ) : Parking
-    {
+    ): Parking {
         $dto = new ParkingDTO(
             ...$request->all([
                 'name',
@@ -322,9 +312,7 @@ class ParkingController extends Controller
     private function updateParking(
         Request $request,
         int $id
-    ) : Parking
-    {
-
+    ): Parking {
         $dto = new ParkingDTO(
             ...$request->only([
                 'name',

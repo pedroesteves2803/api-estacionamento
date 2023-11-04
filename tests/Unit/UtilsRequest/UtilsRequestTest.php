@@ -8,20 +8,19 @@ use PHPUnit\Framework\TestCase;
 
 class UtilsRequestTest extends TestCase
 {
-
-    const STATUS_CORRECT = true;
-    const STATUS_INCORRECT = false;
+    public const STATUS_CORRECT = true;
+    public const STATUS_INCORRECT = false;
 
     public static function RequestsDataProviderIncorrect()
     {
         return [
             'pasando-dois-parametros-esperando-tres' => [
                 [
-                    'name' => 'Estacionamento de sucesso 0',
-                    'numberOfVacancies' => 50
+                    'name'              => 'Estacionamento de sucesso 0',
+                    'numberOfVacancies' => 50,
                 ],
                 3,
-            ]
+            ],
         ];
     }
 
@@ -30,12 +29,12 @@ class UtilsRequestTest extends TestCase
         return [
             'pasando-dois-parametros-esperando-dois' => [
                 [
-                    'name' => 'Estacionamento de sucesso 0',
-                    'numberOfVacancies' => 50
+                    'name'              => 'Estacionamento de sucesso 0',
+                    'numberOfVacancies' => 50,
                 ],
                 2,
                 self::STATUS_CORRECT,
-            ]
+            ],
         ];
     }
 
@@ -48,7 +47,6 @@ class UtilsRequestTest extends TestCase
         $this->expectExceptionMessage('Request incorreto!');
 
         (new UtilsRequestService())->verifiedRequest($requestData, $numberOfParameters);
-
     }
 
     /**
@@ -59,6 +57,5 @@ class UtilsRequestTest extends TestCase
         $response = (new UtilsRequestService())->verifiedRequest($requestData, $numberOfParameters);
 
         $this->assertTrue($response);
-
     }
 }

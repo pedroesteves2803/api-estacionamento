@@ -14,7 +14,7 @@ class EmployeesAuthenticateTest extends TestCase
 
     public const API_EMPLOYEES_PATH = '/api/employees';
     public const ERROR_MESSAGE_PARKING = 'Estacionamento não existe!';
-    public const ERROR_MESSAGE= 'Registro não encontrado';
+    public const ERROR_MESSAGE = 'Registro não encontrado';
     public const PASSWORD = 'password';
     public const STATUS_CODE_CORRECT = 200;
     public const STATUS_CODE_ERROR = 401;
@@ -43,7 +43,7 @@ class EmployeesAuthenticateTest extends TestCase
         ];
     }
 
-    private function checkResponseBody($response) :void
+    private function checkResponseBody($response): void
     {
         $this->assertNotNull($response['data']);
         $this->assertEquals(false, $response['data']['errors']);
@@ -106,7 +106,7 @@ class EmployeesAuthenticateTest extends TestCase
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('employees', $requestData);
         } else {
-            $this->assertEquals(self::ERROR_MESSAGE,$response['data']['message']);
+            $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
         }
     }
 

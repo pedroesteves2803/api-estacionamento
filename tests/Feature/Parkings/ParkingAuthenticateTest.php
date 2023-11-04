@@ -11,17 +11,16 @@ class ParkingAuthenticateTest extends TestCase
 {
     use RefreshDatabase;
 
-    const API_LOGIN_PATH = '/api/login';
-    const API_PARKING_PATH = '/api/parking';
-    const ERROR_MESSAGE = 'Registro não encontrado';
-    const PASSWORD = 'password';
-    const STATUS_CODE_CORRECT = 200;
-    const STATUS_CODE_ERROR = 401;
+    public const API_LOGIN_PATH = '/api/login';
+    public const API_PARKING_PATH = '/api/parking';
+    public const ERROR_MESSAGE = 'Registro não encontrado';
+    public const PASSWORD = 'password';
+    public const STATUS_CODE_CORRECT = 200;
+    public const STATUS_CODE_ERROR = 401;
 
     protected $user;
     protected $parking;
     protected $token;
-
 
     protected function setUp(): void
     {
@@ -34,7 +33,7 @@ class ParkingAuthenticateTest extends TestCase
         $this->token = $this->user->createToken($this->user->device_name)->plainTextToken;
     }
 
-    private function AuthHeaders() : array
+    private function AuthHeaders(): array
     {
         return [
             'Authorization' => 'Bearer '.$this->token,
@@ -42,22 +41,22 @@ class ParkingAuthenticateTest extends TestCase
         ];
     }
 
-    private function UnauthenticatedHeader() : array
+    private function UnauthenticatedHeader(): array
     {
         return [
-            'Accept'        => 'application/json',
+            'Accept' => 'application/json',
         ];
     }
 
-    public function testLogin(){
-
+    public function testLogin()
+    {
         $body = [
-            'email' => $this->user->email,
+            'email'    => $this->user->email,
             'password' => self::PASSWORD,
         ];
 
         $response = $this->withHeaders([
-            'Accept'        => 'application/json',
+            'Accept' => 'application/json',
         ])->post(self::API_LOGIN_PATH, $body);
 
         $this->token = $response->json()['data']['content']['token'];
@@ -86,12 +85,12 @@ class ParkingAuthenticateTest extends TestCase
         return [
             'estacionamento-com-corpo-correto' => [
                 [
-                    'name' => 'Estacionamento de sucesso 1',
+                    'name'              => 'Estacionamento de sucesso 1',
                     'numberOfVacancies' => 100,
-                    'active' => 1,
+                    'active'            => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
-            ]
+            ],
         ];
     }
 
@@ -106,9 +105,9 @@ class ParkingAuthenticateTest extends TestCase
 
         $this->isFalse($response['data']['errors']);
 
-        if ($expectedStatusCode === self::STATUS_CODE_CORRECT and $response['data']['errors'] === false) {
+        if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('parkings', $requestData);
-        }else{
+        } else {
             $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
         }
     }
@@ -122,9 +121,9 @@ class ParkingAuthenticateTest extends TestCase
 
         $response->assertStatus(self::STATUS_CODE_CORRECT);
 
-        if ($expectedStatusCode === self::STATUS_CODE_CORRECT and $response['data']['errors'] === false) {
+        if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('parkings', $requestData);
-        }else{
+        } else {
             $this->assertEquals(self::ERROR_MESSAGE, $response['data']['message']);
         }
     }
@@ -152,7 +151,7 @@ class ParkingAuthenticateTest extends TestCase
 
     public function testDeleteById(): void
     {
-        $response = $this->delete(self::API_PARKING_PATH."/{$this->parking->id}", [],$this->AuthHeaders());
+        $response = $this->delete(self::API_PARKING_PATH."/{$this->parking->id}", [], $this->AuthHeaders());
 
         $response->assertStatus(204);
     }

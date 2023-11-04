@@ -43,7 +43,7 @@ class CarAuthenticateTest extends TestCase
         ];
     }
 
-    private function checkResponseBody($response) :void
+    private function checkResponseBody($response): void
     {
         $this->assertNotNull($response['data']);
         $this->assertEquals(false, $response['data']['errors']);

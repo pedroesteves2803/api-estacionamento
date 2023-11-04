@@ -2,9 +2,6 @@
 
 namespace App\Exceptions\Car;
 
-use Exception;
-
-class FailureUpdateCarException extends Exception
+class FailureUpdateCarException extends \Exception
 {
-    //
 }

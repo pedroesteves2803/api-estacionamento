@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Parkings;
 
-use App\Models\Parking;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -47,7 +46,6 @@ class AuthenticateTest extends TestCase
             ->assertJsonStructure([
                 'data' => [],
             ]);
-
 
         $this->assertNotNull($response['data']);
         $this->assertEquals(false, $response['data']['errors']);

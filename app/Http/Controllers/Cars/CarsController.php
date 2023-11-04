@@ -6,7 +6,7 @@ use App\Dtos\Cars\CarsDTO;
 use App\Dtos\Cars\OutputCarsDTO;
 use App\Exceptions\Car\FailureCreateCarException;
 use App\Exceptions\Car\FailureExitCarException;
-use App\Exceptions\Car\FailureGetCarByParkingIdAndCarIdtCarException;
+use App\Exceptions\Car\FailureGetCarByParkingIdAndCarIdCarException;
 use App\Exceptions\Car\FailureUpdateCarException;
 use App\Exceptions\Parking\NoParkingException;
 use App\Exceptions\RequestFailureException;
@@ -15,11 +15,9 @@ use App\Http\Resources\CarResource;
 use App\Models\Car;
 use App\Models\Parking;
 use App\Services\Utils\UtilsRequestService;
-use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 
 /**
@@ -32,14 +30,12 @@ use Illuminate\Http\Response;
  */
 class CarsController extends Controller
 {
-
-    const NUMBER_OF_PARAMETERS = 4;
+    public const NUMBER_OF_PARAMETERS = 4;
 
     public function __construct(
         protected Car $cars,
         protected UtilsRequestService $utilsRequestService
-    )
-    {
+    ) {
     }
 
     /**
@@ -72,8 +68,7 @@ class CarsController extends Controller
      */
     public function index(
         string $parkingId
-    )
-    {
+    ) {
         $cars = $this->cars::where('parking_id', $parkingId)->get();
 
         $carsDTOs = $this->mapToOutputCarsDTO($cars);
@@ -108,9 +103,8 @@ class CarsController extends Controller
      */
     public function store(
         Request $request
-    ) : CarResource
-    {
-        try{
+    ): CarResource {
+        try {
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
             $this->checkParkingExistence($request->parking_id);
@@ -118,11 +112,11 @@ class CarsController extends Controller
             $car = $this->createCar($request);
 
             return $this->outputResponse($car);
-        }catch(NoParkingException $e){
+        } catch (NoParkingException $e) {
             return $this->outputResponse(null, $e->getMessage());
-        }catch(RequestFailureException $e){
+        } catch (RequestFailureException $e) {
             return $this->outputResponse(null, $e->getMessage());
-        }catch(FailureCreateCarException $e){
+        } catch (FailureCreateCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -162,13 +156,11 @@ class CarsController extends Controller
      *     )
      * )
      */
-
     public function show(
         string $parkingId,
         string $id
-    ): CarResource
-    {
-        try{
+    ): CarResource {
+        try {
             $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
             if ($car->erro) {
@@ -176,7 +168,7 @@ class CarsController extends Controller
             }
 
             return $this->outputResponse($car);
-        }catch(FailureGetCarByParkingIdAndCarIdtCarException $e){
+        } catch (FailureGetCarByParkingIdAndCarIdCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -226,9 +218,8 @@ class CarsController extends Controller
         Request $request,
         string $parkingId,
         string $id
-    ) : CarResource
-    {
-        try{
+    ): CarResource {
+        try {
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
             $this->checkParkingExistence($request->parking_id);
@@ -240,13 +231,13 @@ class CarsController extends Controller
             }
 
             return $this->outputResponse($car);
-        }catch(NoParkingException $e){
+        } catch (NoParkingException $e) {
             return $this->outputResponse(null, $e->getMessage());
-        }catch(RequestFailureException $e){
+        } catch (RequestFailureException $e) {
             return $this->outputResponse(null, $e->getMessage());
-        }catch(FailureUpdateCarException $e){
+        } catch (FailureUpdateCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
-        }catch(FailureGetCarByParkingIdAndCarIdtCarException $e){
+        } catch (FailureGetCarByParkingIdAndCarIdCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -289,9 +280,8 @@ class CarsController extends Controller
     public function registersCarExit(
         string $parkingId,
         string $id
-    ) : CarResource
-    {
-        try{
+    ): CarResource {
+        try {
             $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
             if ($car->erro) {
@@ -301,9 +291,9 @@ class CarsController extends Controller
             $this->exitCar($car);
 
             return $this->outputResponse($car);
-        }catch(FailureGetCarByParkingIdAndCarIdtCarException $e){
+        } catch (FailureGetCarByParkingIdAndCarIdCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
-        }catch(FailureExitCarException $e){
+        } catch (FailureExitCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -342,9 +332,8 @@ class CarsController extends Controller
     public function destroy(
         string $parkingId,
         string $id
-    ) : JsonResponse | CarResource
-    {
-        try{
+    ): JsonResponse|CarResource {
+        try {
             $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
             if ($car->erro) {
@@ -354,17 +343,15 @@ class CarsController extends Controller
             $car->delete();
 
             return response()->json([], Response::HTTP_NO_CONTENT);
-        }catch(FailureGetCarByParkingIdAndCarIdtCarException $e){
+        } catch (FailureGetCarByParkingIdAndCarIdCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
-
     }
 
     private function outputResponse(
         Car|null $car,
-        String $message = 'Registro não encontrado'
-    ) : CarResource
-    {
+        string $message = 'Registro não encontrado'
+    ): CarResource {
         $error = [];
 
         if (is_null($car)) {
@@ -393,15 +380,14 @@ class CarsController extends Controller
     private function getCarByParkingIdAndCarId(
         int $parkingId,
         int $carId
-    ) : Car | FailureGetCarByParkingIdAndCarIdtCarException
-    {
+    ): Car|FailureGetCarByParkingIdAndCarIdCarException {
         $car = $this->cars::where([
             'parking_id' => $parkingId,
             'id'         => $carId,
         ])->first();
 
         if (is_null($car)) {
-            throw new FailureGetCarByParkingIdAndCarIdtCarException('Não foi possível localizar o carro.');
+            throw new FailureGetCarByParkingIdAndCarIdCarException('Não foi possível localizar o carro.');
         }
 
         return $car;
@@ -409,9 +395,7 @@ class CarsController extends Controller
 
     private function mapToOutputCarsDTO(
         Collection $cars
-    ) : array
-    {
-
+    ): array {
         return $cars->map(function ($car) {
             return new OutputCarsDTO(
                 $car->id,
@@ -426,8 +410,7 @@ class CarsController extends Controller
 
     private function createCar(
         Request $request
-    ) : Car | FailureCreateCarException
-    {
+    ): Car|FailureCreateCarException {
         $dto = new CarsDTO(
             ...$request->only([
                 'plate',
@@ -454,8 +437,7 @@ class CarsController extends Controller
         Request $request,
         string $parkingId,
         string $id
-    ) : Car | FailureUpdateCarException
-    {
+    ): Car|FailureUpdateCarException {
         $dto = new CarsDTO(
             ...$request->only([
                 'plate',
@@ -478,12 +460,11 @@ class CarsController extends Controller
 
     private function exitCar(
         Car $car
-    ) : Car
-    {
+    ): Car {
         $car->output = now();
         $car->save();
 
-        if(is_null($car)) {
+        if (is_null($car)) {
             throw new FailureExitCarException('Estacionamento não existe!');
         }
 
@@ -492,8 +473,7 @@ class CarsController extends Controller
 
     private function checkParkingExistence(
         string $parkingId
-    )
-    {
+    ) {
         if (!Parking::where('id', $parkingId)->exists()) {
             throw new NoParkingException('Estacionamento não existe!');
         }
