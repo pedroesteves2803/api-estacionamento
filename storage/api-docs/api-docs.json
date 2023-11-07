@@ -677,6 +677,37 @@
                     }
                 ]
             }
+        },
+        "/api/register/user": {
+            "post": {
+                "tags": [
+                    "Registro"
+                ],
+                "summary": "Criar novo usuário",
+                "operationId": "59fb4ef0a81179421be0350563592e65",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UserDTO"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resposta bem sucedida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/UserResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     },
     "components": {
@@ -895,6 +926,52 @@
                 },
                 "type": "object"
             },
+            "OutputRegisterDTO": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "device_name": {
+                        "type": "string",
+                        "example": "Dispositivo 1"
+                    },
+                    "email": {
+                        "type": "integer",
+                        "example": "email@email.com"
+                    },
+                    "erro": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "message": {
+                        "type": "string",
+                        "example": null
+                    }
+                },
+                "type": "object"
+            },
+            "UserDTO": {
+                "properties": {
+                    "device_name": {
+                        "type": "string",
+                        "example": "teste"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "teste@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "12345678"
+                    },
+                    "password_confirmation": {
+                        "type": "string",
+                        "example": "12345678"
+                    }
+                },
+                "type": "object"
+            },
             "AuthResource": {
                 "properties": {
                     "errors": {
@@ -1024,6 +1101,31 @@
                     }
                 },
                 "type": "object"
+            },
+            "UserResource": {
+                "properties": {
+                    "errors": {
+                        "type": "boolean"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "content": {
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "nome_do_dispositivo": {
+                                "type": "string"
+                            },
+                            "email": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -1047,6 +1149,10 @@
         {
             "name": "Estacionamento",
             "description": "API endpoints de estacionamentos"
+        },
+        {
+            "name": "Registro",
+            "description": "API endpoints de usuário"
         }
     ]
 }
