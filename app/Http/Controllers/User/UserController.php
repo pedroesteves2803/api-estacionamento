@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use App\Dtos\Register\OutputUserDTO;
-use App\Dtos\Register\RegisterDTO;
 use App\Dtos\Register\UserDTO;
 use App\Exceptions\Register\FailureCreateUserException;
 use App\Exceptions\RequestFailureException;
@@ -25,7 +24,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     public const NUMBER_OF_PARAMETERS = 4;
-    public const WELCOME = "Bem vindo!!";
+    public const WELCOME = 'Bem vindo!!';
 
     public function __construct(
         protected User $user,
@@ -57,8 +56,8 @@ class UserController extends Controller
      */
     public function store(
         Request $request
-    ) : UserResource {
-        try{
+    ): UserResource {
+        try {
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
             $user = $this->createUser($request);
@@ -91,13 +90,13 @@ class UserController extends Controller
 
     private function createUser(
         Request $request
-    ) : User | FailureCreateUserException {
+    ): User|FailureCreateUserException {
         $dto = $this->createRegisterDTO($request);
 
         $user = $this->user::create([
             'device_name' => $dto->device_name,
-            'email' => $dto->email,
-            'password' => Hash::make($dto->password),
+            'email'       => $dto->email,
+            'password'    => Hash::make($dto->password),
         ]);
 
         if (is_null($user)) {
@@ -130,5 +129,4 @@ class UserController extends Controller
 
         return new UserResource($outputDto);
     }
-
 }

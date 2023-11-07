@@ -4,7 +4,6 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Cars\CarsController;
 use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Parking\ParkingController;
-use App\Http\Controllers\Register\RegisterController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,13 +20,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', [AuthController::class, 'login'])->name('auth.login');
 Route::post('/register/user', [UserController::class, 'store'])->name('register.store');
 
-
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('/parking', ParkingController::class)->names([
-        'index' => 'parking.index',
-        'store' => 'parking.store',
-        'show' => 'parking.show',
-        'update' => 'parking.update',
+        'index'   => 'parking.index',
+        'store'   => 'parking.store',
+        'show'    => 'parking.show',
+        'update'  => 'parking.update',
         'destroy' => 'parking.destroy',
     ]);
 

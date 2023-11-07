@@ -31,7 +31,6 @@ class UserDTO extends AbstractDTO implements InterfaceDTO
 
     public function rules(): array
     {
-
         return [
             'device_name' => [
                 'required',
@@ -48,7 +47,7 @@ class UserDTO extends AbstractDTO implements InterfaceDTO
             'password' => [
                 'required',
                 'string',
-                'confirmed'
+                'confirmed',
             ],
 
             'password_confirmation' => [
