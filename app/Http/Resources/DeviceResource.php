@@ -7,7 +7,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
  * @OA\Schema(
- *     schema="UserResource",
+ *     schema="DeviceResource",
  *     type="object",
  *
  *     @OA\Property(property="errors", type="boolean"),
@@ -21,7 +21,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  *     ),
  * )
  */
-class UserResource extends JsonResource
+class DeviceResource extends JsonResource
 {
     public function toArray(Request $request): array
     {

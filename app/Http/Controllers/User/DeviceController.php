@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Dtos\Register\OutputUserDTO;
-use App\Dtos\Register\UserDTO;
+use App\Dtos\Register\DeviceDTO;
+use App\Dtos\Register\OutputDeviceDTO;
 use App\Exceptions\Register\FailureCreateUserException;
 use App\Exceptions\RequestFailureException;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\DeviceResource;
 use App\Models\User;
 use App\Services\Utils\UtilsRequestService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * Class UserController.
+ * Class DeviceController.
  *
  * @OA\Tag(
  *     name="Registro",
- *     description="API endpoints de usuário"
+ *     description="API endpoints de dispositivo"
  * )
  */
-class UserController extends Controller
+class DeviceController extends Controller
 {
     public const NUMBER_OF_PARAMETERS = 4;
     public const WELCOME = 'Bem vindo!!';
@@ -34,14 +34,14 @@ class UserController extends Controller
 
     /**
      * @OA\Post(
-     *     path="/api/register/user",
-     *     summary="Criar novo usuário",
+     *     path="/api/register/device",
+     *     summary="Criar novo dispositivo",
      *     tags={"Registro"},
      *
      *     @OA\RequestBody(
      *         required=true,
      *
-     *         @OA\JsonContent(ref="#/components/schemas/UserDTO")
+     *         @OA\JsonContent(ref="#/components/schemas/DeviceDTO")
      *     ),
      *
      *     @OA\Response(
@@ -49,14 +49,14 @@ class UserController extends Controller
      *         description="Resposta bem sucedida",
      *
      *         @OA\JsonContent(
-     *             ref="#/components/schemas/UserResource"
+     *             ref="#/components/schemas/DeviceResource"
      *         )
      *     )
      * )
      */
     public function store(
         Request $request
-    ): UserResource {
+    ): DeviceResource {
         try {
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
@@ -72,7 +72,7 @@ class UserController extends Controller
 
     private function createRegisterDTO(
         Request $request
-    ): UserDTO {
+    ): DeviceDTO {
         $fields = $request->only([
             'device_name',
             'email',
@@ -80,7 +80,7 @@ class UserController extends Controller
             'password_confirmation',
         ]);
 
-        return new UserDTO(
+        return new DeviceDTO(
             $fields['device_name'],
             $fields['email'],
             $fields['password'],
@@ -109,7 +109,7 @@ class UserController extends Controller
     private function outputResponse(
         User|null $user,
         string $message = 'Registro não encontrado'
-    ): UserResource {
+    ): DeviceResource {
         $error = [];
 
         if (is_null($user)) {
@@ -119,7 +119,7 @@ class UserController extends Controller
             ];
         }
 
-        $outputDto = new OutputUserDTO(
+        $outputDto = new OutputDeviceDTO(
             $user['id'] ?? null,
             $user['device_name'] ?? null,
             $user['email'] ?? null,
@@ -127,6 +127,6 @@ class UserController extends Controller
             $error['message'] ?? self::WELCOME,
         );
 
-        return new UserResource($outputDto);
+        return new DeviceResource($outputDto);
     }
 }

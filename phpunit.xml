@@ -9,6 +9,10 @@
             <directory>tests/Unit/UtilsRequest</directory>
         </testsuite>
 
+        <testsuite name="feature-device">
+            <directory>tests/Feature/Device</directory>
+        </testsuite>
+
         <testsuite name="feature-authenticate">
             <directory>tests/Feature/Authenticate</directory>
         </testsuite>

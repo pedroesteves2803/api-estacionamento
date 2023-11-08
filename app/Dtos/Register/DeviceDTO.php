@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 
 /**
  * @OA\Schema(
- *     schema="UserDTO",
+ *     schema="DeviceDTO",
  *     type="object",
  *
  *     @OA\Property(property="device_name", type="string", example="teste"),
@@ -18,7 +18,7 @@ use Illuminate\Validation\Rule;
  *     @OA\Property(property="password_confirmation", type="string", example="12345678"),
  * )
  */
-class UserDTO extends AbstractDTO implements InterfaceDTO
+class DeviceDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
         public readonly string $device_name,

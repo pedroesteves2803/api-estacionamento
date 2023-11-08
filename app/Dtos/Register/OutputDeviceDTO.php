@@ -8,7 +8,7 @@ use Illuminate\Contracts\Validation\Validator;
 
 /**
  * @OA\Schema(
- *     schema="OutputRegisterDTO",
+ *     schema="OutputDeviceDTO",
  *     type="object",
  *
  *     @OA\Property(property="id", type="integer", example=1),
@@ -18,7 +18,7 @@ use Illuminate\Contracts\Validation\Validator;
  *     @OA\Property(property="message", type="string", example=null),
  * )
  */
-class OutputUserDTO extends AbstractDTO implements InterfaceDTO
+class OutputDeviceDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
         public readonly ?int $id = null,
