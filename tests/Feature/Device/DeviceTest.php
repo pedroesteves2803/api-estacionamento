@@ -14,26 +14,25 @@ class DeviceTest extends TestCase
     public const STATUS_CODE_CORRECT = 200;
     public const STATUS_CODE_ERROR = 401;
 
-
     private function Headers(): array
     {
         return [
-            'Accept'        => 'application/json',
+            'Accept' => 'application/json',
         ];
     }
 
     /**
      * Data Provider para testar diferentes cenários de criação de devices.
      */
-    public static function createOrUpdateUserDataProvider()
+    public static function createOrUpdateDeviceDataProvider()
     {
         return [
             'device' => [
                 [
-                    "device_name" => "postman",
-                    "email" => "test@gmail.com.br" ,
-                    "password" => "password",
-                    "password_confirmation" => "password"
+                    'device_name'           => 'postman',
+                    'email'                 => 'test@gmail.com.br',
+                    'password'              => 'password',
+                    'password_confirmation' => 'password',
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
@@ -41,9 +40,9 @@ class DeviceTest extends TestCase
     }
 
     /**
-     * @dataProvider createOrUpdateUserDataProvider
+     * @dataProvider createOrUpdateDeviceDataProvider
      */
-    public function testCreateUser(array $requestData, int $expectedStatusCode): void
+    public function testCreateDevice(array $requestData, int $expectedStatusCode): void
     {
         $response = $this->post(self::API_REGISTER_PATH, $requestData, $this->Headers());
 
@@ -51,11 +50,10 @@ class DeviceTest extends TestCase
 
         $this->isFalse($response['data']['errors']);
 
-
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $requestDataCorrect = [
-                "device_name" => $requestData['device_name'],
-                "email" => $requestData['email'] ,
+                'device_name' => $requestData['device_name'],
+                'email'       => $requestData['email'],
             ];
 
             $this->assertDatabaseHas('users', $requestDataCorrect);

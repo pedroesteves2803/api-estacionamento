@@ -5,7 +5,6 @@ use App\Http\Controllers\Cars\CarsController;
 use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Parking\ParkingController;
 use App\Http\Controllers\User\DeviceController;
-use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
