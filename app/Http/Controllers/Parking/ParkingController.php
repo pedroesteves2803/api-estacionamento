@@ -28,7 +28,7 @@ use Illuminate\Http\Response;
  */
 class ParkingController extends Controller
 {
-    public const NUMBER_OF_PARAMETERS = 3;
+    public const NUMBER_OF_PARAMETERS = 2;
 
     public function __construct(
         protected Parking $parking,
@@ -255,7 +255,6 @@ class ParkingController extends Controller
         $outputDto = new OutputParkingDTO(
             $parking['id'] ?? null,
             $parking['name'] ?? null,
-            $parking['numberOfVacancies'] ?? null,
             $parking['active'] ?? null,
             $parking['created_at'] ?? null,
             $parking['cars'] ?? null,
@@ -323,13 +322,11 @@ class ParkingController extends Controller
     ): ParkingDTO {
         $fields = $request->only([
             'name',
-            'numberOfVacancies',
             'active',
         ]);
 
         return new ParkingDTO(
             $fields['name'],
-            $fields['numberOfVacancies'],
             $fields['active']
         );
     }

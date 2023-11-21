@@ -16,7 +16,7 @@ use Illuminate\Validation\Rule;
  *     @OA\Property(property="active", type="boolean", example=true),
  * )
  */
-class ParkingDTO extends AbstractDTO implements InterfaceDTO
+class VacancyDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
         public readonly string $name,
@@ -28,15 +28,17 @@ class ParkingDTO extends AbstractDTO implements InterfaceDTO
     public function rules(): array
     {
         return [
-            'name' => [
+            'parking_id' => [
                 'required',
-                'string',
-                'min:3',
-                'max:255',
-                Rule::unique('parkings')->ignore(request()->parking),
+                'int',
             ],
 
-            'active' => [
+            'number' => [
+                'required',
+                'int',
+            ],
+
+            'available' => [
                 'required',
                 'boolean',
             ],

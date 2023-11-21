@@ -35,7 +35,6 @@ class ParkingResource extends JsonResource
             'content' => [
                 'id'              => $this->id,
                 'nome'            => $this->name,
-                'numero_de_vagas' => $this->numberOfVacancies,
                 'ativo'           => $this->active,
                 'criado'          => $created_at,
                 'carros'          => $this->cars,

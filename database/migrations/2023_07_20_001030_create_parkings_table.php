@@ -10,7 +10,6 @@ return new class() extends Migration {
         Schema::create('parkings', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->integer('numberOfVacancies');
             $table->boolean('active')->default(1);
             $table->timestamps();
         });

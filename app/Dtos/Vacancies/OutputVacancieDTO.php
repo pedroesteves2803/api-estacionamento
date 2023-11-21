@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\Collection;
  *     @OA\Property(property="message", type="string", example=null),
  * )
  */
-class OutputParkingDTO extends AbstractDTO implements InterfaceDTO
+class OutputVacancieDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
         public readonly ?int $id = null,
