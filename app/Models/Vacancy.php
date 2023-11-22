@@ -16,7 +16,7 @@ class Vacancy extends Model
     ];
 
     protected $casts = [
-        'start_date'  => 'datetime:d-m-Y h:i:s',
-        'end_date' => 'datetime:d-m-Y h:i:s',
+        'start_date' => 'datetime:d-m-Y h:i:s',
+        'end_date'   => 'datetime:d-m-Y h:i:s',
     ];
 }

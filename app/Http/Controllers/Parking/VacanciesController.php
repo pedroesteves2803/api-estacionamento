@@ -2,17 +2,22 @@
 
 namespace App\Http\Controllers\Parking;
 
-use App\Dtos\Parking\VacancyDTO;
+use App\Dtos\Vacancies\OutputVacancyDTO;
+use App\Dtos\Vacancies\VacancyDTO;
+use App\Exceptions\Parking\FailureCreateParkingException;
+use App\Exceptions\Parking\NoParkingException;
+use App\Exceptions\RequestFailureException;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\VacanciesResource;
 use App\Models\Parking;
 use App\Models\Vacancy;
 use App\Services\Utils\UtilsRequestService;
-use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class VacanciesController extends Controller
 {
-    public const NUMBER_OF_PARAMETERS = 3;
+    public const NUMBER_OF_PARAMETERS = 2;
 
     public function __construct(
         protected Vacancy $vacancy,
@@ -20,81 +25,140 @@ class VacanciesController extends Controller
     ) {
     }
 
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+    public function index(
+        int $parkingId
+    ) {
+        $vacancies = $this->vacancy::where('parking_id', $parkingId)->get();
+
+        $vacanciesDTOs = $this->mapToOutputVacanciesDTOs($vacancies);
+
+        return VacanciesResource::collection(
+            collect($vacanciesDTOs)
+        );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        $dto = $this->createVacancyDTO($request);
+        try {
+            $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
-        $vacancy = $this->vacancy::create($dto->toArray());
+            $this->checkParkingExistence($request->parking_id);
 
-        if (is_null($vacancy)) {
-            throw new Exception('Não foi possível criar o estacionamento!');
+            $vacancies = $this->createVacancy($request);
+
+            $vacanciesDTOs = $this->mapToOutputVacanciesDTOs($vacancies);
+
+            return VacanciesResource::collection(
+                collect($vacanciesDTOs)
+            );
+        } catch (RequestFailureException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        } catch (NoParkingException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        } catch (FailureCreateParkingException $e) {
+            return $this->outputResponse(null, $e->getMessage());
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
-        //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
-        //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
-        //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
-        //
+    }
+
+    private function outputResponse(
+        Vacancy|null $vacancy,
+        string $message = 'Registro não encontrado'
+    ): VacanciesResource {
+        $error = [];
+
+        if (is_null($vacancy)) {
+            $error = [
+                'erro'    => true,
+                'message' => $message,
+            ];
+        }
+
+        $outputDto = new OutputVacancyDTO(
+            $vacancy['id'] ?? null,
+            $vacancy['parking_id'] ?? null,
+            $vacancy['number'] ?? null,
+            $vacancy['available'] ?? null,
+            $vacancy['created_at'] ?? null,
+            $error['erro'] ?? false,
+            $error['message'] ?? null
+        );
+
+        return new VacanciesResource($outputDto);
     }
 
     private function createVacancyDTO(
         Request $request
     ): VacancyDTO {
         $fields = $request->only([
+            'number_of_vacancies',
             'parking_id',
-            'number',
-            'available',
         ]);
 
         return new VacancyDTO(
-            $fields['parking_id'],
-            $fields['number'],
-            $fields['available']
+            $fields['number_of_vacancies'],
+            $fields['parking_id']
         );
+    }
+
+    private function mapToOutputVacanciesDTOs(
+        $vacancies
+    ): array {
+        return $vacancies->map(function ($vacancie) {
+            return OutputVacancyDTO::fromModel($vacancie);
+        })->all();
+    }
+
+    private function createVacancy(
+        Request $request
+    ): Collection {
+        $dto = $this->createVacancyDTO($request);
+
+        $lastVacancy = $this->vacancy::orderBy('id', 'desc')->first();
+
+        $counter = !empty($lastVacancy) ? $lastVacancy->number : 0;
+
+        $limit = $counter + $dto->number_of_vacancies;
+
+        for ($i = $counter; $i < $limit; ++$i) {
+            $body = [
+                'parking_id' => $dto->parking_id,
+                'number'     => $i + 1,
+                'available'  => false,
+            ];
+
+            $this->vacancy::create($body);
+        }
+
+        $newVacancies = $this->vacancy::where('id', '>', $counter)->get();
+
+        if (empty($newVacancies)) {
+            throw new FailureCreateParkingException('Não foi possível criar o vagas!');
+        }
+
+        return $newVacancies;
+    }
+
+    private function checkParkingExistence(
+        string $parkingId
+    ) {
+        if (!Parking::where('id', $parkingId)->exists()) {
+            throw new NoParkingException('Estacionamento não existe!');
+        }
     }
 }

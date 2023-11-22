@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Dtos\Parking;
+namespace App\Dtos\Vacancies;
 
 use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Validation\Rule;
 
 /**
  * @OA\Schema(
@@ -19,8 +18,8 @@ use Illuminate\Validation\Rule;
 class VacancyDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
-        public readonly string $name,
-        public readonly bool $active,
+        public readonly int $number_of_vacancies,
+        public readonly int $parking_id
     ) {
         $this->validate();
     }
@@ -28,19 +27,14 @@ class VacancyDTO extends AbstractDTO implements InterfaceDTO
     public function rules(): array
     {
         return [
+            'number_of_vacancies' => [
+                'required',
+                'int',
+            ],
+
             'parking_id' => [
                 'required',
                 'int',
-            ],
-
-            'number' => [
-                'required',
-                'int',
-            ],
-
-            'available' => [
-                'required',
-                'boolean',
             ],
         ];
     }

@@ -17,9 +17,8 @@ class ParkingFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'              => fake()->name(),
-            'numberOfVacancies' => rand(1, 100),
-            'active'            => (bool) rand(0, 1),
+            'name'   => fake()->name(),
+            'active' => (bool) rand(0, 1),
         ];
     }
 }

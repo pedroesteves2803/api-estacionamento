@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Dtos\Parking;
+namespace App\Dtos\Vacancies;
 
 use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
-use App\Models\Parking;
+use App\Models\Vacancy;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Database\Eloquent\Collection;
 
 /**
  * @OA\Schema(
@@ -21,15 +20,14 @@ use Illuminate\Database\Eloquent\Collection;
  *     @OA\Property(property="message", type="string", example=null),
  * )
  */
-class OutputVacancieDTO extends AbstractDTO implements InterfaceDTO
+class OutputVacancyDTO extends AbstractDTO implements InterfaceDTO
 {
     public function __construct(
         public readonly ?int $id = null,
-        public readonly ?string $name = null,
-        public readonly ?bool $active = null,
+        public readonly ?int $parking_id = null,
+        public readonly ?int $number = null,
+        public readonly ?bool $available = null,
         public readonly ?\DateTime $created_at = null,
-        public readonly ?Collection $cars = null,
-        public readonly ?Collection $employees = null,
         public readonly ?bool $erro = false,
         public readonly ?string $message = null,
     ) {
@@ -56,15 +54,14 @@ class OutputVacancieDTO extends AbstractDTO implements InterfaceDTO
         return $this->validator()->validate();
     }
 
-    public static function fromModel(Parking $parking)
+    public static function fromModel(Vacancy $vacancy)
     {
         return new self(
-            $parking->id,
-            $parking->name,
-            $parking->active,
-            $parking->created_at,
-            $parking->cars,
-            $parking->employees,
+            $vacancy->id,
+            $vacancy->parking_id,
+            $vacancy->number,
+            $vacancy->available,
+            $vacancy->created_at,
         );
     }
 }

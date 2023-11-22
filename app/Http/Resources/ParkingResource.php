@@ -33,12 +33,12 @@ class ParkingResource extends JsonResource
             'errors'  => isset($this->erro) ? $this->erro : null,
             'message' => isset($this->erro) ? $this->message : null,
             'content' => [
-                'id'              => $this->id,
-                'nome'            => $this->name,
-                'ativo'           => $this->active,
-                'criado'          => $created_at,
-                'carros'          => $this->cars,
-                'funcionarios'    => $this->employees,
+                'id'           => $this->id,
+                'nome'         => $this->name,
+                'ativo'        => $this->active,
+                'criado'       => $created_at,
+                'carros'       => $this->cars,
+                'funcionarios' => $this->employees,
             ],
         ];
     }

@@ -53,16 +53,14 @@ class ParkingUnauthenticatedTest extends TestCase
         return [
             'estacionamento-com-corpo-incorreto' => [
                 [
-                    'name'              => 'Estacionamento de sucesso 0',
-                    'numberOfVacancies' => 50,
+                    'name' => 'Estacionamento de sucesso 0',
                 ],
                 self::STATUS_CODE_ERROR,
             ],
             'estacionamento-com-corpo-correto' => [
                 [
-                    'name'              => 'Estacionamento de sucesso 1',
-                    'numberOfVacancies' => 100,
-                    'active'            => 1,
+                    'name'   => 'Estacionamento de sucesso 1',
+                    'active' => 1,
                 ],
                 self::STATUS_CODE_ERROR,
             ],
@@ -77,16 +75,14 @@ class ParkingUnauthenticatedTest extends TestCase
         return [
             'estacionamento-com-corpo-incorreto' => [
                 [
-                    'name'              => 'Estacionamento de sucesso 0',
-                    'numberOfVacancies' => 50,
+                    'name' => 'Estacionamento de sucesso 0',
                 ],
                 self::STATUS_CODE_ERROR,
             ],
             'estacionamento-com-corpo-correto' => [
                 [
-                    'name'              => 'Estacionamento de sucesso 1',
-                    'numberOfVacancies' => 100,
-                    'active'            => 1,
+                    'name'   => 'Estacionamento de sucesso 1',
+                    'active' => 1,
                 ],
                 self::STATUS_CODE_ERROR,
             ],

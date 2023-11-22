@@ -41,13 +41,6 @@ class ParkingAuthenticateTest extends TestCase
         ];
     }
 
-    private function UnauthenticatedHeader(): array
-    {
-        return [
-            'Accept' => 'application/json',
-        ];
-    }
-
     public function testLogin()
     {
         $body = [
@@ -85,9 +78,8 @@ class ParkingAuthenticateTest extends TestCase
         return [
             'estacionamento-com-corpo-correto' => [
                 [
-                    'name'              => 'Estacionamento de sucesso 1',
-                    'numberOfVacancies' => 100,
-                    'active'            => 1,
+                    'name'   => 'Estacionamento de sucesso 1',
+                    'active' => 1,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
@@ -145,7 +137,6 @@ class ParkingAuthenticateTest extends TestCase
         $content = $response['data']['content'];
 
         $this->assertEquals($this->parking->name, $content['nome']);
-        $this->assertEquals($this->parking->numberOfVacancies, $content['numero_de_vagas']);
         $this->assertEquals($this->parking->active, $content['ativo']);
     }
 
