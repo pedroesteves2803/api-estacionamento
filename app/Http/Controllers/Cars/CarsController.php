@@ -163,10 +163,6 @@ class CarsController extends Controller
         try {
             $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
-            if ($car->erro) {
-                return $car;
-            }
-
             return $this->outputResponse($car);
         } catch (FailureGetCarByParkingIdAndCarIdCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
@@ -225,10 +221,6 @@ class CarsController extends Controller
             $this->checkParkingExistence($request->parking_id);
 
             $car = $this->updateCar($request, $parkingId, $id);
-
-            if ($car->erro) {
-                return $car;
-            }
 
             return $this->outputResponse($car);
         } catch (NoParkingException $e) {

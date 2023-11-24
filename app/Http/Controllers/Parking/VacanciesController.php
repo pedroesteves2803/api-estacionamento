@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Parking;
 
 use App\Dtos\Vacancies\OutputVacancyDTO;
 use App\Dtos\Vacancies\VacancyDTO;
+use App\Dtos\Vacancies\VacancyUpdateDTO;
+use App\Exceptions\FailureGetVacancyByParkingByIdException;
+use App\Exceptions\FailureUpdateVacancyException;
 use App\Exceptions\Parking\FailureCreateParkingException;
 use App\Exceptions\Parking\NoParkingException;
 use App\Exceptions\RequestFailureException;
@@ -60,16 +63,41 @@ class VacanciesController extends Controller
         }
     }
 
-    public function show(string $id)
-    {
+    public function show(
+        string $parkingId,
+        string $id
+    ) {
+        try{
+           $vacancy = $this->getVacancyByParkingById($parkingId, $id);
+
+           return $this->outputResponse($vacancy);
+        }catch(FailureGetVacancyByParkingByIdException $e){
+            return $this->outputResponse(null, $e->getMessage());
+        }
     }
 
-    public function edit(string $id)
-    {
-    }
+    public function update(
+        Request $request,
+        string $parkingId,
+        string $id
+    ) {
+        try{
+            $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
-    public function update(Request $request, string $id)
-    {
+            $this->checkParkingExistence($request->parking_id);
+
+            $vacancy = $this->updateVacancy($request, $parkingId, $id);
+
+            return $this->outputResponse($vacancy);
+        } catch (NoParkingException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        } catch (RequestFailureException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        } catch (FailureUpdateVacancyException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        } catch (FailureGetVacancyByParkingByIdException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        }
     }
 
     public function destroy(string $id)
@@ -116,6 +144,22 @@ class VacanciesController extends Controller
         );
     }
 
+    private function createUpdateVacancyDTO(
+        Request $request
+    ): VacancyUpdateDTO {
+        $fields = $request->only([
+            'parking_id',
+            'number',
+            'available',
+        ]);
+
+        return new VacancyUpdateDTO(
+            $fields['parking_id'],
+            $fields['number'],
+            $fields['available']
+        );
+    }
+
     private function mapToOutputVacanciesDTOs(
         $vacancies
     ): array {
@@ -129,7 +173,7 @@ class VacanciesController extends Controller
     ): Collection {
         $dto = $this->createVacancyDTO($request);
 
-        $lastVacancy = $this->vacancy::orderBy('id', 'desc')->first();
+        $lastVacancy = $this->vacancy::where('parking_id', $dto->parking_id)->orderBy('id', 'desc')->first();
 
         $counter = !empty($lastVacancy) ? $lastVacancy->number : 0;
 
@@ -160,5 +204,39 @@ class VacanciesController extends Controller
         if (!Parking::where('id', $parkingId)->exists()) {
             throw new NoParkingException('Estacionamento não existe!');
         }
+    }
+
+    private function getVacancyByParkingById(
+        string $parkingId,
+        int $vacancyId
+    ): Vacancy|FailureGetVacancyByParkingByIdException {
+        $vacancy = $this->vacancy::where([
+            'parking_id' => $parkingId,
+            'id'         => $vacancyId,
+        ])->first();
+
+        if (!$vacancy) {
+            throw new FailureGetVacancyByParkingByIdException('Não foi possível localizar a vaga.');
+        }
+
+        return $vacancy;
+    }
+
+    private function updateVacancy(
+        Request $request,
+        string $parkingId,
+        string $vacancyId
+    ): Vacancy {
+        $dto = $this->createUpdateVacancyDTO($request);
+
+        $vacancy = $this->getVacancyByParkingById($parkingId, $vacancyId);
+
+        $vacancy->update($dto->toArray());
+
+        if (is_null($vacancy)) {
+            throw new FailureUpdateVacancyException('Não foi possível atualizar a vaga.');
+        }
+
+        return $vacancy;
     }
 }

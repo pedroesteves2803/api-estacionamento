@@ -44,5 +44,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/employees/{parking}/{id}', [EmployeesController::class, 'destroy'])->name('employees.destroy');
 
     Route::get('/vacancies/{parking}', [VacanciesController::class, 'index'])->name('vacancies.index');
+    Route::get('/vacancies/{parking}/{id}', [VacanciesController::class, 'show'])->name('vacancies.show');
     Route::post('/vacancies', [VacanciesController::class, 'store'])->name('vacancies.store');
+    Route::patch('/vacancies/{parking}/{id}', [VacanciesController::class, 'update'])->name('vacancies.update');
+
 });
