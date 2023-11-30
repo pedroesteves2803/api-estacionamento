@@ -110,7 +110,7 @@ class CarAuthenticateTest extends TestCase
     {
         $response = $this->patch(self::API_CAR_PATH."/{$this->parking->id}/{$this->car->id}", $requestData, $this->AuthHeaders());
 
-        $response->assertStatus(self::STATUS_CODE_CORRECT);
+        $response->assertStatus($expectedStatusCode);
 
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('cars', $requestData);
