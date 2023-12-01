@@ -164,4 +164,11 @@ class VacanciesAuthenticateTest extends TestCase
         $this->assertEquals($this->vacancy->number, $content['numero']);
         $this->assertEquals($this->vacancy->available, $content['disponivel']);
     }
+
+    public function testDeleteById()
+    {
+        $response = $this->delete(self::API_VACANCIE_PATH."/{$this->parking->id}/{$this->vacancy->id}", [], $this->AuthHeaders());
+
+        $response->assertStatus(204);
+    }
 }
