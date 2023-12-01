@@ -328,10 +328,6 @@ class CarsController extends Controller
         try {
             $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
-            if ($car->erro) {
-                return $car;
-            }
-
             $car->delete();
 
             return response()->json([], Response::HTTP_NO_CONTENT);
