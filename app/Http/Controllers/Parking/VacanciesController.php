@@ -6,6 +6,7 @@ use App\Dtos\Vacancies\OutputVacancyDTO;
 use App\Dtos\Vacancies\VacancyDTO;
 use App\Dtos\Vacancies\VacancyUpdateDTO;
 use App\Exceptions\FailureGetVacancyByParkingByIdException;
+use App\Exceptions\FailureGetVacancyByParkingIdAndVacancyException;
 use App\Exceptions\FailureUpdateVacancyException;
 use App\Exceptions\Parking\FailureCreateParkingException;
 use App\Exceptions\Parking\NoParkingException;
@@ -16,7 +17,9 @@ use App\Models\Parking;
 use App\Models\Vacancy;
 use App\Services\Utils\UtilsRequestService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class VacanciesController extends Controller
 {
@@ -100,8 +103,19 @@ class VacanciesController extends Controller
         }
     }
 
-    public function destroy(string $id)
-    {
+    public function destroy(
+        string $parkingId,
+        string $id
+    ): JsonResponse|VacanciesResource {
+        try {
+            $vacancy = $this->getVacancyByParkingById($parkingId, $id);
+
+            $vacancy->delete();
+
+            return response()->json([], Response::HTTP_NO_CONTENT);
+        } catch (FailureGetVacancyByParkingIdAndVacancyException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        }
     }
 
     private function outputResponse(

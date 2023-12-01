@@ -47,5 +47,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/vacancies/{parking}/{id}', [VacanciesController::class, 'show'])->name('vacancies.show');
     Route::post('/vacancies', [VacanciesController::class, 'store'])->name('vacancies.store');
     Route::patch('/vacancies/{parking}/{id}', [VacanciesController::class, 'update'])->name('vacancies.update');
+    Route::delete('/vacancies/{parking}/{id}', [VacanciesController::class, 'destroy'])->name('vacancies.destroy');
 
 });
