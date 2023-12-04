@@ -71,14 +71,14 @@ class AuthController extends Controller
 
         if (is_null($token)) {
             $error = [
-                'erro'    => true,
+                'error'   => true,
                 'message' => $message,
             ];
         }
 
         $outputDto = new OutputAuthDTO(
             $token ?? null,
-            $error['erro'] ?? false,
+            $error['error'] ?? false,
             $error['message'] ?? null,
         );
 

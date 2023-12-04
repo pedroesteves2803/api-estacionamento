@@ -46,7 +46,7 @@ class CarAuthenticateTest extends TestCase
     private function checkResponseBody($response): void
     {
         $this->assertNotNull($response['data']);
-        $this->assertEquals(false, $response['data']['errors']);
+        $this->isFalse($response['data']['errors']);
         $this->assertNull($response['data']['message']);
         $this->assertIsArray($response['data']['content']);
     }
@@ -94,7 +94,7 @@ class CarAuthenticateTest extends TestCase
 
         $response->assertStatus($expectedStatusCode);
 
-        $this->isFalse($response['data']['errors']);
+        $this->checkResponseBody($response);
 
         if (self::STATUS_CODE_CORRECT === $expectedStatusCode and false === $response['data']['errors']) {
             $this->assertDatabaseHas('cars', $requestData);

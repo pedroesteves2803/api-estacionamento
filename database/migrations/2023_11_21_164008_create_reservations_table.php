@@ -14,9 +14,9 @@ return new class() extends Migration {
             $table->id();
             $table->foreignId('parking_id')->constrained('parkings');
             $table->foreignId('vacancy_id')->constrained('vacancies');
-            $table->foreignId('device_id')->constrained('users');
+            $table->foreignId('car_id')->constrained('cars');
             $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->dateTime('end_date')->nullable();
             $table->enum('status', [0, 1, 2]);
             $table->timestamps();
         });

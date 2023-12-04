@@ -295,7 +295,7 @@ class EmployeesController extends Controller
 
         if (is_null($employee)) {
             $error = [
-                'erro'    => true,
+                'error'   => true,
                 'message' => $message,
             ];
         }
@@ -308,7 +308,7 @@ class EmployeesController extends Controller
             $employee['office'] ?? null,
             $employee['active'] ?? null,
             $employee['parking_id'] ?? null,
-            $error['erro'] ?? false,
+            $error['error'] ?? false,
             $error['message'] ?? null,
         );
 

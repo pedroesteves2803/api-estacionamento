@@ -247,7 +247,7 @@ class ParkingController extends Controller
 
         if (is_null($parking)) {
             $error = [
-                'erro'    => true,
+                'error'   => true,
                 'message' => $message,
             ];
         }
@@ -259,7 +259,7 @@ class ParkingController extends Controller
             $parking['created_at'] ?? null,
             $parking['cars'] ?? null,
             $parking['employees'] ?? null,
-            $error['erro'] ?? false,
+            $error['error'] ?? false,
             $error['message'] ?? null
         );
 

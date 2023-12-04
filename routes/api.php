@@ -5,6 +5,7 @@ use App\Http\Controllers\Cars\CarsController;
 use App\Http\Controllers\Employees\EmployeesController;
 use App\Http\Controllers\Parking\ParkingController;
 use App\Http\Controllers\Parking\VacanciesController;
+use App\Http\Controllers\ReservertionController;
 use App\Http\Controllers\User\DeviceController;
 use Illuminate\Support\Facades\Route;
 
@@ -49,4 +50,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::patch('/vacancies/{parking}/{id}', [VacanciesController::class, 'update'])->name('vacancies.update');
     Route::delete('/vacancies/{parking}/{id}', [VacanciesController::class, 'destroy'])->name('vacancies.destroy');
 
+    Route::post('/reservation', [ReservertionController::class, 'store'])->name('reservation.store');
 });

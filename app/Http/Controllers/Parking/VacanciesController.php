@@ -70,11 +70,11 @@ class VacanciesController extends Controller
         string $parkingId,
         string $id
     ) {
-        try{
-           $vacancy = $this->getVacancyByParkingById($parkingId, $id);
+        try {
+            $vacancy = $this->getVacancyByParkingById($parkingId, $id);
 
-           return $this->outputResponse($vacancy);
-        }catch(FailureGetVacancyByParkingByIdException $e){
+            return $this->outputResponse($vacancy);
+        } catch (FailureGetVacancyByParkingByIdException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -84,7 +84,7 @@ class VacanciesController extends Controller
         string $parkingId,
         string $id
     ) {
-        try{
+        try {
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
             $this->checkParkingExistence($request->parking_id);
@@ -126,7 +126,7 @@ class VacanciesController extends Controller
 
         if (is_null($vacancy)) {
             $error = [
-                'erro'    => true,
+                'error'   => true,
                 'message' => $message,
             ];
         }
@@ -137,7 +137,7 @@ class VacanciesController extends Controller
             $vacancy['number'] ?? null,
             $vacancy['available'] ?? null,
             $vacancy['created_at'] ?? null,
-            $error['erro'] ?? false,
+            $error['error'] ?? false,
             $error['message'] ?? null
         );
 

@@ -344,7 +344,7 @@ class CarsController extends Controller
 
         if (is_null($car)) {
             $error = [
-                'erro'    => true,
+                'error'   => true,
                 'message' => $message,
             ];
         }
@@ -358,7 +358,7 @@ class CarsController extends Controller
             $car['parking_id'] ?? null,
             $car['output'] ?? null,
             $car['amountToBePaid'] ?? null,
-            $error['erro'] ?? false,
+            $error['error'] ?? false,
             $error['message'] ?? null,
         );
 

@@ -114,7 +114,7 @@ class DeviceController extends Controller
 
         if (is_null($user)) {
             $error = [
-                'erro'    => true,
+                'error'   => true,
                 'message' => $message,
             ];
         }
@@ -123,7 +123,7 @@ class DeviceController extends Controller
             $user['id'] ?? null,
             $user['device_name'] ?? null,
             $user['email'] ?? null,
-            $error['erro'] ?? false,
+            $error['error'] ?? false,
             $error['message'] ?? self::WELCOME,
         );
 

@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Parking;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +18,8 @@ class VacancyFactory extends Factory
     {
         return [
             'parking_id' => 1,
-            'number' => rand(0, 10),
-            'available' => (bool) rand(0, 1),
+            'number'     => rand(0, 10),
+            'available'  => (bool) rand(0, 1),
         ];
     }
 }

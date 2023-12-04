@@ -25,6 +25,10 @@
             <directory>tests/Feature/Vacancies</directory>
         </testsuite>
 
+        <testsuite name="feature-reservations">
+            <directory>tests/Feature/Reservations</directory>
+        </testsuite>
+
         <testsuite name="feature-employees">
             <directory>tests/Feature/Employees</directory>
         </testsuite>

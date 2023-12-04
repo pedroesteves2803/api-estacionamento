@@ -33,7 +33,6 @@ class VacanciesUnauthenticateTest extends TestCase
         $this->parking = Parking::factory()->create();
         $this->vacancy = Vacancy::factory()->create();
 
-
         $this->token = $this->user->createToken($this->user->device_name)->plainTextToken;
     }
 
@@ -91,9 +90,9 @@ class VacanciesUnauthenticateTest extends TestCase
         return [
             'vagas-com-corpo-correto' => [
                 [
-                    "parking_id" => 1,
-                    "number" => 99,
-                    "available" => true
+                    'parking_id' => 1,
+                    'number'     => 99,
+                    'available'  => true,
                 ],
                 self::STATUS_CODE_CORRECT,
             ],
