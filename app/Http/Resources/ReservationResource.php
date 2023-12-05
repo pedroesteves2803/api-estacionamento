@@ -32,7 +32,6 @@ class ReservationResource extends JsonResource
                 'carro_id'          => $this->car_id,
                 'entrada'           => $input,
                 'saida'             => $output,
-                'carro_id'          => $output,
                 'status'            => $this->status,
             ],
         ];

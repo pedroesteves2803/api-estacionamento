@@ -6,7 +6,7 @@ use App\Dtos\Cars\CarsDTO;
 use App\Dtos\Cars\OutputCarsDTO;
 use App\Exceptions\Car\FailureCreateCarException;
 use App\Exceptions\Car\FailureExitCarException;
-use App\Exceptions\Car\FailureGetCarByParkingIdAndCarIdCarException;
+use App\Exceptions\Car\FailureGetCarByParkingIdAndCarIdException;
 use App\Exceptions\Car\FailureUpdateCarException;
 use App\Exceptions\Parking\NoParkingException;
 use App\Exceptions\RequestFailureException;
@@ -164,7 +164,7 @@ class CarsController extends Controller
             $car = $this->getCarByParkingIdAndCarId($parkingId, $id);
 
             return $this->outputResponse($car);
-        } catch (FailureGetCarByParkingIdAndCarIdCarException $e) {
+        } catch (FailureGetCarByParkingIdAndCarIdException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -229,7 +229,7 @@ class CarsController extends Controller
             return $this->outputResponse(null, $e->getMessage());
         } catch (FailureUpdateCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
-        } catch (FailureGetCarByParkingIdAndCarIdCarException $e) {
+        } catch (FailureGetCarByParkingIdAndCarIdException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -283,7 +283,7 @@ class CarsController extends Controller
             $this->exitCar($car);
 
             return $this->outputResponse($car);
-        } catch (FailureGetCarByParkingIdAndCarIdCarException $e) {
+        } catch (FailureGetCarByParkingIdAndCarIdException $e) {
             return $this->outputResponse(null, $e->getMessage());
         } catch (FailureExitCarException $e) {
             return $this->outputResponse(null, $e->getMessage());
@@ -331,7 +331,7 @@ class CarsController extends Controller
             $car->delete();
 
             return response()->json([], Response::HTTP_NO_CONTENT);
-        } catch (FailureGetCarByParkingIdAndCarIdCarException $e) {
+        } catch (FailureGetCarByParkingIdAndCarIdException $e) {
             return $this->outputResponse(null, $e->getMessage());
         }
     }
@@ -368,14 +368,14 @@ class CarsController extends Controller
     private function getCarByParkingIdAndCarId(
         int $parkingId,
         int $carId
-    ): Car|FailureGetCarByParkingIdAndCarIdCarException {
+    ): Car|FailureGetCarByParkingIdAndCarIdException {
         $car = $this->cars::where([
             'parking_id' => $parkingId,
             'id'         => $carId,
         ])->first();
 
         if (is_null($car)) {
-            throw new FailureGetCarByParkingIdAndCarIdCarException('Não foi possível localizar o carro.');
+            throw new FailureGetCarByParkingIdAndCarIdException('Não foi possível localizar o carro.');
         }
 
         return $car;

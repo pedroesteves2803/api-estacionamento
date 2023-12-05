@@ -4,6 +4,7 @@ namespace Tests\Feature\Reservations;
 
 use App\Models\Car;
 use App\Models\Parking;
+use App\Models\Reservations;
 use App\Models\User;
 use App\Models\Vacancy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -26,6 +27,7 @@ class ReservationsAuthenticateTest extends TestCase
     protected $parking;
     protected $vacancy;
     protected $car;
+    protected $reservation;
 
     public function setUp(): void
     {
@@ -35,6 +37,7 @@ class ReservationsAuthenticateTest extends TestCase
         $this->parking = Parking::factory()->create();
         $this->vacancy = Vacancy::factory()->create();
         $this->car = Car::factory()->create();
+        $this->reservation = Reservations::factory()->create();
         $this->token = $this->user->createToken($this->user->device_name)->plainTextToken;
     }
 
@@ -58,6 +61,16 @@ class ReservationsAuthenticateTest extends TestCase
         ])->post(self::API_LOGIN_PATH, $body);
 
         $this->token = $response->json()['data']['content']['token'];
+
+        $response->assertStatus(self::STATUS_CODE_CORRECT)
+            ->assertJsonStructure([
+                'data' => [],
+            ]);
+    }
+
+    public function testGetReservations(): void
+    {
+        $response = $this->get(self::API_RESERVATION_PATH."/{$this->parking->id}/", $this->AuthHeaders());
 
         $response->assertStatus(self::STATUS_CODE_CORRECT)
             ->assertJsonStructure([
@@ -102,4 +115,23 @@ class ReservationsAuthenticateTest extends TestCase
 
         $this->assertDatabaseHas('reservations', $requestData);
     }
+
+    // public function testGetReservationById(): void
+    // {
+    //     $response = $this->get(self::API_RESERVATION_PATH."/{$this->parking->id}/{$this->reservation->id}", $this->AuthHeaders());
+
+    //     $response->assertStatus(self::STATUS_CODE_CORRECT)
+    //         ->assertJsonStructure([
+    //             'data' => [],
+    //         ]);
+
+    //     $this->checkResponseBody($response);
+
+    //     $content = $response['data']['content'];
+
+    //     $this->assertEquals($this->reservation->parking_id, $content['estacionamento_id']);
+    //     $this->assertEquals($this->reservation->vacancy_id, $content['vaga_id']);
+    //     $this->assertEquals($this->reservation->car_id, $content['carro_id']);
+    //     $this->assertEquals($this->reservation->status, $content['status']);
+    // }
 }

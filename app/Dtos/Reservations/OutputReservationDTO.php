@@ -4,7 +4,7 @@ namespace App\Dtos\Reservations;
 
 use App\Dtos\AbstractDTO;
 use App\Dtos\InterfaceDTO;
-use App\Models\Vacancy;
+use App\Models\Reservations;
 use Illuminate\Contracts\Validation\Validator;
 
 /**
@@ -30,7 +30,7 @@ class OutputReservationDTO extends AbstractDTO implements InterfaceDTO
         public readonly ?string $start_date = null,
         public readonly ?string $end_date = null,
         public readonly ?int $status = null,
-        public readonly ?bool $erro = false,
+        public readonly ?bool $error = false,
         public readonly ?string $message = null,
     ) {
         $this->validate();
@@ -56,16 +56,16 @@ class OutputReservationDTO extends AbstractDTO implements InterfaceDTO
         return $this->validator()->validate();
     }
 
-    public static function fromModel(Vacancy $vacancy)
+    public static function fromModel(Reservations $reservation)
     {
         return new self(
-            $vacancy->id,
-            $vacancy->parking_id,
-            $vacancy->vacancy_id,
-            $vacancy->car_id,
-            $vacancy->start_date,
-            $vacancy->end_date,
-            $vacancy->status,
+            $reservation->id,
+            $reservation->parking_id,
+            $reservation->vacancy_id,
+            $reservation->car_id,
+            $reservation->start_date,
+            $reservation->end_date,
+            $reservation->status,
         );
     }
 }

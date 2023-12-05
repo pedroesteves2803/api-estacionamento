@@ -119,7 +119,7 @@ class CarAuthenticateTest extends TestCase
         }
     }
 
-    public function testGetParkingById(): void
+    public function testGetCarById(): void
     {
         $response = $this->get(self::API_CAR_PATH."/{$this->parking->id}/{$this->car->id}", $this->AuthHeaders());
 
