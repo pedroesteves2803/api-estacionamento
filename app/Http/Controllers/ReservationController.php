@@ -6,6 +6,7 @@ use App\Dtos\Reservations\OutputReservationDTO;
 use App\Dtos\Reservations\ReservationDTO;
 use App\Exceptions\FailureCreateReservationException;
 use App\Exceptions\FailureGetReservationByParkingIdAndReservationIdException;
+use App\Exceptions\FailureUpdateReservationException;
 use App\Exceptions\NoCarException;
 use App\Exceptions\NoVacancyException;
 use App\Exceptions\Parking\NoParkingException;
@@ -19,7 +20,7 @@ use App\Services\Utils\UtilsRequestService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
-class ReservertionController extends Controller
+class ReservationController extends Controller
 {
     public const NUMBER_OF_PARAMETERS = 5;
 
@@ -28,7 +29,6 @@ class ReservertionController extends Controller
         protected UtilsRequestService $utilsRequestService
     ) {
     }
-
 
     public function index(
         string $parkingId
@@ -42,7 +42,6 @@ class ReservertionController extends Controller
             collect($reservationsDTOs)
         );
     }
-
 
     public function store(
         Request $request
@@ -72,15 +71,12 @@ class ReservertionController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(
         string $parkingId,
         string $id
     ): ReservationResource{
         try {
-            $reservation = $this->getReservationByParkingIdAndCarId($parkingId, $id);
+            $reservation = $this->getReservationByParkingIdAndReservationId($parkingId, $id);
 
             return $this->outputResponse($reservation);
         } catch (FailureGetReservationByParkingIdAndReservationIdException $e) {
@@ -88,23 +84,36 @@ class ReservertionController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
+    public function update(
+        Request $request,
+        string $parkingId,
+        string $id
+    ): ReservationResource{
+        try {
+            $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
+
+            $this->checkCarExistence($request->car_id);
+
+            $this->checkVacancyExistence($request->vacancy_id);
+
+            $this->checkParkingExistence($request->parking_id);
+
+            $reservation = $this->updateReservation($request, $parkingId, $id);
+
+            return $this->outputResponse($reservation);
+        } catch (NoParkingException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        } catch (NoCarException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        } catch (NoVacancyException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        } catch (RequestFailureException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        } catch (FailureUpdateReservationException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
     }
@@ -207,17 +216,35 @@ class ReservertionController extends Controller
         return $reservation;
     }
 
-    private function getReservationByParkingIdAndCarId(
+    private function getReservationByParkingIdAndReservationId(
         int $parkingId,
-        int $carId
+        int $reservationId
     ): Reservations|FailureGetReservationByParkingIdAndReservationIdException {
         $reservation = $this->reservations::where([
             'parking_id' => $parkingId,
-            'id'         => $carId,
+            'id'         => $reservationId,
         ])->first();
 
         if (is_null($reservation)) {
             throw new FailureGetReservationByParkingIdAndReservationIdException('Não foi possível localizar a reserva.');
+        }
+
+        return $reservation;
+    }
+
+    private function updateReservation(
+        Request $request,
+        string $parkingId,
+        string $id
+    ): Reservations|FailureUpdateReservationException {
+        $dto = $this->createReservationDTO($request);
+
+        $reservation = $this->getReservationByParkingIdAndReservationId($parkingId, $id);
+
+        $reservation->update($dto->toArray());
+
+        if (is_null($reservation)) {
+            throw new FailureUpdateReservationException('Não foi possível atualizar a reserva.');
         }
 
         return $reservation;

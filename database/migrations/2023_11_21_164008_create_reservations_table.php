@@ -13,8 +13,8 @@ return new class() extends Migration {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
             $table->foreignId('parking_id')->constrained('parkings');
-            $table->foreignId('vacancy_id')->constrained('vacancies');
-            $table->foreignId('car_id')->constrained('cars');
+            $table->foreignId('vacancy_id')->constrained('vacancies')->unique();
+            $table->foreignId('car_id')->constrained('cars')->unique();
             $table->dateTime('start_date');
             $table->dateTime('end_date')->nullable();
             $table->enum('status', [0, 1, 2]);

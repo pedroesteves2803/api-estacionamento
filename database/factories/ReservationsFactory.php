@@ -17,12 +17,12 @@ class ReservationsFactory extends Factory
     public function definition(): array
     {
         return [
-            'parking_id' =>  rand(0, 2),
-            'vacancy_id' =>  rand(0, 2),
-            'car_id' =>  rand(0, 2),
+            'parking_id' =>  1,
+            'vacancy_id' =>  1,
+            'car_id' =>  1,
             'start_date'     => "05/12/2023",
             'end_date'  => null,
-            'status'  =>  rand(0, 2),
+            'status'  =>  1,
         ];
     }
 }

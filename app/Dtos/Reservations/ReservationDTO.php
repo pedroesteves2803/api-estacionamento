@@ -40,13 +40,13 @@ class ReservationDTO extends AbstractDTO implements InterfaceDTO
             'vacancy_id' => [
                 'required',
                 'int',
-                Rule::unique('reservations'),
+                Rule::unique('reservations')->ignore(request()->id),
             ],
 
             'car_id' => [
                 'required',
                 'int',
-                Rule::unique('reservations'),
+                Rule::unique('reservations')->ignore(request()->id),
             ],
 
             'start_date' => [
