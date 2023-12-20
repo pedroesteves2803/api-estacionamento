@@ -167,4 +167,13 @@ class ReservationsAuthenticateTest extends TestCase
         $this->assertEquals($reservation->car_id, $content['carro_id']);
         $this->assertEquals($reservation->status, $content['status']);
     }
+
+    public function testDeleteById(): void
+    {
+        $reservation = Reservations::factory()->create();
+
+        $response = $this->delete(self::API_RESERVATION_PATH."/{$this->parking->id}/{$reservation->id}", [], $this->AuthHeaders());
+
+        $response->assertStatus(204);
+    }
 }

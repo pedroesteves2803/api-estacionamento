@@ -18,7 +18,9 @@ use App\Models\Reservations;
 use App\Models\Vacancy;
 use App\Services\Utils\UtilsRequestService;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ReservationController extends Controller
 {
@@ -32,8 +34,7 @@ class ReservationController extends Controller
 
     public function index(
         string $parkingId
-    )
-    {
+    ) {
         $reservations = $this->reservations::where('parking_id', $parkingId)->get();
 
         $reservationsDTOs = $this->mapToOutputReservationsDTO($reservations);
@@ -74,7 +75,7 @@ class ReservationController extends Controller
     public function show(
         string $parkingId,
         string $id
-    ): ReservationResource{
+    ): ReservationResource {
         try {
             $reservation = $this->getReservationByParkingIdAndReservationId($parkingId, $id);
 
@@ -88,7 +89,7 @@ class ReservationController extends Controller
         Request $request,
         string $parkingId,
         string $id
-    ): ReservationResource{
+    ): ReservationResource {
         try {
             $this->utilsRequestService->verifiedRequest($request->all(), self::NUMBER_OF_PARAMETERS);
 
@@ -114,8 +115,19 @@ class ReservationController extends Controller
         }
     }
 
-    public function destroy(string $id)
-    {
+    public function destroy(
+        string $parkingId,
+        string $id
+    ): JsonResponse|ReservationResource {
+        try {
+            $reservation = $this->getReservationByParkingIdAndReservationId($parkingId, $id);
+
+            $reservation->delete();
+
+            return response()->json([], Response::HTTP_NO_CONTENT);
+        } catch (FailureGetReservationByParkingIdAndReservationIdException $e) {
+            return $this->outputResponse(null, $e->getMessage());
+        }
     }
 
     private function mapToOutputReservationsDTO(
